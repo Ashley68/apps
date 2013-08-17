@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Simplesite | Home{% endblock %}
+
+{% block content %}
+<div class="hero-unit">
+<h1>Phonebook App</h1>
+
+<form method="post" action="/accounts/login/">
+{% csrf_token %}
+
+  {% if message %}
+  <p>{{message}}</p>
+  {% endif %}
+
+<br/>
+  <table>
+    {{ form.as_table }}
+  </table>
+<p><a href="/accounts/password_reset">forgot password</a></p>
+<br/>
+
+    <input class="btn btn-primary btn-large" type="submit" value="Log In" /></a>
+</form>
+
+
+
+</div>
+{% endblock %}

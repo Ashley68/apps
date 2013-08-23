@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Details{% endblock %}
+{% block content %}
+
+  <h2>{{ stuff.title }}</h2>
+  <p><a href="{% url "edit_stuff" thing.id %}">Edit your stuff</a></p>
+  <p><b>Created:</b> {{ thing.creation_date|date:"D, Y/m/d" }}</p>
+  <p>
+  {% if thing.description %}
+    {{ thing.description }}
+    <p><a href="{% url "delete_stuff" thing.id %}">Delete This Stuff</a></p>
+  {% else %}
+    You got no stuff :(
+  {% endif %}
+  </p>
+
+{% endblock %}

@@ -69,9 +69,8 @@
       <h1>Stuff App <small>Create-Read-Update-Delete Application Template</small></h1>
       <hr/>
 
-      <p>Web Applications generally involve using a web browser to interact with data in a database via a web browser. Interact means to Create, Read, Update, or Delete data. Data can be articles, blog posts, classified ads, catalogs, personal profiles, pictures, or any other kind of data.</p>
-      <p>In this tutorial we will create a general purpose Create-Read-Update-Delete type application that we'll call Stuff. The app will create a database table where you can create your stuff, pull stuff to view or Read, Update your stuff and delete stuff. Once you understand this general purpose app you can use it as a template for other apps to modify and build upon. And we'll create more tutorials that do just that.</p>
-      <p>We will assume you already have a Django project started with the initial files set up. You can do that by following the simplesite tutorial to create a simple two page website using the Django framework.</p>
+      <p>Web Applications generally involve interacting with data in a database via a web browser. Interact means to Create, Read, Update, or Delete data. Data can be articles, blog posts, classified ads, catalogs, personal profiles, pictures, or any other kind of data.</p>
+      <p>In this tutorial we will create a general purpose Create-Read-Update-Delete type application that we'll call Stuff. The app will create a database table where you can create your stuff, pull stuff to view or Read, Update your stuff and delete stuff. Once you understand this general purpose app you can use it as a template for other apps to modify and build upon.</p>
       <p>Prerequisites: This tutorial assumes you are familiar with HTML and CSS; a basic command line interface (e.g., Windows Command Prompt, OSX Terminal, Linux Bash); the basics of the Python Programming Language; and preferrably you have already gone through the Django "Polls App" Tutorial at Djangoproject.org. At a minimum, you should have the following already installed: A text editor, Python version 2.7 or above, and Django.</p>
       <!--There are multiple versions of this tutorial. Click on the tab to see each. It is recommended that you go through each in order.
       <ul>
@@ -83,37 +82,615 @@
     </div>
 
     <!-- TABS TO SELECT ENVIRONMENT -->
-    <ul class="nav nav-tabs">
-      <li class="active"><a href="#basic" data-toggle="tab">Basic Version</a></li>
-      <!--<li><a href="#forms" data-toggle="tab">Form Class</a></li>
+    <!-- <ul class="nav nav-tabs">
+      <li class="active"><a href="#basic" data-toggle="tab">Create New Site</a></li>
+      <li><a href="#install" data-toggle="tab">Install On Existing Site</a></li>
       <li><a href="#noforms" data-toggle="tab">noforms</a></li>
-      <li><a href="#filledin" data-toggle="tab">Filled In</a></li>-->
-    </ul>
+      <li><a href="#filledin" data-toggle="tab">Filled In</a></li>
+    </ul>  -->
         
     <div id="myTabContent" class="tab-content">
 
 <!-------------------------------------------------------------------------------------------------------------
 ------  STUFF APP ------------------------------------------------------------------------------>     
-      <div class="tab-pane fade in active" id="stuff">
+      <div class="tab-pane fade in active" id="basic">
         <div class='row-fluid'>
           <div class='span9 container-fluid'>
-            <!-- <h2>Stuff App - Create-Read-Update-Delete Template</h2> -->
-          
+            <!-- <h2>Stuff App - Create-Read-Update-Delete Template</h2> -- >
+            <h2>Create New Site</h2>
             <!-- Set Up the Project -->
             <h3 id="setup" class="adjust-anchor">Setup</h3>
+            <ul>
+              <li>Open your command line interface (e.g., Terminal for Mac, Command Prompt for Windows, Bash for Linux).</li>
+              <li>Change Directories to the folder where you want to create your web project. We'll assume a folder in your root directory called localsites <code>cd /localsites</code></li>
+              <li>First create your overall website. The Stuff app will be an application within your website, not the whole website itself. That way it is like a module within the website that can be disabled, removed, or installed in other sites.</li>
+              <li>Create the Django Site setup <code>django-admin.py startproject simplesite </code>. This will create the basic file structure. Note there will now be two folders named simplesite. The upper one will have just the manage.py command line utility file. The lower one will have important site-wide files such as settings.py and urls.py.</li>
+              <li>Change Directories to your site's upper directory <code>cd simplesite</code></li>
+              <li>Now let's create the application that will put stuff in our database and pull it out to view, update, or delete. We'll call our application <i>stuff</i> because it can be molded to work with many different kinds of things. In the command line enter <code>python manage.py startapp stuff</code></li>
+              <li>A new folder named stuff will be created with some files in it (e.g., views.py, models.py).</li>
+              <li>Open the settings.py file. Insert a new row under <code>INSTALLED_APPS = (</code> and enter <code>'stuff', </code>. Now Django will know to include this app with your site.</li>
+              <li>Use your browser to confirm that the basic Django files are now in place:</li>
+              <ul>
+                <li>Open a second instance of your command line interface so you can run the virtual server and still use the Command Line. In Windows Command Promt you can open a second instance by typing <code>start</code></li>
+                <li>from the upper simplesite directory <code>cd /localsites/simplesite</code> run the virtual server <code>python manage.py runserver</code></li>
+                <li>Go to the browser and put in your local ip address and port 8000 as url: <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+                <li>If the setup worked you will see an "It Worked" message in the browser.</li>
+              </ul>  
+            </ul>                
+
+            <!-- The settings.py file -->
+            <h3 id="settings" class="adjust-anchor">Settings.py file</h3>
+            <ul>
+              <li>Open the settings.py file.</li>
+              <li>At the very top of the file (first line) import the Django os module by inserting <code>import os</code> in the first line. This will enable relative references to our templates and static files.</li>
+              <li>Update the timezone for your region. If you are not in the default TIME_ZONE = 'America/Chicago' then change <i>America/Chicago</i> to one of these <a href="http://en.wikipedia.org/wiki/List_of_tz_database_time_zones" target="_blank">timezones</a>.</li>
+              <li>Setup the database. During development on your local machine we'll assume you are using sqlite, the lightweight database that's included with Django.</li>
+              <ul>
+                <li>Under <code>DATABASES = {</code>, change <code>'ENGINE': 'django.db.backends.',</code> to <code>'ENGINE': 'django.db.backends.sqlite3',</code></li>
+                <li>Change <code>'NAME': '',</code> to the path where you will put the sqlite database file <code>'NAME': '/localsites/simplesite/simplesite/sqlite.db',</code></li>
+                <li>The rest is unchanged. A database file called sqlite.db will be created in the lower simplesite directory.</li>
+              </ul>
+              <li>Syncronize the database settings with the actual database. From the project folder enter <code>python manage.py syncdb</code></li>
+              <li>The first time you run syncdb for the site, you are prompted for a username and password which will make you the site administrator and first user.</li>
+            </ul>   
+            
+            <!-- Models -->
+            <h3 id="models" class="adjust-anchor">Create the Data Model</h3>
+            <ul>
+              <li>We will start by populating the model.py file. This is where we define the database table(s) and fields.</li>
+              <li>Go to the stuff folder, open the models.py file, then populate it with the following:
+<pre>
+from django.db import models
+
+class Thing(models.Model):  
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    quantity = models.IntegerField()
+    creation_date = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.title
+        
+    class Meta:
+        ordering = ['title']
+</pre>             
+              This will do the following:
+              </li>
+              <li>Import the models module from django located at the following path (starting from your Python or Virtualenv folder) Lib/site-packages/django/db/models.</li>
+              <li>Create a class called Thing. When you sync your Django files with your database this will create a  table called Thing. Each one of the attributes (title, description, etc.) will become a field in the table.</li>
+              <li>You must assign each field to a field type (e.g., CharField, TextField, BooleanField). Django converts these to the database field type.</li>
+              <li>CharField requires that you specify the maximum number of characters (max_length). Most other parameters are optional.</li>
+              <li>Django automatically generates a field called id, assigns it an auto generated integer starting with 1, and makes "id" the primary key.</li>
+              <li>Creation_date will be automatically entered when the form is submitted and a record is created in the database.</li>
+              <li>At the end we added a class to sort the results alphabetically by title when they are displayed. To reverse the order (from z to a), put a minus sign before the fieldname.</li>
+            </ul> 
+            
+            <!-- FORMS -->
+            <h3 id="forms" class="adjust-anchor">Forms</h3>
+            <ul>
+              <li>Now we will create the form that will be displayed to users to create and update records in our database.</li>
+              <li>One of Django's core principles is Don't Repeat Yourself (DRY). If you leverage Django's functionality then you don't need to rewrite the fields in your form, rather you pull in the fields from the models.py file.</li>
+              <li>Create a file called forms.py, save it to the stuff directory, and populate it with the following:
+<pre>
+from django import forms
+from models import Thing
+
+class StuffForm(forms.ModelForm):
+
+    class Meta:
+        model = Thing
+        # uncomment the below line to include only specific fields.
+        # fields = ('title', 'description')
+</pre>              
+              </li>
+              <li>This imports Django's forms module, and it imports the Thing class we just created in our models.py file.</li>
+              <li>We create a class for the form that we're calling StuffForm. It converts the attributes in the Thing class into fields on the form so we don't have to reenter them. 
+              <li>Django excludes automatically generated fields from forms such as the "id" field and date created.</li>
+              <li>If we don't want all the fields in the Thing class to appear on our form then we can specifically exclude them. Right below <code>model = Thing</code> we would insert <code>exclude = ('quantity')</code>. Or, conversely, we can list only the fields we want <code>fields = ('title', 'description')</code>.  
+            </ul>   
+
+            <!-- Templates -->
+            <h3 id="templates" class="adjust-anchor">Templates</h3>
+            <ul>
+              <li>In the upper simplesite folder (where manage.py is) create a directory called templates <code>mkdir templates</code></li>
+              <li>Create a file named base.html and save it to the templates folder. This will be the template that all the other HTML files reference. Then populate it with the basic HTML and Django template tags, and the Navigation bar with a link to the stuff app and to the Admin console (explained later).
+<pre>
+&#123;% load staticfiles %} 
+&lt;!DOCTYPE html> 
+&lt;html lang="en"> 
+&lt;head> 
+  &lt;link rel="stylesheet" type="text/css" href="&#123;% static 'css/style.css' %}"&gt;
+  &lt;title>&#123;% block title %}&#123;% endblock %}&lt;/title> 
+&lt;/head>
+&lt;body>
+  &lt;nav>
+    &lt;a href="/">home&lt;/a>
+    &lt;a href="/stuff">Stuff&lt;/a>
+    &lt;a href="/admin">Admin&lt;/a>
+  &lt;/nav>
+  &#123;% block content %}
+  &#123;% endblock %}
+&lt;/body>
+&lt;/html> 
+</pre>              
+              </li>
+              <li>Create another file called index.html, save it to the templates folder, and populate it with the following bare bones content:
+<pre>
+&#123;% extends 'base.html' %}
+&#123;% block title %}Simplesite | Home&#123;% endblock %}
+&#123;% block content %}
+
+&lt;h1>Simple Site&lt;/h1>
+&lt;p>Site content goes here&lt;/p>
+
+&#123;% endblock %}
+</pre>              
+              Now your basic site templates are created. Let's make the templates for the stuff app.
+              </li>
+              <li>Within the templates directory, create another directory called "stuff".</li>
+              <li>Create a file called index.html, save it to the templates/stuff folder, and populate it with the following:
+<pre>
+{% extends 'base.html' %}
+{% block title %}List Stuff{% endblock %}
+{% block content %}
+
+&lt;h2>List of Stuff&lt;/h2>
+
+    &lt;p>&lt;a href="{% url "create_stuff" %}">Add New Stuff&lt;/a>&lt;/p>
+    {% for thing in stuff %}
+        &lt;a href="{% url "thing_details" thing.id %}">{{ thing.title }}&lt;/a>&lt;br/>
+    {% endfor %}
+
+{% endblock %}
+</pre>              
+              </li>
+              <ul>
+                <li>When this html page is opened it will have a link to "Add New Stuff" and below that it will list all the records we have in the database. It uses a for loop to pull all the data in.</li>
+                <li>Within the For Loop we are adding a link for each record that goes to the thing_details template with the thing.id appended to it. What is displayed is the title field for each record.</li>
+              </ul>
+              <li>Create a file called thing_details.html, save it to the templates/stuff folder, and populate it with the following:
+<pre>
+{% extends 'base.html' %}
+{% block title %}Details{% endblock %}
+{% block content %}
+
+  &lt;h2>{{ stuff.title }}&lt;/h2>
+  &lt;p>&lt;a href="{% url "edit_stuff" thing.id %}">Edit your stuff&lt;/a>&lt;/p>
+  &lt;p>&lt;b>Created:&lt;/b> {{ thing.creation_date|date:"D, Y/m/d" }}&lt;/p>
+  &lt;p>
+  {% if thing.description %}
+    {{ thing.description }}
+    &lt;p>&lt;a href="{% url "delete_stuff" thing.id %}">Delete This Stuff&lt;/a>&lt;/p>
+  {% else %}
+    You got no stuff :(
+  {% endif %}
+  &lt;/p>
+
+{% endblock %}
+</pre>              
+              <ul>
+                <li>This page shows the details of a specified individual record from your database. The database automatically generates a sequential id number for every record. The record is called when the URL is appended by stuff and the record's id number like so <code>/stuff/<i>1</i></code>
+                </li>
+                <li>At the top of the page we are displaying the title field for the record.</li>
+                <li>Below that is a link to the "edit_stuff" page where you can edit the record. That is called by appending the url with <code>/stuff/edit/<i>id number</i></code></li>
+                <li>In this case we are including the creation date. That's relevant for things like blog posts, articles, pictures, but you can delete that line for things like catalogs.</li>
+                <li>The next line is an if statement. If the description field is not empty then show the description field, otherwise show some message.</li>
+                <li>There is also a link that activates the delete function and removes the current record from the database.</li>
+              </ul>
+              <li>Create a file called create_stuff.html, save it to the templates/stuff folder, and populate it with the following:
+<pre>
+{% extends "base.html" %}
+{% block title %}Create New Stuff{% endblock %}
+{% block content %}
+    &lt;h2>Create New Stuff&lt;/h2>
+      &lt;form action="" method="post">{% csrf_token %}
+        {% for field in form %}
+            &lt;div class="field_container">
+                {{ field.errors }}
+                {{ field.label_tag }}&lt;/br>
+                {{ field }}
+            &lt;/div>
+        {% endfor %}
+      &lt;input type="submit" value="Submit" />
+      &lt;/form>
+{% endblock %}
+</pre>              
+              </li>
+              <ul>
+                <li>We are displaying a form for creating a new record and inserting it into the database. It uses the post method.</li>
+                <li>The <code>{% csrf_token %}</code> is a security feature provided by Django's form module to prevent cross site request forgeries where data is inserted in your database bypassing the form.</li>
+                <li>A For Loop is used to generate the fields from the form.py file (which calls the fields from the models.py file). We are including a variable for the field error messages, the label tag and an input field to enter the data.</li>
+              </ul>
+              <li>Create a file called edit_stuff.html, save it to the templates/stuff folder, and populate it with the following:
+<pre>
+{% extends "base.html" %}
+{% block title %}Edit Stuff{% endblock %}
+{% block content %}
+  &lt;form action="" method="post">{% csrf_token %}
+    &lt;h2>Edit Your Stuff&lt;/h2>
+    {% for field in form %}
+        &lt;div class="field_container">
+            {{ field.errors }}
+            {{ field.label_tag }}&lt;/br>
+            {{ field }}
+        &lt;/div>
+    {% endfor %}
+  &lt;input type="submit" value="Submit" />
+  &lt;/form>
+{% endblock %}
+</pre>              
+              </li>
+              <ul>
+                <li>This form is essentially the same as the create_stuff form except it calls an existing record in the database and allows you to modify the values in the fields.</li>
+              </ul>
+              <li>Go to the settings.py file and in the line under <code>TEMPLATE_DIRS = (</code> enter the relative path to the templates folder <code>os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\','/'), </code>. For just your local environment, the direct path would also work <code>    '/localsites/simplesite/templates',</code></li>
+            </ul>   
+
+            <!-- URLs -->
+            <h3 id="urls" class="adjust-anchor">URLs</h3>
+            <ul>
+              <li>Now we will dispatch the URLs. 
+              <li>Go to the lower simplesite folder (where settings.py is) and open the urls.py file. Below <code>urlpatterns = patterns('',</code> insert the following lines:
+<pre>
+    url(r'^$', 'simplesite.views.home', name='home'),
+    (r'^stuff/', include('stuff.urls')),
+</pre>
+              </li>
+              <li>The first line routes a url with nothing appended to it to our home page.</li>
+              <li>The second line is activated any time "stuff/" is appended to our URL. It calls in the urls file from our stuff directory, which we will create next.</li>
+              <li>Create a file called urls.py, save it to the stuff directory, and populate it with the following:
+<pre>
+from django.conf.urls import patterns, url
+
+urlpatterns = patterns('',
+    url(r'^$', 'stuff.views.all_stuff', name="stuff"),
+    url(r'^(?P&lt;thing_id>\d+)/$',
+         'stuff.views.thing_details',
+          name='thing_details'),
+    url(r'^create/$',
+         'stuff.views.create_stuff',
+          name="create_stuff"),
+    url(r'^edit/(?P&lt;thing_id>\d+)/$',
+         'stuff.views.edit_stuff',
+         name='edit_stuff'),
+    url(r'^delete/(?P&lt;thing_id>\d+)/$',
+        'stuff.views.delete_stuff',
+        name='delete_stuff'), 
+)        
+</pre>              
+              </li>
+              <li>This file imports the url and patterns functions from Django's urls module located at (from your Python or virualenvs folder) Lib/site-packages/django/conf/urls</li>
+              <li>The patterns function looks for a match with the urls inside it when a URL is entered. The url function matches a URL with a view. It also allows you to give the URL a name.</li>
+              <li>You may notice that /stuff/ is not part of these URLs. That's because we put that in the site's main urls.py file.</li>
+              <li>Note, we are using the option to give the urls names. That allows us to use the link name rather than the actual url when we put links throughout our site. That way if we change the URLs we can do it centrally in the URLs file and not have to change the links in the html files.</li>
+            </ul> 
+            
+            <!-- Views -->
+            <h3 id="views" class="adjust-anchor">Views</h3>
+            <ul>
+              <li>Now we will create the functions to display the pages and process the forms.</li>
+              <li>First let's create the view (function) to render our site's home page.</li>
+              <ul>
+                <li>Go to the lower simplesite directory (where settings.py is), create a file called views.py, then populate it with the following:
+<pre>
+from django.shortcuts import render_to_response
+
+def home(request):
+    return render_to_response('index.html')
+</pre>                
+                </li>
+                <li>This will import the render_to_response function from the Django shortcuts module located in the (from your python folder or virtualenvs folder) Lib/site-packages/django/shortcuts/__init__.py file. It simply opens the index.html file.</li>
+              </ul>              
+              <li>Now lets create the views (functions) specific to our stuff app. Open the views.py file in the stuff directory and populate it with the following:
+<pre>
+from django.shortcuts import get_object_or_404, render_to_response, redirect
+from django.template import RequestContext
+from stuff.models import Thing
+from stuff.forms import StuffForm
+
+
+def all_stuff(request):
+    stuff = Thing.objects.all()
+    return render_to_response('stuff/index.html',
+                                      {'stuff': stuff},
+                      context_instance=RequestContext(request))
+
+def thing_details(request, thing_id):
+    thing = get_object_or_404(Thing, pk=thing_id)
+    return render_to_response('stuff/thing_details.html',
+                                                  {'thing': thing},
+                                context_instance=RequestContext(request))
+
+def create_stuff(request):
+    if request.method == 'POST':
+        form = StuffForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('stuff')
+    else:
+        form = StuffForm()
+    return render_to_response('stuff/create_stuff.html',
+                                                          {'form': form},
+                                context_instance=RequestContext(request))
+
+def edit_stuff(request, thing_id):
+    thing = get_object_or_404(Thing, pk=thing_id)
+    if request.method == 'POST':
+        form = StuffForm(request.POST, instance=thing)
+        if form.is_valid():
+            form.save()
+            return redirect('thing_details', thing_id)
+    else:
+        form = StuffForm(instance=thing)
+    return render_to_response('stuff/edit_stuff.html',
+                                                          {'form': form},
+                                context_instance=RequestContext(request))
+                                
+def delete_stuff(request, thing_id):
+    thing = get_object_or_404(Thing, pk=thing_id)
+    thing.delete()
+    return redirect('stuff')                                
+</pre>              
+              </li>
+              <li>The all_stuff view (all_stuff function):</li>
+              <ul>
+                <li>At the top of the file we imported the Thing class from our models.py file. In the function we created a variable called "stuff" and populated it with all the objects in the Thing table in our database.</li>
+                <li>At the top of the file we also imported the render_to_response function from the Django Shortcuts module. This function will load the page we include as the first argument <code>'stuff/index.html',</code>.</li>
+                <li>We are also passing the variable we just defined to the page we are rendering <code>{'stuff': stuff},</code>.</li>
+                <li>At the top of the file we imported the <code>context_instance=RequestContext(request)</code> function from the Django template module. Among other things, this function will process the csrf token.</li>
+              </ul>
+              <li>The thing_details view (thing_details function):</li>
+              <ul>
+                <li>This function includes the thing id as an argument. A variable called thing is created from the Thing table in the database based on the id number. The get_object_or_404 function will give a 404 page not found error if the id number is not in the database.</li>
+                <li>The render_to_response function renders the thing_details file and passes the "thing" variable we just created.</li>
+              </ul>
+              <li>Create_stuff view:</li>
+              <ul>
+                <li>The create_stuff template displays a template to create a new "thing" and add it to the "Thing" table in your "stuff" database.</li>
+                <li>The create_stuff view does two things. It renders create_stuff.html template with an empty form to fill out. It also processes the form when it is submitted. It uses an if statement to know which action to take. 
+                <li>If the form is filled out it will be submitted using the "post" method, making <code>if request.method == 'POST':</code> True.</li> 
+                <li>At the top of the file we imported the StuffForm class from the forms.py file. Below the if statment we created a variable named "form" and populated it with the POST data that was submitted.</li>
+                <li>Django's form module does some validation to ensure the data entered is safe from sql injections. If so it saves the data and redirects you to the stuff URL using the imported redirect function imported from Django shortcuts.</li>
+                <li>If the if statement was False (i.e., there was no POST data) then the else statement is executed. A variable named "form" is created and populated with the StuffForm class imported at the top of the file from the forms.py file. Then the create_stuff.html file is rendered and the form variable is passed to it.</li>
+              </ul>
+              <li>Edit_stuff view (edit_stuff function):</li>
+              <ul>
+                <li>The edit_stuff view is mostly the same as the create_stuff view except it starts with an existing record rather than a blank record.</li>
+                <li>the function is called when a URL has a number following stuff/edit/ (see the urls.py file). It takes the id number as an argument to the function.</li>
+                <li>You create a variable called "thing" and populate it with the database record, or if the id number doesn't exist it renders a 404 url not found error message.</li>
+                <li>The object data in the "thing" variable is passed to the form when the page is rendered.</li>
+              </ul>
+              <li>Delete_stuff view: calls the delete() function, then redirects back to the stuff url.</li>
+              <li>We are almost done. Let's sync the database to our Django project and see if everything is working.</li>
+              <ul>
+                <li>Open the command line interface.</li>
+                <li>Change directories to the upper site directory (the folder with the manage.py file in it) <code>cd /localsites/simplesite </code>. Enter <code>python manage.py syncdb </code>. This will create the table and fields in the database from our models.py.</li>
+                <li>Let's run the virtual server. Type <code>python manage.py runserver</code></li>
+                <li>Go to the browser and put in your local ip address and port 8000 as url: <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+                <li>The home page should appear. Click on the navigation bar's "stuff" link and it should take you to the index.html page listing any stuff you have... which is none at this point. So far so good. Let's give this site a minimal amount of styling.</li>
+              </ul>              
+            </ul>  
+
+            <!-- Static Files -->
+            <h3 id="static" class="adjust-anchor">Static Files</h3>
+            <ul>
+              <li>Create a directory called static to hold your css, images and javascript files. From the upper simplesite directory <code>cd /localsites/simplesite</code> enter <code>mkdir static && cd static</code>.</li>
+              <li>Create your static directories inside the static folder. We won't use all of them in this tutorial but we'll make them anyway. <code>mkdir css</code>, <code>mkdir img</code>, <code>mkdir js</code></li>
+              <li>Create a file called style.css and save it to the css folder.</li>
+              <li>Save some CSS style to the style.css file. Here's some bare bones styling:
+<pre>
+body {
+  background-color: ghostwhite; 
+  margin: auto;
+  width: 940px;
+}
+</pre>
+              </li>
+              <li>Go to the settings.py file and in the line below <code>STATICFILES_DIRS = (</code> enter the path to the static folder.
+              <ul>
+                <li>To just work in your local development environment you can put the direct path <code>    '/localsites/simplesite/static',</code>.</li>
+                <li>To be able to work in both a development and production environment use relative path <code>        os.path.join(os.path.dirname(__file__), '..', 'static').replace('\\','/'), </code>. Additionally change <code>STATIC_ROOT = ''</code> to <code>STATIC_ROOT = 'staticfiles'</code>. And static_url should be <code>STATIC_URL = '/static/'</code>.</li>
+              </ul>
+              <li>If you refresh your browser you should see the minimal styling we added <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+            </ul>             
+
+            <!-- Admin -->
+            <h3 id="admin" class="adjust-anchor">Activate the Admin Console</h3>
+            <ul>
+              <li>As the site administrator, you can use the Admin Console to create, read, update, or delete stuff.</li>
+              <li>Activate Django's Admin App.</li>
+              <ul>
+                <li>Open the settings.py file. Under <code>INSTALLED_APPS</code> uncomment the Admin App line <code>'django.contrib.admin',</code>.</li>
+                <li>Now sync the database to create the database tables for the Admin app. Open the command line interface and change directories to the upper directory of your site (where manage.py is). Type <code>python manage.py syncdb</code>.</li>
+                <li>Edit the simplesite/urls.py file (in the same directory as settings.py) and uncomment the three lines that reference admin so it looks like the below (excluding other links or code you may have).
+<pre>
+from django.conf.urls import patterns, include, url
+
+from django.contrib import admin
+admin.autodiscover()
+
+urlpatterns = patterns('',
+    url(r'^admin/', include(admin.site.urls)),
+)
+</pre>
+                </li>
+              </ul>
+              <li>The admin console is now activated. Let's now add the ability to manage the stuff app through the Admin Console. Create a file named admin.py, save it to the stuff folder, and populate it with the following:
+<pre>
+from django.contrib import admin
+from stuff.models import Thing
+
+admin.site.register(Thing)
+</pre>              
+              </li>
+              <li>Okay, we are done. Now let's test it.</li>
+            </ul>
+            
+            <!-- TESTING -->
+            <h3 id="testing" class="adjust-anchor">Testing</h3>
+            <ul>
+              <li>Run the virtual server and test the app in your browser.</li>
+              <li>Open the command line interface.</li>
+              <li>from the upper site directory (the folder with the manage.py file in it) enter <code>python manage.py runserver</code></li>
+              <li>Go to the browser and put in your local ip address and port 8000 as url: <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+              <li>Click on the navigation bar's "stuff" link. It should take you to the index.html page listing any stuff you have... which is none at this point.</li>
+              <li>Click on the create stuff link. It should take you to the create_stuff form.</li>
+              <li>Fill out the form both incorrectly, to see the error messages, and correctly.</li>
+              <li>When filled out correctly you should be directed back to the stuff page. You should see the item you just entered.</li>
+              <li>Click on the item and it should take you to the thing_detail page. Click on the Edit My Stuff link.</li>
+              <li>This should take you to the edit_stuff page with the form. Fill out the form both incorrectly, to see the error messages, and correctly.</li>
+              <li>Test the delete function. Go to the stuff link and click on the details for a specific thing. Click "Delete This Thing". It should take you back to the main stuff page with the deleted record gone.</li>
+              <li>Click on the Admin link. You should see a category called stuff with a link called Thing. Click on Thing and you should see the records in your database. You can add, update, or delete records from the Admin Console.</li>
+              <li>If it all works, you are done!</li>
+              <li>Once you are comfortable with this app and how it works, you can modify it to a different kind of app that Creates, Reads, Updates, and Deletes data, like a blog, articles, surveys, catalog, photos, profiles, etc.</li>
+            </ul>
+            
+            <!-- MORPH -->
+            <h3 id="morph" class="adjust-anchor">Morph the App</h3>
+            <ul>
+              <li>As an added bonus we will turn the stuff app into various kinds of apps just by changing the models.py file.</li>
+              <li>For simplicity we will keep the fields <i>title</i>, <i>description</i>, and <i>creation_date</i> in all the apps so that we don't have to change the template files. And we will keep the database table name of <i>Thing</i>.</li>
+              <li>For each example you need to delete sqlite.db file from the lower simplesite folder. That is the sqlite database where your tables, fields, and records are stored. Once you create a database table, you can't change it. So we'll just delete it each time. Note: if you have the Firefox browser, you can download the Sqlite Manager Addin and just delete the Thing table from the database each time.</li>
+              <li>Replace the models.py file content with the content in the below examples.</li>
+              <li>Sync the database again from the upper simplesite directory <code>python manage.py syncdb</code></li>
+              <li>Then run the virtual server <code>python manage.py runserver</code></li>
+              <li>Then view the results in your browser <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+              <h5>Phonebook App</h5>
+              <li>Populate the models.py file with the below:
+<pre>
+from django.db import models
+
+class Thing(models.Model):  
+    title = models.CharField(max_length=255) # Of course you wouldn't have this field in a phonebook.
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    phone_number = models.CharField(max_length=13, blank=True) 
+    email = models.EmailField()
+    description = models.TextField() # notes
+    creation_date = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.title
+
+    class Meta:
+        ordering = ['last_name']
+</pre>              
+              </li>
+              <li>We added optional arguments to fields. blank=True makes the field optional.</li>   
+              <h5>Blog or Articles App</h5>
+              <li>Populate the models.py file with the below:
+<pre>
+from django.db import models
+
+class Thing(models.Model):  
+    title = models.CharField(max_length=255, unique=True)  # Make unique true so you don't reuse a title.
+    slug = models.SlugField(max_length=255)
+    description = models.TextField() # content.
+    author = models.CharField(max_length=50)
+    creation_date = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.title
+
+    class Meta:
+        ordering = ['title']
+</pre> 
+              </li>
+              <h5>Classified Ads App</h5>
+              <li>Populate the models.py file with the below:  
+<pre>
+from django.db import models
+
+class Thing(models.Model):  
+    CATEGORY = (
+        ('employment', 'Employment'),
+        ('cars', 'Cars For Sale'),
+        ('house_rental', 'Houses For Rent'),
+        ('apt_rental', 'Apartments For Rent'),
+    )
+    category = models.CharField(max_length=50, choices=CATEGORY)
+    title = models.CharField(max_length=255)  
+    description = models.TextField() 
+    email = models.EmailField()
+    make_email_anonomous = models.BooleanField()
+    creation_date = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.title
+
+    class Meta:
+        ordering = ['category']
+</pre>             
+              </li>
+              <li>CATEGORY is the name we gave a constant that is called by the choices argument. Django converts these to choices available in a select box. They are in pairs. on the left is how it appears in the database, on the right how it appears in the dropdown box.</li>
+              <h5>Catalog App</h5>
+              <li>Populate the models.py file with the below:  
+<pre>
+from django.db import models
+
+class Thing(models.Model):  
+    CATEGORY = (
+        ('computers', 'Computers'),
+        ('printers', 'Printers'),
+        ('monitors', 'Monitors'),
+        ('cameras', 'Cameras'),
+    )
+    category = models.CharField(max_length=50, choices=CATEGORY)
+    title = models.CharField(max_length=255) 
+    product_number = models.IntegerField(max_length=50)
+    description = models.TextField() 
+    price = models.DecimalField(max_digits=4, decimal_places=2)
+    creation_date = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.title
+
+    class Meta:
+        ordering = ['category']
+</pre>             
+              </li>
+            </ul>
+            
+          </div> <!--/.span9 -->  
+        	<!-- SIDEBAR -->
+          <div class='span3'>
+            <ul class="nav nav-tabs nav-stacked">
+              <li><a href='#setup'><i class="icon-chevron-left"></i> Set Up the Project</a></li>
+              <li><a href='#settings'><i class="icon-chevron-left"></i> Settings</a></li>	    
+              <li><a href='#models'><i class="icon-chevron-left"></i> Models</a></li>	
+              <li><a href='#forms'><i class="icon-chevron-left"></i> Forms</a></li>	
+              <li><a href='#templates'><i class="icon-chevron-left"></i> Templates</a></li>	
+              <li><a href='#urls'><i class="icon-chevron-left"></i> URLs</a></li>	
+              <li><a href='#views'><i class="icon-chevron-left"></i> Views</a></li>	
+              <li><a href='#admin'><i class="icon-chevron-left"></i> Admin</a></li>	
+              <li><a href='#testing'><i class="icon-chevron-left"></i> Testing</a></li>	
+              <li><a href='#morph'><i class="icon-chevron-left"></i> Morph the App</a></li>	
+            </ul>
+          </div> <!--/.span3 -->
+        </div> <!-- /.row -->
+      </div> <!--/#basic -->    
+
+<!-------------------------------------------------------------------------------------------------------------
+-------  INSTALL ON EXISTING SITE ---------------------------------------------------------------------------->
+      <div class="tab-pane fade" id="install">
+        <div class='row-fluid'>
+          <div class='span9 container-fluid'>
+            <h2>Install the Stuff App in an Existing Project</h2>
+            <!-- Set Up the Project -->
+            <h3 id="existing-setup" class="adjust-anchor">Setup</h3>
             <ul>
               <li>Open your command line interface (e.g., Terminal for Mac, Command Prompt for Windows, Bash for Linux).</li>
               <li>Change Directories to your site's upper directory <code>cd /localsites/simplesite</code> or whatever the path is to the manage.py file.</li>
               <li>Create the folder and files for the application that we'll call <i>stuff</i>. In the command line enter <code>python manage.py startapp stuff</code></li>
               <li>A new folder named stuff will be created with some files in it (e.g., views.py, models.py).</li>
               <li>Open the settings.py file. Insert a new row under <code>INSTALLED_APPS = (</code> and enter <code>'stuff',</code>. Now Django will know to include this app with your site.</li>
-            </ul>             
-
+            </ul>              
+            
             <!-- Models -->
-            <h3 id="views" class="adjust-anchor">Create the Database Model</h3>
+            <h3 id="existing-models" class="adjust-anchor">Create the Data Model</h3>
             <ul>
               <li>We will start by populating the model.py file. This is where we define the database table(s) and fields.</li>
-              <li>Open the models.py file in the stuff directory and populate it with the following:
+              <li>Go to the stuff folder, open the models.py file, then populate it with the following:
 <pre>
 from django.db import models
 
@@ -165,7 +742,7 @@ class Thing(models.Model):  #This will create a table in the DB with the class n
             </ul> 
             
             <!-- FORMS -->
-            <h3 id="forms" class="adjust-anchor">Forms</h3>
+            <h3 id="existing-forms" class="adjust-anchor">Forms</h3>
             <ul>
               <li>Now we will create the form that will be displayed to users to create and update records in our database.</li>
               <li>One of Django's core principles is Don't Repeat Yourself (DRY). If you leverage Django's functionality then you don't need to rewrite the fields in your form, rather you pull in the fields from the models.py file.</li>
@@ -189,7 +766,7 @@ class StuffForm(forms.ModelForm):
             </ul>   
 
             <!-- Templates -->
-            <h3 id="templates" class="adjust-anchor">Templates</h3>
+            <h3 id="existing-templates" class="adjust-anchor">Templates</h3>
             <ul>
               <li>Now the form is created. Let's make the html files to 1) Display a list of data in the database (our stuff); 2) Display the details of individual things; 3) A form to create new things; 4) A form to update existing things.</li>
               <li>We will assume your site already has a templates directory and a base.html file with the navigation bar. Open the base.html file and in the nav element add a navigation menu link to the stuff app <code>&lt;a href="/stuff">Stuff&lt;/a></code></li>
@@ -226,7 +803,6 @@ class StuffForm(forms.ModelForm):
   &lt;p>
   {% if thing.description %}
     {{ thing.description }}
-  &lt;p>&lt;a href="{% url "delete_stuff" thing.id %}">Delete This Stuff&lt;/a>&lt;/p>
   {% else %}
     You got no stuff :(
   {% endif %}
@@ -238,10 +814,9 @@ class StuffForm(forms.ModelForm):
                 <li>This page shows the details of a specified individual record from your database. The database automatically generates a sequential id number for every record. The record is called when the URL is appended by stuff and the record's id number like so <code>/stuff/<i>1</i></code>
                 </li>
                 <li>At the top of the page we are displaying the title field for the record.</li>
-                <li>Below that is a link to the "edit_stuff" page where you can edit the record. That is called by appending the url with the named url for <code>/stuff/edit/<i>id number</i></code></li>
+                <li>Below that is a link to the "edit_stuff" page where you can edit the record. That is called by appending the url with <code>/stuff/edit/<i>id number</i></code></li>
                 <li>In this case we are including the creation date. That's relevant for things like blog posts, articles, pictures, but you can delete that line for things like catalogs.</li>
                 <li>The next line is an if statement. If the description field is not empty then show the description field, otherwise show some message.</li>
-                <li>There is a link at the bottom of the page to delete the record. It appends the delete_stuff url and the record's id number.</li>
               </ul>
               <li>Create a file called create_stuff.html, save it to the templates/stuff folder, and populate it with the following:
 <pre>
@@ -292,7 +867,7 @@ class StuffForm(forms.ModelForm):
             </ul>   
 
             <!-- URLs -->
-            <h3 id="urls" class="adjust-anchor">URLs</h3>
+            <h3 id="existing-urls" class="adjust-anchor">URLs</h3>
             <ul>
               <li>Now we will dispatch the URLs. Create a file called urls.py, save it to the stuff folder, and populate it with the following:
 <pre>
@@ -301,18 +876,14 @@ from django.conf.urls import patterns, url
 urlpatterns = patterns('',
     url(r'^$', 'stuff.views.index', name="stuff"),
     url(r'^(?P<thing_id>\d+)/$',
-        'stuff.views.thing_details',
-        name='thing_details'),
+         'stuff.views.thing_details',
+          name='thing_details'),
     url(r'^create/$',
-        'stuff.views.create_stuff',
-        name="create_stuff"),
+         'stuff.views.create_stuff',
+          name="create_stuff"),
     url(r'^edit/(?P<thing_id>\d+)/$',
-        'stuff.views.edit_stuff',
-        name='edit_stuff'),
-    url(r'^delete/(?P<thing_id>\d+)/$',
-        'stuff.views.delete_stuff',
-        name='delete_stuff'),
-)
+         'stuff.views.edit_stuff',
+         name='edit_stuff'),
 </pre>              
               </li>
               <li>This file imports the url and patterns functions from Django's urls module located at (from your Python or virualenvs folder) Lib/site-packages/django/conf/urls</li>
@@ -328,7 +899,7 @@ urlpatterns = patterns('',
             </ul> 
             
             <!-- Views -->
-            <h3 id="views" class="adjust-anchor">Views</h3>
+            <h3 id="existing-views" class="adjust-anchor">Views</h3>
             <ul>
               <li>Now we will create the functions to display the pages and process the forms.</li>
               <li>Open the views.py file in the stuff directory and populate it with the following:
@@ -374,11 +945,6 @@ def edit_stuff(request, thing_id):
     return render_to_response('stuff/edit_stuff.html',
                                                           {'form': form},
                                 context_instance=RequestContext(request))
-                                
-def delete_stuff(request, thing_id):
-    thing = get_object_or_404(Thing, pk=thing_id)
-    thing.delete()
-    return redirect('stuff')
 </pre>              
               </li>
               <li>The index view (index function):</li>
@@ -409,11 +975,10 @@ def delete_stuff(request, thing_id):
                 <li>You create a variable called "thing" and populate it with the database record, or if the id number doesn't exist it renders a 404 url not found error message.</li>
                 <li>The object data in the "thing" variable is passed to the form when the page is rendered.</li>
               </ul>
-              <li>Delete_stuff view: calls the delete() function, then redirects back to the stuff url.</li>
             </ul>    
 
             <!-- Admin -->
-            <h3 id="admin" class="adjust-anchor">Activate the Admin Console</h3>
+            <h3 id="existing-admin" class="adjust-anchor">Activate the Admin Console</h3>
             <ul>
               <li>As the site administrator, you can use the Admin Console to create, read, update, or delete stuff.</li>
               <li>Activate Django's Admin App.</li>
@@ -446,7 +1011,7 @@ admin.site.register(Thing)
             </ul>
             
             <!-- TESTING -->
-            <h3 id="testing" class="adjust-anchor">Testing</h3>
+            <h3 id="existing-testing" class="adjust-anchor">Testing</h3>
             <ul>
               <li>Run the virtual server and test the app in your browser.</li>
               <li>Open the command line interface.</li>
@@ -466,62 +1031,19 @@ admin.site.register(Thing)
         	<!-- SIDEBAR -->
           <div class='span3'>
             <ul class="nav nav-tabs nav-stacked">
-              <li><a href='#setup'><i class="icon-chevron-left"></i> Set Up the Project</a></li>
-              <li><a href='#models'><i class="icon-chevron-left"></i> Models</a></li>	
-              <li><a href='#forms'><i class="icon-chevron-left"></i> Forms</a></li>	
-              <li><a href='#templates'><i class="icon-chevron-left"></i> Templates</a></li>	
-              <li><a href='#URLs'><i class="icon-chevron-left"></i> URLs</a></li>	
-              <li><a href='#views'><i class="icon-chevron-left"></i> Views</a></li>	
-              <li><a href='#admin'><i class="icon-chevron-left"></i> Admin</a></li>	
-              <li><a href='#testing'><i class="icon-chevron-left"></i> Testing</a></li>	
+              <li><a href='#existing-setup'><i class="icon-chevron-left"></i> Set Up the Project</a></li>   
+              <li><a href='#existing-models'><i class="icon-chevron-left"></i> Models</a></li>	
+              <li><a href='#existing-forms'><i class="icon-chevron-left"></i> Forms</a></li>	
+              <li><a href='#existing-templates'><i class="icon-chevron-left"></i> Templates</a></li>	
+              <li><a href='#existing-urls'><i class="icon-chevron-left"></i> URLs</a></li>	
+              <li><a href='#existing-views'><i class="icon-chevron-left"></i> Views</a></li>	
+              <li><a href='#existing-admin'><i class="icon-chevron-left"></i> Admin</a></li>	
+              <li><a href='#existing-testing'><i class="icon-chevron-left"></i> Testing</a></li>	
             </ul>
           </div> <!--/.span3 -->
         </div> <!-- /.row -->
       </div> <!--/#basic -->    
 
-<!-------------------------------------------------------------------------------------------------------------
--------  With FORM CLASS ------------------------------------------------------------------------------------->
-      <div class="tab-pane fade" id="forms">
-        <div class='row-fluid'>
-          <div class='span9 container-fluid'>
-            <h2>Incorporate Django Forms</h2>
-            <!-- Set Up the Project -->
-            <h3 id="forms-setup" class="adjust-anchor">Set Up the Project</h3>
-            <ul>
-              <li></li>
-            </ul>              
-            
-            <!-- FORMS -->
-            <h3 id="forms-form" class="adjust-anchor">Forms</h3>
-            <ul>
-              <li></li>
-            </ul>   
-            
-            <!-- Views and Urls -->
-            <h3 id="forms-views" class="adjust-anchor">Views and URLs</h3>
-            <ul>
-              <li></li>
-            </ul>   
-
-            <!-- Templates -->
-            <h3 id="forms-templates" class="adjust-anchor">Templates</h3>
-            <ul>
-              <li></li>
-            </ul>  
-            
-          </div> <!--/.span9 -->  
-          
-          <!-- SIDEBAR -->
-          <div class='span3'>
-            <ul class="nav nav-tabs nav-stacked">
-              <li><a href='#forms-setup'><i class="icon-chevron-left"></i> Set Up the Project</a></li>					
-              <li><a href='#forms-form'><i class="icon-chevron-left"></i> Form</a></li>	              
-              <li><a href='#forms-views'><i class="icon-chevron-left"></i> Views and URLs</a></li>	
-              <li><a href='#forms-templates'><i class="icon-chevron-left"></i> Templates</a></li>	
-            </ul>
-          </div> <!--/.span3 -->
-        </div> <!-- /.row -->
-      </div><!--/#forms- -->
       
 <!-------------------------------------------------------------------------------------------------------------
 ------  With NoFORM CLASS ------------------------------------------------------------------------------------->

@@ -1,0 +1,570 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+	<meta charset="utf-8"> 
+	<title>User Registration | Python Django Starter Kit</title> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Various tools and reference material to get started and up to speed with Python Django.">
+  <meta name="author" content="Steve Carey, TechandStartup.com founder">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />  
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css" />  
+	<style type="text/css">
+		body {
+			padding-top:60px;
+		}
+		/* The adjust-anchor class is also related to the navbar-fixed-top class. It is needed when you have internal links on the page. Without it the top line of the anchored link would be hidden by the navbar. */
+		.adjust-anchor {
+			padding-top: 40px; 
+			margin-top: -40px;
+		}
+	</style>
+</head>
+<body>
+
+	<!-- NAVBAR -->
+  <div class="navbar navbar-inverse navbar-fixed-top">  
+    <div class="navbar-inner">
+			<div class="container">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="#">Python Django Starter Kit</a>
+				<div class="nav-collapse collapse">
+					<ul class="nav pull-right">
+						<li><a href="index.html">Home</a></li>
+						<!-- Tools Dropdown Menu  -->
+						<li class="dropdown"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Tools
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+                <li><a href="python-tools.html">Django Environment</a></li>
+                <li><a href="python-postgres.html">Install PostgreSQL</a></li>
+              </ul>
+						</li>
+						<!-- Tools Dropdown Menu  -->
+						<li class="dropdown"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Code Reference
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+                <li><a href="python-command.html">Command Line</a></li>
+                <li><a href="python-reference.html">Django Reference</a></li>
+              </ul>
+						</li>
+						<!-- Django Apps Dropdown Menu  -->
+						<li class="dropdown active"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Django Apps
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a href='python-pollsapp.html'>Pollsapp</a></li>
+								<li><a href='python-simple-site.html'>Simple Site</a></li>
+								<li><a href='python-contact.html'>Contact Form</a></li>
+                <li><a href='python-admin.html'>Admin Console</a></li>
+                <li><a href='python-login.html'>Login</a></li>
+                <li class="active"><a href='python-registration.html'>Registration</a></li>
+                <li><a href='python-pwreset.html'>Password Reset</a></li>
+                <li><a href='python-pwchange.html'>Change Password</a></li>
+                <li><a href='python-stuff.html'>Stuff App</a></li>
+              </ul>
+						</li>
+            <li><a href="python-heroku.html">Heroku Hosting</a></li>
+
+					</ul>
+				</div><!--/.nav-collapse -->
+			</div><!--/.container -->	
+    </div><!--/.navbar-inner -->
+  </div><!--/.navbar -->
+	
+	<!-- CONTENT -->
+	<div class="container">
+
+        
+    <!-- Page Header -->
+    <div class="well">  <!-- <div class="page-header">  -->
+      <h1>User Registration <small>with Django</small></h1>
+      <hr/>
+
+      <p>In this tutorial we will create a User Registration form. We will assume you already have a Django project started with the initial files set up. You can do that by following the simplesite tutorial to create a simple two page website using the Django framework.</p>
+      <p>Like Login, Registration is generally a site-wide function, so we will not create a separate app for it. Rather we will use the files in the inner site folder where the settings.py file is. It is recommended that you go through the Login tutorial before this one.</p>
+      <p>Prerequisites: This tutorial assumes you are familiar with HTML and CSS; a basic command line interface (e.g., Windows Command Prompt, OSX Terminal, Linux Bash); the basics of the Python Programming Language; and preferrably you have already gone through the Django "Polls App" Tutorial at Djangoproject.org. At a minimum, you should have the following already installed: A text editor, Python version 2.7, Django, and pip.</p>
+      There are multiple versions of this tutorial. Click on the tab to see each. It is recommended that you go through each in order. All these versions are limited to the Django User model which limits the fields available.</li>
+      <ul>
+        <li>Django's Out-of-the-Box User Registration</li>
+        <li>Add more fields</li>
+        <li>Install Django-Registration Third-Party App</li>
+      </ul>
+
+    </div>
+
+    <!-- TABS TO SELECT ENVIRONMENT -->
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#basic" data-toggle="tab">Out-of-the-Box</a></li>
+      <li><a href="#fields" data-toggle="tab">Add more fields</a></li>
+      <li><a href="#app" data-toggle="tab">Third Party App</a></li>
+    </ul>
+        
+    <div id="myTabContent" class="tab-content">
+
+<!-------------------------------------------------------------------------------------------------------------
+------  BASIC REGISTRATION ----------------------------------------------------------------------------------->     
+      <div class="tab-pane fade in active" id="basic">
+        <div class='row-fluid'>
+          <div class='span9 container-fluid'>
+
+            <h2>Out-of-the-Box User Registration</h2>
+            
+            <!-- Set Up the Project -->
+            <h3 id="overview" class="adjust-anchor">Overview</h3>
+            <ul>
+              <li>Django's out-of-the-box user registration process is part of their Auth module located in your python or virtualenv directory at /Lib/site-packages/django/contrib/auth/. Django provides:
+              <ul>
+                <li>The Django Auth module is based on the user model class that creates the database user table and fields. The user class is located in /Lib/site-packages/django/contrib/auth/models.py. The user model has mandatory fields for username and password, optional fields for first_name, last_name, and email. It has autogenerated fields for id number (that's the primary key), date_joined, and last_login date. There are also fields for for active/inactive (default: active), staff/nonstaff (default: nonstaff), and superuser/nonsuperuser that are only accessible by the administrator.</li>
+                <li>Django provides a registration form called UserCreationForm. It is a class in the /Lib/site-packages/django/contrib/auth/forms.py file. It imports the user model and requests a username and password only. It puts restrictions on the username. It cannot exceed 30 characters and can consist of letters, digits, and @.+-_. It has built-in error messages. If you want to include first_name, last_name or email, or any other fields in the registration form, you will need to create your own form.</li>
+                <li>Django does not provide the views, urls or templates.</li>
+              </ul>
+              <li>Here is how the default process works:</p>
+              <ul>
+                <li>You include a Registration link in an appropriate place on your site.</li>
+                <li>The user clicks the link to register, the page opens with a form asking the user to create a username and password. They have to enter the password twice.</li>
+                <li>They enter those. If the passwords don't match or if the username is already taken they will get an error message.</li>
+                <li>If everything is fine they will be registered and redirected to a success page that includes a Login link.</li>
+              </ul>
+            </ul>               
+            
+            <!-- Views and Urls -->
+            <h3 id="views" class="adjust-anchor">Views and URLs</h3>
+            <ul>
+              <li>Open the views.py file and at the top make sure the following imports are included. Add them if not:
+<pre>
+from django.shortcuts import render_to_response
+from django.http import HttpResponseRedirect
+from django.contrib.auth.forms import UserCreationForm
+</pre>
+              </li>
+              <li>Below that add the following functions (you can put them after the Login functions):
+<pre>
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/accounts/registrater/complete')
+
+    else:
+        form = UserCreationForm()
+    token = {}
+    token.update(csrf(request))
+    token['form'] = form
+
+    return render_to_response('registration/registration_form.html', token)
+
+def registration_complete(request):
+    return render_to_response('registration/registration_complete.html')
+</pre>
+              </li>
+              <li>Open the urls.py file in the site folder (same folder as settings.py). Below <code>urlpatterns = patterns('',</code> insert the following lines.
+<pre>
+    # Registration URLs
+    url(r'^accounts/register/$', 'simplesite.views.register', name='register'),
+    url(r'^accounts/registrater/complete/$', 'simplesite.views.registration_complete', name='registration_complete'),
+</pre>
+              </li>
+            </ul>   
+
+            <!-- Templates -->
+            <h3 id="forms-templates" class="adjust-anchor">Templates</h3>
+            <ul>
+              <li>We will assume your site already has a templates directory and a base.html file with the navigation bar. Open the base.html file and in the nav element add a navigation menu link to the login page <code>&lt;a href="/accounts/register">register&lt;/a></code></li>
+              <li>If one does not already exist, go to the templates folder and create a folder inside it named registration.</li>
+              <li>Create a file called registration_form.html, save it to the templates/registration folder, then populate it with the following:
+<pre>
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+
+  &lt;h2>Registration&lt;/h2>
+
+  &lt;form action="/accounts/register/" method="post">{% csrf_token %}
+    {{form.as_p}}
+  &lt;input type="submit" value="Register" />
+
+  &lt;/form>
+
+{% endblock %}
+</pre>
+              </li>
+              <li>Create a file called registration_complete.html, save it to the templates/registration folder, and populate it with the following:
+<pre>
+{% extends "base.html" %}
+{% block title %}You are Registered{% endblock %}
+{% block content %}
+
+  &lt;h2>Thank you for Registering&lt;/h2>
+  &lt;p>&lt;a href="/accounts/login/">Please Login&lt;/a>&lt;/p>
+
+{% endblock %}
+</pre>
+              </li>
+            </ul>
+            
+            <!-- TESTING -->
+            <h3 id="testing" class="adjust-anchor">Testing</h3>
+            <ul>
+              <li>Now run the virtual server and test that the Registration form is working.</li>
+              <ul>
+                <li>Open the command line interface.</li>
+                <li>from the upper site directory (the folder with the manage.py file in it) enter <code>python manage.py runserver</code></li>
+                <li>Go to the browser and put in your local ip address and port 8000 as url: <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+                <li>Click on the navigation bar's "register" link. It should take you to the registration page.</li>
+                <li>Fill out the form both incorrectly, to see the error messages, and correctly.</li>
+                <li>When filled out correctly you should be directed to the register_done page. If it works, you're done.</li>
+              </ul>
+            </ul>
+              
+          </div> <!--/.span9 -->  
+          
+          <!-- SIDEBAR -->
+          <div class='span3'>
+            <ul class="nav nav-tabs nav-stacked">
+              <li><a href='#setup'><i class="icon-chevron-left"></i> Set Up the Project</a></li>       
+              <li><a href='#views'><i class="icon-chevron-left"></i> Views and URLs</a></li>	
+              <li><a href='#templates'><i class="icon-chevron-left"></i> Templates</a></li>	
+              <li><a href='#testing'><i class="icon-chevron-left"></i> Testing</a></li>	
+            </ul>
+          </div> <!--/.span3 -->
+        </div> <!-- /.row -->
+      </div><!--/#basic- -->
+      
+      <!-------------------------------------------------------------------------------------------------------- 
+      -----------  ADD MORE FIELDS ---------------------------------------------------------------------------->
+      <div class="tab-pane fade" id="fields">
+        <div class='row-fluid'>
+          <div class='span9 container-fluid'>
+
+            <h2>Add More Fields</h2>
+            
+            <!-- Overview -->
+            <h3 id="fields-overview" class="adjust-anchor">Overview</h3>
+            <ul>
+              <li>The out-of-the-box registration form only requests two fields, username and password. You may require more than that.</li>
+              <li>Django's User model also includes first_name, last_name and email as part of the user object. If you want to include one or more of those on the registration form you can create your own form class that inherits Django's UserCreationForm class.</li>
+            </ul>             
+            
+            <!-- FORMS -->
+            <h3 id="fields-form" class="adjust-anchor">Forms</h3>
+            <ul>
+              <li>Create a file named forms.py and save it in the lower site folder (where the settings.py file is).</li>
+              <li>Populate the file with the following:
+<pre>
+from django import forms
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+
+class RegistrationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
+        
+    def save(self, commit=True):
+        user = super(RegistrationForm, self).save(commit=False)
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
+        user.email = self.cleaned_data['email']
+        
+        if commit:
+            user.save()
+            
+        return user
+</pre>
+              </li>
+              <li>This form inherits the UserCreationForm, meaning that the UserCreationForm functions such as setting and checking field requirements are still done, we are just modifying it to add three fields. </li>
+              <li>We listed the fields we want on the form: (username, firstname, lastname, email, and password).</li> 
+              <li>Username and password are required by default. We set email to required. You could do the same for first_name and last_name.</li>
+            </ul>   
+            
+            <!-- Views and Urls -->
+            <h3 id="fields-views" class="adjust-anchor">Views and URLs</h3>
+            <ul>
+              <li>Open the views.py file and at the top make sure the following imports are included. Add them if not:
+<pre>
+from django.shortcuts import render_to_response
+from django.http import HttpResponseRedirect
+from forms import RegistrationForm
+</pre>
+              You are importing the RegistrationForm class you just created.
+              </li>
+              <li>Below that add the following two functions:
+<pre>
+def register(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/accounts/register/complete')
+
+    else:
+        form = RegistrationForm()
+    token = {}
+    token.update(csrf(request))
+    token['form'] = form
+
+    return render_to_response('registration/registration_form.html', token)
+
+def registration_complete(request):
+    return render_to_response('registration/registration_complete.html')
+</pre>
+              </li>
+              <li>Open the urls.py file in the site folder (same folder as settings.py). Below <code>urlpatterns = patterns('',</code> insert the following lines.
+<pre>
+    # Registration URLs
+    url(r'^accounts/register/$', 'simplesite.views.register', name='register'),
+    url(r'^accounts/register/complete/$', 'simplesite.views.registration_complete', name='registration_complete'),
+</pre>
+              </li>
+            </ul>   
+
+            <!-- Templates -->
+            <h3 id="fields-templates" class="adjust-anchor">Templates</h3>
+            <ul>
+              <li>We will assume your site already has a templates directory and a base.html file with the navigation bar. Open the base.html file and in the nav element add a navigation menu link to the login page <code>&lt;a href="/accounts/register">register&lt;/a></code></li>
+              <li>Create a file called register.html and save it to the templates folder.</li>
+              <li>Populate the register.html template with the following:
+<pre>
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+
+  &lt;h2>Registration&lt;/h2>
+
+  &lt;form action="/accounts/register/" method="post">{% csrf_token %}
+    {{form.as_p}}
+  &lt;input type="submit" value="Register" />
+
+  &lt;/form>
+
+{% endblock %}
+</pre>
+              </li>
+              <li>Create a file called registration_complete.html, save it to the templates/registration folder, and populate it with the following:
+<pre>
+{% extends "base.html" %}
+{% block title %}You are Registered{% endblock %}
+{% block content %}
+
+  &lt;h2>Thank you for Registering&lt;/h2>
+  &lt;p>&lt;a href="/accounts/login/">Please Login&lt;/a>&lt;/p>
+
+{% endblock %}
+</pre>
+              </li>
+            </ul>
+            
+            <!-- TESTING -->
+            <h3 id="fields-testing" class="adjust-anchor">Testing</h3>
+            <ul>
+              <li>Now run the virtual server and test that the Registration form is working.</li>
+              <ul>
+                <li>Open the command line interface.</li>
+                <li>from the upper site directory (the folder with the manage.py file in it) enter <code>python manage.py runserver</code></li>
+                <li>Go to the browser and put in your local ip address and port 8000 as url: <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+                <li>Click on the navigation bar's "register" link. It should take you to the registration page.</li>
+                <li>Fill out the form both incorrectly, to see the error messages, and correctly.</li>
+                <li>When filled out correctly you should be directed to the register_done page. If it works, you're done.</li>
+              </ul>
+            </ul>
+          </div> <!--/.span9 -->  
+          
+          <!-- SIDEBAR -->
+          <div class='span3'>
+            <ul class="nav nav-tabs nav-stacked">
+              <li><a href='#fields-overview'><i class="icon-chevron-left"></i> Overview</a></li>					
+              <li><a href='#fields-form'><i class="icon-chevron-left"></i> Form</a></li>	              
+              <li><a href='#fields-views'><i class="icon-chevron-left"></i> Views and URLs</a></li>	
+              <li><a href='#fields-templates'><i class="icon-chevron-left"></i> Templates</a></li>	
+              <li><a href='#fields-testing'><i class="icon-chevron-left"></i> Testing</a></li>	
+            </ul>
+          </div> <!--/.span3 -->
+        </div> <!-- /.row -->
+      </div><!--/#forms- -->
+      
+      
+<!-------------------------------------------------------------------------------------------------------------
+------  INSTALL THIRD PARTY APP ------------------------------------------------------------------------------>
+      <div class="tab-pane fade" id="app">
+        <div class='row-fluid'>
+          <div class='span9 container-fluid'>
+            <h2>Install Django-Registration Third Party App</h2>
+            
+            <!-- OVERVIEW -->
+            <h3 id="app-overview" class="adjust-anchor">Overview</h3>
+            <ul>
+              <li>The Django out-of-the-box registration process does not include any security against robot registration. Without it your site will quickly get overrun by fake users trying to generate spam or worse. Djano-Registration is a well-regarded registration app that includes an email verification.</li> 
+              <li>One reason to use the Django Framework is there are a lot of third party apps available for free that you can install into your site. With a little configuration you can have an app such as a simple Contact Form working on your site, potentially saving you a lot of development time.</li>
+              <li>You can find a comprehensive list of all Pyton Packages including Django Apps (Apps are a type of package) indexed on Python's website <a href="https://pypi.python.org/pypi">https://pypi.python.org</a>. There is also a site just for Django packages <a href="https://www.djangopackages.com/">https://www.djangopackages.com/</a>, but not all the Django packages are there.</li>
+              <li>Django 1.5 was released in February 2013 so apps not created or updated by then may or may not work propertly.</li>
+              <li>There are other registration apps available that you can find by searching on the keyword "Registration". But we'll go ahead and install Django-Registration.</li>
+              <li>Here is how the Django-Registration App's registration process works:</p>
+              <ul>
+                <li>A user signs up for an account by supplying a username, email address and password.</li>
+                <li>From this information, a new User object is created, with its is_active field set to False. Additionally, an activation key is generated and stored, and an email is sent to the user containing a link to click to activate the account.</li>
+                <li>Upon clicking the activation link, the new account is made active (the is_active field is set to True); after this, the user can log in.</li>
+              </ul>
+            </ul>
+              
+            <!-- DOWNLOAD -->
+            <h3 id="app-download" class="adjust-anchor">Download the App</h3>
+            <ul>
+              <li>Instructions on installing the app are at <a href="https://django-registration.readthedocs.org/en/latest/">https://django-registration.readthedocs.org/en/latest/</a>.</li>
+              <li>Open your command line interface (e.g., Terminal for Mac, Command Prompt for Windows, Bash for Linux).</li>
+              <li>Optional: If you only want this app installed on this project then you should use a virtualenv. If you created your project in a virtualenv then you need to activate it before installing this app. Go to the scripts folder <code>cd <i>/virtualenvs/simpleproj</i>/scripts</code> (your path may differ) and type <code>activate</code>.</li>
+              <li>Use the pip utility to install the app <code>pip install django-registration</code></li>
+              <li>Now the app is installed in the Site-Packages folder, the same place the Django and pip packages reside (<i>/virtualenvs/simpleproj</i>/Lib/site-packages/registration). It will have all the same files as if you created the app yourself and put it in your site folder. That includes views.py, urls.py, forms.py, admin.py, models.py and more. It does not come with templates, so you'll need to create those yourself.</li>
+              <li>You can confirm that it's installed with the command line by entering <code>pip list</code> and all installed packages will show up.</li>
+            </ul>
+            
+            <!-- MODIFY -->
+            <h3 id="app-modify" class="adjust-anchor">Modify Your Files to Integrate the App</h3>
+            <ul>
+              <li>Open the settings.py file. In one of the rows under <code>INSTALLED_APPS = (</code> enter <code>'registration',</code>.</li>
+              <li>In the settings.py file insert <code>ACCOUNT_ACTIVATION_DAYS = 7</code> (You can put it somewhere at the end of the file). This is the number of days the user has to activate their account. After 7 days the activation link that is emailed out will no longer work. We are using 7 here by you can set it to whatever you want.</li>
+              <li>Sync the registration model to your database. From the command line in the folder where the manage.py file is, type <code>python manage.py syncdb</code></li>
+              <li>Open the urls.py file and in a row under <code>urlpatterns = patterns('',</code> enter <code>(r'^accounts/', include('registration.backends.default.urls')),</code></li>
+            </ul>
+            
+            <!-- Templates -->
+            <h3 id="app-templates" class="adjust-anchor">Templates</h3>
+            <ul>
+              <li>We will assume your site already has a templates directory and a base.html file with the navigation bar. Open the base.html file and in the nav element add a navigation menu link to the registration page <code>&lt;a href="/accounts/register">register&lt;/a></code></li>
+              <li>If one is not already there, create a directory called registration inside the templates folder.</li>
+              <li>Create a file called registration_form.html, save it to the templates/registration folder, then populate it with the following:
+<pre>
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+
+  &lt;h2>Registration&lt;/h2>
+
+&lt;form action="." method="post">{% csrf_token %}
+  {{ form.as_p }}
+  &lt;input type="submit" value="Register" />
+&lt;/form>
+
+{% endblock %}
+</pre>       
+              </li>
+              <li>Create a file called registration_complete.html, save it to the templates/registration folder, and populate it with the following:
+<pre>
+{% extends "base.html" %}
+{% block title %}Email Sent{% endblock %}
+{% block content %}
+    
+    &lt;h3>Activation Email Sent&lt;/h3>
+    &lt;p>There is one more step. An activation link has been sent to your email address. Please open it and click on the link to complete your registration.&lt;/p>
+    
+{% endblock %}
+</pre>                           
+              </li>
+              <li>Create a file called activation_complete.html, save it to the templates/registration folder, and populate it with the following:
+<pre>
+{% extends "base.html" %}
+{% block title %}Account Activated{% endblock %}
+{% block content %}
+
+&lt;h4>Registration Activated&lt;/h4>
+&lt;p>Your account is now activated.&lt;/p>
+&lt;p>&lt;a href="{% url 'auth_login' %}">Log in&lt;/a>&lt;/p>
+
+{% endblock %}
+</pre>              
+              </li>
+              <li>Create a file called activation_email_subject.txt, save it to the templates/registration folder, and populate it with the following:
+<pre>
+Account activation on {{ site.name }}
+</pre>              
+              </li>
+              <li>Create a file called activation_email.txt, save it to the templates/registration folder, and populate it with the following:
+<pre>
+Activate account at {{ site.name }}:
+
+http://{{ site.domain }}{% url 'registration_activate' activation_key %}
+
+Link is valid for {{ expiration_days }} days.
+</pre>              
+              </li>
+            </ul>
+
+            <!-- Testing -->
+            <h3 id="app-testing" class="adjust-anchor">Testing</h3>
+            <ul>
+              <li>Now test it to make sure it works. You'll need to take some added steps to test that the emails are being sent. There are two simple ways you can do this using the core Django mail module. In both methods you need to open the settings.py file and add code to the very bottom of the file.</li>
+              <ul>
+                <li>The first method is just to print the email into your Command Line Interface once it is sent. To do that you add the following line to the bottom of your settings.py file: <code>EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'</code></li>
+                <li>In the second method, Python creates a text file with the email contents. To do this pick or create a directory to hold the email. For simplicity we'll assume you create a folder in the root directory called <i>messages</i>. 
+                <li>Then add the following two lines to the bottom of your settings.py file:
+<pre>
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+    EMAIL_FILE_PATH = '/<i>messages</i>'
+</pre>
+                </li>
+                <li>This is only used in development not production. The conditional if DEBUG statement will prevent this from executing in production if you set DEBUG to false when you deploy your site (as you should). Alternatively you could just delete the EMAIL_BACKEND and EMAIL_FILE_PATH lines before deploying.</li>
+              </ul>
+              <li>Now run the virtual server and test that the process is working.</li>
+              <ul>
+                <li>Open the command line interface.</li>
+                <li>from the upper site directory (the folder with the manage.py file in it) enter <code>python manage.py runserver</code></li>
+                <li>Go to the browser and put in your local ip address and port 8000 as url: <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+                <li>Click on the navigation bar's "register" link. It should take you to the registration page.</li>
+                <li>Fill out the form both incorrectly, to see the error messages, and correctly.</li>
+                <li>When filled out correctly you should be directed to the thanks page.</li>
+                <li>If you used the console testing method then check your command line interface to see the email message contents. If you used the file method then go to the messages folder and there should be a file with the email content.</li>
+              </ul>  
+              <li>Note the email domain will be example.com. Cut and paste the activation key to 127.0.0.1:8000 to activate it. To change the domain go to the Admin Console <a href="http://127.0.0.1:8000/admin/" target="_blank">http://127.0.0.1:8000/admin/</a> (See the tutorial on activating the Admin console). Click on the sites link. Change example.com to your site's domain name, or the development IP address 127.0.0.1:8000.</li>
+            </ul>  
+            
+          </div> <!--/.span9 -->  
+          
+          <!-- SIDEBAR -->
+          <div class='span3'>
+            <ul class="nav nav-tabs nav-stacked">
+              <li><a href='#app-overview'><i class="icon-chevron-left"></i> Overview</a></li>					
+              <li><a href='#app-download'><i class="icon-chevron-left"></i> Download the App</a></li>	
+              <li><a href='#app-modify'><i class="icon-chevron-left"></i> Modify Your Files</a></li>	
+              <li><a href='#app-templates'><i class="icon-chevron-left"></i> Templates</a></li>	
+              <li><a href='#app-testing'><i class="icon-chevron-left"></i> Testing</a></li>	
+            </ul>
+          </div> <!--/.span3 -->
+        </div> <!-- /.row -->
+      </div><!--/#module- -->
+          
+          
+      
+      <div class="span9">
+      
+    </div><!--/#myTabContent -->
+    
+		<hr/>
+		<footer class="span9">
+			<center>Python Django Starter Kit  |  Posted by <a href="http://techandstartup.com">TechandStartup.com</a></center>
+		</footer>
+
+</div>  <!-- /container -->
+
+<!-- Javascript is at the end for faster page loading -->
+  <script src="js/jquery-1.10.1.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <!-- Or link to the js files hosted on a content delivery network
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>	-->
+</body>
+</html> 
+            

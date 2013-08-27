@@ -1,0 +1,528 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+	<meta charset="utf-8"> 
+	<title>Profiles | Python Django Starter Kit</title> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Various tools and reference material to get started and up to speed with Python Django.">
+  <meta name="author" content="Steve Carey, TechandStartup.com founder">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />  
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css" />  
+	<style type="text/css">
+		body {
+			padding-top:60px;
+		}
+		/* The adjust-anchor class is also related to the navbar-fixed-top class. It is needed when you have internal links on the page. Without it the top line of the anchored link would be hidden by the navbar. */
+		.adjust-anchor {
+			padding-top: 40px; 
+			margin-top: -40px;
+		}
+	</style>
+</head>
+<body>
+
+	<!-- NAVBAR -->
+  <div class="navbar navbar-inverse navbar-fixed-top">  
+    <div class="navbar-inner">
+			<div class="container">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="#">Python Django Starter Kit</a>
+				<div class="nav-collapse collapse">
+					<ul class="nav pull-right">
+						<li><a href="index.html">Home</a></li>
+						<!-- Tools Dropdown Menu  -->
+						<li class="dropdown"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Tools
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+                <li><a href="python-tools.html">Django Environment</a></li>
+                <li><a href="python-postgres.html">Install PostgreSQL</a></li>
+              </ul>
+						</li>
+						<!-- Tools Dropdown Menu  -->
+						<li class="dropdown"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Code Reference
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+                <li><a href="python-command.html">Command Line</a></li>
+                <li><a href="python-reference.html">Django Reference</a></li>
+              </ul>
+						</li>
+						<!-- Django Apps Dropdown Menu  -->
+						<li class="dropdown active"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Django Apps
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a href='python-pollsapp.html'>Pollsapp</a></li>
+								<li><a href='python-simple-site.html'>Simple Site</a></li>
+								<li><a href='python-contact.html'>Contact Form</a></li>
+                <li><a href='python-admin.html'>Admin Console</a></li>
+                <li><a href='python-login.html'>Login</a></li>
+                <li><a href='python-registration.html'>Registration</a></li>
+                <li><a href='python-pwreset.html'>Password Reset</a></li>
+                <li><a href='python-pwchange.html'>Change Password</a></li>
+                <li class="active"><a href='python-profiles.html'>Profiles</a></li>
+                <li><a href='python-stuff.html'>Stuff App</a></li>
+              </ul>
+						</li>
+            <li><a href="python-heroku.html">Heroku Hosting</a></li>
+
+					</ul>
+				</div><!--/.nav-collapse -->
+			</div><!--/.container -->	
+    </div><!--/.navbar-inner -->
+  </div><!--/.navbar -->
+	
+	<!-- CONTENT -->
+	<div class="container">
+
+        
+    <!-- Page Header -->
+    <div class="well">  <!-- <div class="page-header">  -->
+      <h1>Custom User Profile <small>with Django</small></h1>
+      <hr/>
+
+      <p>In this tutorial we will create a customized User Profile. Previous authentication tutorials (Login, Registration, etc.) were based on the standard Django User model which is limited to a username, password, email, first name and last name. If you want to add additional fields, Django 1.5 allows you to create a user model subclass (earlier versions did not have this feature). This tutorial will show you how to do that. 
+      <p>We will assume you already have a Django project started with the initial files set up. You can do that by following the simplesite tutorial to create a simple two page website using the Django framework.</p>
+      <p>Prerequisites: This tutorial assumes you are familiar with HTML and CSS; a basic command line interface (e.g., Windows Command Prompt, OSX Terminal, Linux Bash); the basics of the Python Programming Language; and preferrably you have already gone through the Django "Polls App" Tutorial at Djangoproject.org. At a minimum, you should have the following already installed: A text editor, Python version 2.7 and Django.</p>
+      <!--
+      There are multiple versions of this tutorial. Click on the tab to see each. It is recommended that you go through each in order. All these versions are limited to the Django User model which limits the fields available.</li>
+      <ul>
+        <li>Django's Out-of-the-Box User Registration</li>
+        <li>Add more fields</li>
+        <li>Install Django-Registration Third-Party App</li>
+      </ul> -->
+
+    </div>
+
+    <!-- TABS TO SELECT ENVIRONMENT -->
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#profile" data-toggle="tab">Add fields</a></li>
+      <!--<li><a href="#app" data-toggle="tab">Third Party App</a></li>-->
+    </ul>
+        
+    <div id="myTabContent" class="tab-content">
+
+
+      <!-------------------------------------------------------------------------------------------------------- 
+      -----------  USER PROFILE  ------------------------------------------------------------------------------>
+      <div class="tab-pane fade in active" id="profile">
+        <div class='row-fluid'>
+          <div class='span9 container-fluid'>
+
+            <h2>Add Fields to the User Profile</h2>
+            
+            <!-- Set Up the Project -->
+            <h3 id="profilesetup" class="adjust-anchor">Setup</h3>
+            <ul>
+              <li>In this version of the tutorial we will create a separate user profile app within your project folder.</li>
+              <li>Open your command line interface (e.g., Terminal for Mac, Command Prompt for Windows, Bash for Linux).</li>
+              <li>Change Directories to your site's upper directory <code>cd /localsites/simplesite</code> or whatever the path is to the manage.py file.</li>
+              <li>Create the folder and files for the application that we'll call profiles. In the command line enter <code>python manage.py startapp profiles</code></li>
+              <li>A new folder named profiles will be created with some files in it (e.g., views.py, models.py)</li>
+              <li>Open the settings.py file in your site's main directory. In one of the rows under <code>INSTALLED_APPS = (</code> enter <code>'profiles',</code>. Now Django will know to include this app with your site.</li>
+              <li>At the bottom of the settings.py file add <code>AUTH_USER_MODEL = 'profiles.ExpandedUser'</code>
+            </ul>              
+            
+            <!-- MODELS -->
+            <h3 id="profilemodels" class="adjust-anchor">Models</h3>
+            <ul>
+              <li>In the userprofile folder, open the models.py file and insert the following:
+<pre>
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+from django.utils.translation import ugettext_lazy as _
+
+
+class ExpandedUser(AbstractUser):
+    city = models.CharField(_("city"), max_length=20, blank=True)
+    state = models.CharField(_("state"), max_length=20, blank=True)
+    zip = models.CharField(_("zip code"), max_length=5, blank=True)
+</pre>
+              </li>
+            </ul>
+
+            <!-- FORMS ->
+            <h3 id="profileform" class="adjust-anchor">Forms</h3>
+            <ul>
+              <li>Create a file named forms.py and save it in the profiles folder.</li>
+              <li>Populate the file with the following:
+<pre>
+from django import forms
+from userprofile.models import UserProfile
+
+class UserProfileForm(forms.ModelForm):
+    
+    class Meta:
+        model = UserProfile 
+        fields = ('address', 'city', 'state', 'django_newbie')
+</pre>
+              </li>
+              <li>You can add more fields.</li>
+            </ul>   
+            
+            <!-- Views and Urls ->
+            <h3 id="profileviews" class="adjust-anchor">Views and URLs</h3>
+            <ul>
+              <li>Open the userprofile/views.py file and at the top insert the following imports:
+<pre>
+from django.shortcuts import render_to_response
+from django.http import HttpResponseRedirect
+from django.core.context_processors import csrf
+from forms import UserProfileForm
+from django.contrib.auth.decorators import login_required
+</pre>
+              </li>
+              <li>Below that add the function:
+<pre>
+@login_required
+def user_profile(request):
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/accounts/loggedin')
+    else:
+        user = request.user
+        profile = user.profile
+        form = UserProfileForm(instance=profile)
+        
+    args = {}
+    args.update(csrf(request))
+    
+    args['form'] = form
+    
+    return render_to_response('profile.html', args)  
+</pre>
+              </li>
+              <li>Create a urls.py file, save it to the userprofile folder, and populate it with the following:
+<pre>
+from django.conf.urls import patterns, include, url
+
+urlpatterns = patterns('',
+        url(r'^profile/$', 'userprofile.views.user_profile'),
+)
+</pre>              
+              </li>
+              <li>Open the urls.py file in the site folder (same folder as settings.py). Below <code>urlpatterns = patterns('',</code> insert the following line to connect the userprofile urls.py file to the main site urls file.
+<pre>
+    (r'^accounts/', include('userprofile.urls')),
+</pre>
+              </li>
+            </ul>   
+
+            <!-- Templates ->
+            <h3 id="profiletemplates" class="adjust-anchor">Templates</h3>
+            <ul>
+              <li>We will assume your site already has a templates directory and a base.html file with the navigation bar. Open the base.html file and in the nav element add a navigation menu link to the contact page <code>&lt;a href="/accounts/profile">profile&lt;/a></code></li>
+              <li>In the userprofile directory create a folder called templates.</li>
+              <li>Create a file called profile.html and save it to the templates folder.</li>
+              <li>Populate the profile.html file with the following:
+<pre>
+{% extends "base.html" %}
+
+{% block content %}
+  
+  &lt;h2>Profile&lt;/h2>
+  
+  {% for field in form %}
+    {{field.error}}
+
+  {% endfor %}
+  
+  &lt;form action="/accounts/profile/" method="post">{% csrf_token %}
+    &lt;table>
+      {{form.as_table}}
+    &lt;/table>
+  
+    &lt;input type="submit" value="Update" />
+    
+  &lt;/form>
+  
+{% endblock %}
+</pre>
+              </li>
+              Create a file called profile_updated.html, save it to the templates folder, and populate it with the following:
+<pre>
+{% extends "base.html" %}
+
+{% block content %}
+
+  &lt;h2>Profile updated&lt;/h2>
+  &lt;p>Click &lt;a href="/accounts/profile/">here&lt;/a> to edit your profile information&lt;/p>
+
+{% endblock %}
+</pre>
+              </li>
+            </ul--> 
+            
+            <!-- Admin -->
+            <h3 id="admin" class="adjust-anchor">Manage Profile Using the Admin Console</h3>
+            <ul>
+              <li>As the site administrator, you can use the Admin Console to view, add, modify, or delete users.</li>
+              <li>Activate Django's Admin App.</li>
+              <ul>
+                <li>Open the settings.py file. Under <code>INSTALLED_APPS</code> uncomment the Admin App line <code>'django.contrib.admin',</code>.</li>
+                <li>Now sync the database to create the database tables for the Admin app. Open the command line interface and change directories to the upper directory of your site (where manage.py is). Type <code>python manage.py syncdb</code>.</li>
+                <li>Edit the simplesite/urls.py file (in the same directory as settings.py) and uncomment the three lines that reference admin so it looks like the below (excluding other links or code you may have).
+<pre>
+from django.conf.urls import patterns, include, url
+
+from django.contrib import admin
+admin.autodiscover()
+
+urlpatterns = patterns('',
+    url(r'^admin/', include(admin.site.urls)),
+)
+</pre>
+                </li>
+              </ul>
+              <li>The admin console is now activated. Let's now add the ability to manage users through the Admin Console. Create a file named admin.py, save it to the profiles folder, and populate it with one of the the following. First without modifying the Admin display:
+<pre>
+from django.contrib import admin
+from profiles.models import ExpandedUser
+
+admin.site.register(ExpandedUser)
+</pre>              
+              </li>
+              <li>You can jump to the next section to test it.</li>
+              <li>The second option does a lot to organize how it appears in the Admin Console. Replace the admin.py file content with the following:
+<pre>
+from django.contrib import admin
+from profiles.models import ExpandedUser
+
+
+class ExpandedUserAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('User Info', {'fields': ['username', 'first_name', 'last_name', 'email',
+                                  'password', 'city', 'state', 'zip']}),
+        ('Date information', {'fields': ['date_joined', 'last_login'], 'classes': ['collapse']}),
+        ('Permissions', {'fields': ['is_active', 'is_staff', 'is_superuser']}),
+    ]
+
+    list_filter = ['city']
+
+    list_display = ['username', 'first_name', 'last_name', 'email', 'city', 'state',
+                    'date_joined', 'last_login']
+
+admin.site.register(ExpandedUser, ExpandedUserAdmin)
+</pre>              
+              </li>
+              <li>In this version we added a class called ExpandedUserAdmin. It groups the fields into three fieldsets on the user creation form and the user change form. The Date information fieldset has an added collapse class. You can delete the added class if you don't want it collapsed.</li>
+              <li>When viewing the list of users we added <code>list_filter</code> to have the option of filtering by city.</li>
+              <li>We added <code>list_display</code> to show specific fields when viewing the list of users.</li>
+              <li>We register both the ExpandedUser and the ExpandedUserAdmin class.</li>
+            </ul>
+             
+            <!-- TESTING -->
+            <h3 id="profiletesting" class="adjust-anchor">Testing</h3>
+            <ul>
+              <!--li>Syncronize the database settings with the actual database. Open the command line interface. From the upper site directory (the folder with the manage.py file in it) enter <code>python manage.py syncdb</code></li-->
+              <li>Run the virtual server and test that the new profiles app is working in the Admin Console.</li>
+              <ul>
+                <li>from the upper site directory enter <code>python manage.py runserver</code></li>
+                <li>Go to the browser and put in your local ip address, port 8000, and /admin/ as the url: <a href="http://127.0.0.1:8000/admin/" target="_blank">http://127.0.0.1:8000/admin</a></li>
+                <li>Click on "profiles". It should take you to the Profiles Administration Page.</li>
+                <li>Click on Users, you should see yourself and the list of fields we put in the list_display.</li>
+                <li>Click on a user and you should see the fieldsets as we entered them under fieldsets. You can edit your info. Add a new user. Delete a user. If it works, you're done.</li>
+              </ul>
+            </ul>
+              
+          </div> <!--/.span9 -->  
+          
+          <!-- SIDEBAR -->
+          <div class='span3'>
+            <ul class="nav nav-tabs nav-stacked">
+              <li><a href='#profilesetup'><i class="icon-chevron-left"></i> Set Up the Project</a></li>					
+              <li><a href='#profilemodels'><i class="icon-chevron-left"></i> Models</a></li>	 
+              <!--li><a href='#profileform'><i class="icon-chevron-left"></i> Form</a></li>	              
+              <li><a href='#profileviews'><i class="icon-chevron-left"></i> Views and URLs</a></li>	
+              <li><a href='#profiletemplates'><i class="icon-chevron-left"></i> Templates</a></li-->
+              <li><a href='#profileadmin'><i class="icon-chevron-left"></i> Admin</a></li>
+              <li><a href='#profiletesting'><i class="icon-chevron-left"></i> Testing</a></li>              
+            </ul>
+          </div> <!--/.span3 -->
+        </div> <!-- /.row -->
+      </div><!--/#V3- -->
+      
+<!-------------------------------------------------------------------------------------------------------------
+------  INSTALL THIRD PARTY APP ------------------------------------------------------------------------------>
+      <div class="tab-pane fade" id="app">
+        <div class='row-fluid'>
+          <div class='span9 container-fluid'>
+            <h2>Install Django-Registration Third Party App</h2>
+            
+            <!-- OVERVIEW -->
+            <h3 id="app-overview" class="adjust-anchor">Overview</h3>
+            <ul>
+              <li>The Django out-of-the-box registration process does not include any security against robot registration. Without it your site will quickly get overrun by fake users trying to generate spam or worse. Djano-Registration is a well-regarded registration app that includes an email verification.</li> 
+              <li>One reason to use the Django Framework is there are a lot of third party apps available for free that you can install into your site. With a little configuration you can have an app such as a simple Contact Form working on your site, potentially saving you a lot of development time.</li>
+              <li>You can find a comprehensive list of all Pyton Packages including Django Apps (Apps are a type of package) indexed on Python's website <a href="https://pypi.python.org/pypi">https://pypi.python.org</a>. There is also a site just for Django packages <a href="https://www.djangopackages.com/">https://www.djangopackages.com/</a>, but not all the Django packages are there.</li>
+              <li>Django 1.5 was released in February 2013 so apps not created or updated by then may or may not work propertly.</li>
+              <li>There are other registration apps available that you can find by searching on the keyword "Registration". But we'll go ahead and install Django-Registration.</li>
+              <li>Here is how the Django-Registration App's registration process works:</p>
+              <ul>
+                <li>A user signs up for an account by supplying a username, email address and password.</li>
+                <li>From this information, a new User object is created, with its is_active field set to False. Additionally, an activation key is generated and stored, and an email is sent to the user containing a link to click to activate the account.</li>
+                <li>Upon clicking the activation link, the new account is made active (the is_active field is set to True); after this, the user can log in.</li>
+              </ul>
+            </ul>
+              
+            <!-- DOWNLOAD -->
+            <h3 id="app-download" class="adjust-anchor">Download the App</h3>
+            <ul>
+              <li>Instructions on installing the app are at <a href="https://django-registration.readthedocs.org/en/latest/">https://django-registration.readthedocs.org/en/latest/</a>.</li>
+              <li>Open your command line interface (e.g., Terminal for Mac, Command Prompt for Windows, Bash for Linux).</li>
+              <li>Optional: If you only want this app installed on this project then you should use a virtualenv. If you created your project in a virtualenv then you need to activate it before installing this app. Go to the scripts folder <code>cd <i>/virtualenvs/simpleproj</i>/scripts</code> (your path may differ) and type <code>activate</code>.</li>
+              <li>Use the pip utility to install the app <code>pip install django-registration</code></li>
+              <li>Now the app is installed in the Site-Packages folder, the same place the Django and pip packages reside (<i>/virtualenvs/simpleproj</i>/Lib/site-packages/registration). It will have all the same files as if you created the app yourself and put it in your site folder. That includes views.py, urls.py, forms.py, admin.py, models.py and more. It does not come with templates, so you'll need to create those yourself.</li>
+              <li>You can confirm that it's installed with the command line by entering <code>pip list</code> and all installed packages will show up.</li>
+            </ul>
+            
+            <!-- MODIFY -->
+            <h3 id="app-modify" class="adjust-anchor">Modify Your Files to Integrate the App</h3>
+            <ul>
+              <li>Open the settings.py file. In one of the rows under <code>INSTALLED_APPS = (</code> enter <code>'registration',</code>.</li>
+              <li>In the settings.py file insert <code>ACCOUNT_ACTIVATION_DAYS = 7</code> (You can put it somewhere at the end of the file). This is the number of days the user has to activate their account. After 7 days the activation link that is emailed out will no longer work. We are using 7 here by you can set it to whatever you want.</li>
+              <li>Sync the registration model to your database. From the command line in the folder where the manage.py file is, type <code>python manage.py syncdb</code></li>
+              <li>Open the urls.py file and in a row under <code>urlpatterns = patterns('',</code> enter <code>(r'^accounts/', include('registration.backends.default.urls')),</code></li>
+            </ul>
+            
+            <!-- Templates -->
+            <h3 id="app-templates" class="adjust-anchor">Templates</h3>
+            <ul>
+              <li>We will assume your site already has a templates directory and a base.html file with the navigation bar. Open the base.html file and in the nav element add a navigation menu link to the registration page <code>&lt;a href="/accounts/register">register&lt;/a></code></li>
+              <li>If one is not already there, create a directory called registration inside the templates folder.</li>
+              <li>Create a file called registration_form.html, save it to the templates/registration folder, then populate it with the following:
+<pre>
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+
+  &lt;h2>Registration&lt;/h2>
+
+&lt;form action="." method="post">{% csrf_token %}
+  {{ form.as_p }}
+  &lt;input type="submit" value="Register" />
+&lt;/form>
+
+{% endblock %}
+</pre>       
+              </li>
+              <li>Create a file called registration_complete.html, save it to the templates/registration folder, and populate it with the following:
+<pre>
+{% extends "base.html" %}
+{% block title %}Email Sent{% endblock %}
+{% block content %}
+    
+    &lt;h3>Activation Email Sent&lt;/h3>
+    &lt;p>There is one more step. An activation link has been sent to your email address. Please open it and click on the link to complete your registration.&lt;/p>
+    
+{% endblock %}
+</pre>                           
+              </li>
+              <li>Create a file called activation_complete.html, save it to the templates/registration folder, and populate it with the following:
+<pre>
+{% extends "base.html" %}
+{% block title %}Account Activated{% endblock %}
+{% block content %}
+
+&lt;h4>Registration Activated&lt;/h4>
+&lt;p>Your account is now activated.&lt;/p>
+&lt;p>&lt;a href="{% url 'auth_login' %}">Log in&lt;/a>&lt;/p>
+
+{% endblock %}
+</pre>              
+              </li>
+              <li>Create a file called activation_email_subject.txt, save it to the templates/registration folder, and populate it with the following:
+<pre>
+Account activation on {{ site.name }}
+</pre>              
+              </li>
+              <li>Create a file called activation_email.txt, save it to the templates/registration folder, and populate it with the following:
+<pre>
+Activate account at {{ site.name }}:
+
+http://{{ site.domain }}{% url 'registration_activate' activation_key %}
+
+Link is valid for {{ expiration_days }} days.
+</pre>              
+              </li>
+            </ul>
+
+            <!-- Testing -->
+            <h3 id="app-testing" class="adjust-anchor">Testing</h3>
+            <ul>
+              <li>Now test it to make sure it works. You'll need to take some added steps to test that the emails are being sent. There are two simple ways you can do this using the core Django mail module. In both methods you need to open the settings.py file and add code to the very bottom of the file.</li>
+              <ul>
+                <li>The first method is just to print the email into your Command Line Interface once it is sent. To do that you add the following line to the bottom of your settings.py file: <code>EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'</code></li>
+                <li>In the second method, Python creates a text file with the email contents. To do this pick or create a directory to hold the email. For simplicity we'll assume you create a folder in the root directory called <i>messages</i>. 
+                <li>Then add the following two lines to the bottom of your settings.py file:
+<pre>
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+    EMAIL_FILE_PATH = '/<i>messages</i>'
+</pre>
+                </li>
+                <li>This is only used in development not production. The conditional if DEBUG statement will prevent this from executing in production if you set DEBUG to false when you deploy your site (as you should). Alternatively you could just delete the EMAIL_BACKEND and EMAIL_FILE_PATH lines before deploying.</li>
+              </ul>
+              <li>Now run the virtual server and test that the process is working.</li>
+              <ul>
+                <li>Open the command line interface.</li>
+                <li>from the upper site directory (the folder with the manage.py file in it) enter <code>python manage.py runserver</code></li>
+                <li>Go to the browser and put in your local ip address, port 8000 as url: <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+                <li>Click on the navigation bar's "register" link. It should take you to the registration page.</li>
+                <li>Fill out the form both incorrectly, to see the error messages, and correctly.</li>
+                <li>When filled out correctly you should be directed to the thanks page.</li>
+                <li>If you used the console testing method then check your command line interface to see the email message contents. If you used the file method then go to the messages folder and there should be a file with the email content.</li>
+              </ul>  
+              <li>Note the email domain will be example.com. Cut and paste the activation key to 127.0.0.1:8000 to activate it. To change the domain go to the Admin Console <a href="http://127.0.0.1:8000/admin/" target="_blank">http://127.0.0.1:8000/admin/</a> (See the tutorial on activating the Admin console). Click on the sites link. Change example.com to your site's domain name, or the development IP address 127.0.0.1:8000.</li>
+            </ul>  
+            
+          </div> <!--/.span9 -->  
+          
+          <!-- SIDEBAR -->
+          <div class='span3'>
+            <ul class="nav nav-tabs nav-stacked">
+              <li><a href='#app-overview'><i class="icon-chevron-left"></i> Overview</a></li>					
+              <li><a href='#app-download'><i class="icon-chevron-left"></i> Download the App</a></li>	
+              <li><a href='#app-modify'><i class="icon-chevron-left"></i> Modify Your Files</a></li>	
+              <li><a href='#app-templates'><i class="icon-chevron-left"></i> Templates</a></li>	
+              <li><a href='#app-testing'><i class="icon-chevron-left"></i> Testing</a></li>	
+            </ul>
+          </div> <!--/.span3 -->
+        </div> <!-- /.row -->
+      </div><!--/#module- -->
+          
+          
+      
+      <div class="span9">
+      
+    </div><!--/#myTabContent -->
+    
+		<hr/>
+		<footer class="span9">
+			<center>Python Django Starter Kit  |  Posted by <a href="http://techandstartup.com">TechandStartup.com</a></center>
+		</footer>
+
+</div>  <!-- /container -->
+
+<!-- Javascript is at the end for faster page loading -->
+  <script src="js/jquery-1.10.1.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <!-- Or link to the js files hosted on a content delivery network
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>	-->
+</body>
+</html> 
+            

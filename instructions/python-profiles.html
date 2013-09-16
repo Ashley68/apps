@@ -45,7 +45,7 @@
                 <li><a href="python-postgres.html">Install PostgreSQL</a></li>
               </ul>
 						</li>
-						<!-- Tools Dropdown Menu  -->
+						<!-- Reference Dropdown Menu  -->
 						<li class="dropdown"> 
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 								Code Reference
@@ -53,7 +53,7 @@
 							</a>
 							<ul class="dropdown-menu">
                 <li><a href="python-command.html">Command Line</a></li>
-                <li><a href="python-reference.html">Django Reference</a></li>
+                <li><a href="#">Django Reference (coming soon)</a></li>
               </ul>
 						</li>
 						<!-- Django Apps Dropdown Menu  -->
@@ -73,10 +73,10 @@
                 <li><a href='python-pwchange.html'>Change Password</a></li>
                 <li class="active"><a href='python-profiles.html'>Profiles</a></li>
                 <li><a href='python-stuff.html'>Stuff App</a></li>
+                <li><a href='python-images.html'>Upload Images</a></li>
               </ul>
 						</li>
             <li><a href="python-heroku.html">Heroku Hosting</a></li>
-
 					</ul>
 				</div><!--/.nav-collapse -->
 			</div><!--/.container -->	
@@ -92,52 +92,63 @@
       <h1>Custom User Profile <small>with Django</small></h1>
       <hr/>
 
-      <p>In this tutorial we will create a customized User Profile. Previous authentication tutorials (Login, Registration, etc.) were based on the standard Django User model which is limited to a username, password, email, first name and last name. If you want to add additional fields, Django 1.5 allows you to create a user model subclass (earlier versions did not have this feature). This tutorial will show you how to do that. 
+      <p>In this tutorial we will create a customized User Profile. Previous authentication tutorials (Login, Registration, etc.) were based on the standard Django User model which is limited to a username, password, email, first name and last name. If you want to add additional fields, Django 1.5 allows you to create a user model subclass (earlier versions did not have this feature) to either add fields to the standard user profile, or create a custom user profile with new fields. This tutorial will show you how to do both.</p>
       <p>We will assume you already have a Django project started with the initial files set up. You can do that by following the simplesite tutorial to create a simple two page website using the Django framework.</p>
       <p>Prerequisites: This tutorial assumes you are familiar with HTML and CSS; a basic command line interface (e.g., Windows Command Prompt, OSX Terminal, Linux Bash); the basics of the Python Programming Language; and preferrably you have already gone through the Django "Polls App" Tutorial at Djangoproject.org. At a minimum, you should have the following already installed: A text editor, Python version 2.7 and Django.</p>
-      <!--
-      There are multiple versions of this tutorial. Click on the tab to see each. It is recommended that you go through each in order. All these versions are limited to the Django User model which limits the fields available.</li>
+
+      There are multiple versions of this tutorial. Click on the tab to see each. It is recommended that you go through them in order.</li>
       <ul>
-        <li>Django's Out-of-the-Box User Registration</li>
-        <li>Add more fields</li>
-        <li>Install Django-Registration Third-Party App</li>
-      </ul> -->
+        <li>Extend the Django User Profile</li>
+        <li>Create a Custom User Profile</li>
+        <li>Custom User Profile with Login and Registration Forms</li>
+      </ul>
 
     </div>
 
     <!-- TABS TO SELECT ENVIRONMENT -->
     <ul class="nav nav-tabs">
-      <li class="active"><a href="#profile" data-toggle="tab">Add fields</a></li>
-      <!--<li><a href="#app" data-toggle="tab">Third Party App</a></li>-->
+      <li class="active"><a href="#extend" data-toggle="tab">Extend Profile</a></li>
+      <li><a href="#custom" data-toggle="tab">Custom Profile</a></li>
+      <li><a href="#loginreg" data-toggle="tab">Login/Reg Forms</a></li>
     </ul>
         
     <div id="myTabContent" class="tab-content">
 
 
       <!-------------------------------------------------------------------------------------------------------- 
-      -----------  USER PROFILE  ------------------------------------------------------------------------------>
-      <div class="tab-pane fade in active" id="profile">
+      -----------  EXTENDED PROFILE  ------------------------------------------------------------------------------>
+      <div class="tab-pane fade in active" id="extend">
         <div class='row-fluid'>
           <div class='span9 container-fluid'>
 
-            <h2>Add Fields to the User Profile</h2>
+            <h2>Extend the Standard User Profile</h2>
+            
+            <!-- Overview -->
+            <h3 id="extend-overview" class="adjust-anchor">Overview</h3>
+            <ul>
+              <li>Extending the default Django user model means we will continue to use the username, password, email, first_name and last_name fields in the user's profile, but want to add more fields.</li>
+              <li>We need to create a profile app, and in it populate the models.py and admin.py files.</li>
+              <li>Django's user model is part of the built-in Auth module. The various model classes are located in (from your Python or Virtualenvs folder) lib/site-packages/django/contrib/auth/models.py</li>
+              <li>We will be creating a subclass of the existing user model so we don't have to recreate the existing code.</li>
+            </ul>
             
             <!-- Set Up the Project -->
-            <h3 id="profilesetup" class="adjust-anchor">Setup</h3>
+            <h3 id="extend-setup" class="adjust-anchor">Setup</h3>
             <ul>
-              <li>In this version of the tutorial we will create a separate user profile app within your project folder.</li>
-              <li>Open your command line interface (e.g., Terminal for Mac, Command Prompt for Windows, Bash for Linux).</li>
-              <li>Change Directories to your site's upper directory <code>cd /localsites/simplesite</code> or whatever the path is to the manage.py file.</li>
-              <li>Create the folder and files for the application that we'll call profiles. In the command line enter <code>python manage.py startapp profiles</code></li>
-              <li>A new folder named profiles will be created with some files in it (e.g., views.py, models.py)</li>
+              <li>Create a separate user profile app within your project folder.</li>
+              <ul>
+                <li>Open your command line interface (e.g., Terminal for Mac, Command Prompt for Windows, Bash for Linux).</li>
+                <li>Change Directories to your site's upper directory <code>cd /localsites/simplesite</code> or whatever the path is to the manage.py file.</li>
+                <li>Create the folder and files for the application that we'll call profiles. In the command line enter <code>python manage.py startapp profiles</code></li>
+              </ul>
               <li>Open the settings.py file in your site's main directory. In one of the rows under <code>INSTALLED_APPS = (</code> enter <code>'profiles',</code>. Now Django will know to include this app with your site.</li>
-              <li>At the bottom of the settings.py file add <code>AUTH_USER_MODEL = 'profiles.ExpandedUser'</code>
+              <li>At the bottom of the settings.py file add <code>AUTH_USER_MODEL = 'profiles.ExpandedUser' </code>. This will tell Django to substitute the ExpandedUser model for the standard User model.</li>
             </ul>              
             
             <!-- MODELS -->
-            <h3 id="profilemodels" class="adjust-anchor">Models</h3>
+            <h3 id="extend-models" class="adjust-anchor">Models</h3>
             <ul>
-              <li>In the userprofile folder, open the models.py file and insert the following:
+              <li>In the profiles folder, open the models.py file and insert the following:
 <pre>
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -150,124 +161,12 @@ class ExpandedUser(AbstractUser):
     zip = models.CharField(_("zip code"), max_length=5, blank=True)
 </pre>
               </li>
+              <li>The ExpandedUser class (you can name it whatever you want) is a subclass of the AbstractUser class. You can see the details of the AbstractUser class in the Django Auth module located in (from your Python or Virtualenvs folder) lib/site-packages/django/contrib/auth/models.py. By inheriting from the AbstractUser class, you keep all the default user fields (username, email, first_name, last_name) and you can add whatever fields you want. In this case we add city, state and zip code.</li>
+              <li>We imported <code>ugettext_lazy as _</code> which enables us to use different field names for the database and the user display. For example the user display will show a field name of <i>zip code</i> but the database field name is <i>zip</i></li>
             </ul>
-
-            <!-- FORMS ->
-            <h3 id="profileform" class="adjust-anchor">Forms</h3>
-            <ul>
-              <li>Create a file named forms.py and save it in the profiles folder.</li>
-              <li>Populate the file with the following:
-<pre>
-from django import forms
-from userprofile.models import UserProfile
-
-class UserProfileForm(forms.ModelForm):
-    
-    class Meta:
-        model = UserProfile 
-        fields = ('address', 'city', 'state', 'django_newbie')
-</pre>
-              </li>
-              <li>You can add more fields.</li>
-            </ul>   
-            
-            <!-- Views and Urls ->
-            <h3 id="profileviews" class="adjust-anchor">Views and URLs</h3>
-            <ul>
-              <li>Open the userprofile/views.py file and at the top insert the following imports:
-<pre>
-from django.shortcuts import render_to_response
-from django.http import HttpResponseRedirect
-from django.core.context_processors import csrf
-from forms import UserProfileForm
-from django.contrib.auth.decorators import login_required
-</pre>
-              </li>
-              <li>Below that add the function:
-<pre>
-@login_required
-def user_profile(request):
-    if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=request.user.profile)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/accounts/loggedin')
-    else:
-        user = request.user
-        profile = user.profile
-        form = UserProfileForm(instance=profile)
-        
-    args = {}
-    args.update(csrf(request))
-    
-    args['form'] = form
-    
-    return render_to_response('profile.html', args)  
-</pre>
-              </li>
-              <li>Create a urls.py file, save it to the userprofile folder, and populate it with the following:
-<pre>
-from django.conf.urls import patterns, include, url
-
-urlpatterns = patterns('',
-        url(r'^profile/$', 'userprofile.views.user_profile'),
-)
-</pre>              
-              </li>
-              <li>Open the urls.py file in the site folder (same folder as settings.py). Below <code>urlpatterns = patterns('',</code> insert the following line to connect the userprofile urls.py file to the main site urls file.
-<pre>
-    (r'^accounts/', include('userprofile.urls')),
-</pre>
-              </li>
-            </ul>   
-
-            <!-- Templates ->
-            <h3 id="profiletemplates" class="adjust-anchor">Templates</h3>
-            <ul>
-              <li>We will assume your site already has a templates directory and a base.html file with the navigation bar. Open the base.html file and in the nav element add a navigation menu link to the contact page <code>&lt;a href="/accounts/profile">profile&lt;/a></code></li>
-              <li>In the userprofile directory create a folder called templates.</li>
-              <li>Create a file called profile.html and save it to the templates folder.</li>
-              <li>Populate the profile.html file with the following:
-<pre>
-{% extends "base.html" %}
-
-{% block content %}
-  
-  &lt;h2>Profile&lt;/h2>
-  
-  {% for field in form %}
-    {{field.error}}
-
-  {% endfor %}
-  
-  &lt;form action="/accounts/profile/" method="post">{% csrf_token %}
-    &lt;table>
-      {{form.as_table}}
-    &lt;/table>
-  
-    &lt;input type="submit" value="Update" />
-    
-  &lt;/form>
-  
-{% endblock %}
-</pre>
-              </li>
-              Create a file called profile_updated.html, save it to the templates folder, and populate it with the following:
-<pre>
-{% extends "base.html" %}
-
-{% block content %}
-
-  &lt;h2>Profile updated&lt;/h2>
-  &lt;p>Click &lt;a href="/accounts/profile/">here&lt;/a> to edit your profile information&lt;/p>
-
-{% endblock %}
-</pre>
-              </li>
-            </ul--> 
             
             <!-- Admin -->
-            <h3 id="admin" class="adjust-anchor">Manage Profile Using the Admin Console</h3>
+            <h3 id="extend-admin" class="adjust-anchor">Manage Profiles Using the Admin Console</h3>
             <ul>
               <li>As the site administrator, you can use the Admin Console to view, add, modify, or delete users.</li>
               <li>Activate Django's Admin App.</li>
@@ -325,7 +224,7 @@ admin.site.register(ExpandedUser, ExpandedUserAdmin)
             </ul>
              
             <!-- TESTING -->
-            <h3 id="profiletesting" class="adjust-anchor">Testing</h3>
+            <h3 id="extend-testing" class="adjust-anchor">Testing</h3>
             <ul>
               <!--li>Syncronize the database settings with the actual database. Open the command line interface. From the upper site directory (the folder with the manage.py file in it) enter <code>python manage.py syncdb</code></li-->
               <li>Run the virtual server and test that the new profiles app is working in the Admin Console.</li>
@@ -343,67 +242,542 @@ admin.site.register(ExpandedUser, ExpandedUserAdmin)
           <!-- SIDEBAR -->
           <div class='span3'>
             <ul class="nav nav-tabs nav-stacked">
-              <li><a href='#profilesetup'><i class="icon-chevron-left"></i> Set Up the Project</a></li>					
-              <li><a href='#profilemodels'><i class="icon-chevron-left"></i> Models</a></li>	 
-              <!--li><a href='#profileform'><i class="icon-chevron-left"></i> Form</a></li>	              
-              <li><a href='#profileviews'><i class="icon-chevron-left"></i> Views and URLs</a></li>	
-              <li><a href='#profiletemplates'><i class="icon-chevron-left"></i> Templates</a></li-->
-              <li><a href='#profileadmin'><i class="icon-chevron-left"></i> Admin</a></li>
-              <li><a href='#profiletesting'><i class="icon-chevron-left"></i> Testing</a></li>              
+              <li><a href='#extend-overview'><i class="icon-chevron-left"></i> Overview</a></li>		
+              <li><a href='#extend-setup'><i class="icon-chevron-left"></i> Set Up the Project</a></li>					
+              <li><a href='#extend-models'><i class="icon-chevron-left"></i> Models</a></li>	 
+              <li><a href='#extend-admin'><i class="icon-chevron-left"></i> Admin</a></li>
+              <li><a href='#extend-testing'><i class="icon-chevron-left"></i> Testing</a></li>              
             </ul>
           </div> <!--/.span3 -->
         </div> <!-- /.row -->
       </div><!--/#V3- -->
       
-<!-------------------------------------------------------------------------------------------------------------
-------  INSTALL THIRD PARTY APP ------------------------------------------------------------------------------>
-      <div class="tab-pane fade" id="app">
+      
+      <!-------------------------------------------------------------------------------------------------------- 
+      -----------  CUSTOM PROFILE  ------------------------------------------------------------------------------>
+      <div class="tab-pane fade" id="custom">
         <div class='row-fluid'>
           <div class='span9 container-fluid'>
-            <h2>Install Django-Registration Third Party App</h2>
+
+            <h2>Create a Custom User Profile</h2>
             
-            <!-- OVERVIEW -->
-            <h3 id="app-overview" class="adjust-anchor">Overview</h3>
+            <!-- Overview -->
+            <h3 id="custom-overview" class="adjust-anchor">Overview</h3>
             <ul>
-              <li>The Django out-of-the-box registration process does not include any security against robot registration. Without it your site will quickly get overrun by fake users trying to generate spam or worse. Djano-Registration is a well-regarded registration app that includes an email verification.</li> 
-              <li>One reason to use the Django Framework is there are a lot of third party apps available for free that you can install into your site. With a little configuration you can have an app such as a simple Contact Form working on your site, potentially saving you a lot of development time.</li>
-              <li>You can find a comprehensive list of all Pyton Packages including Django Apps (Apps are a type of package) indexed on Python's website <a href="https://pypi.python.org/pypi">https://pypi.python.org</a>. There is also a site just for Django packages <a href="https://www.djangopackages.com/">https://www.djangopackages.com/</a>, but not all the Django packages are there.</li>
-              <li>Django 1.5 was released in February 2013 so apps not created or updated by then may or may not work propertly.</li>
-              <li>There are other registration apps available that you can find by searching on the keyword "Registration". But we'll go ahead and install Django-Registration.</li>
-              <li>Here is how the Django-Registration App's registration process works:</p>
+              <li>Django's user model is part of the built-in Auth module. The various model classes are located in (from your Python or Virtualenvs folder) lib/site-packages/django/contrib/auth/models.py</li>
+              <li>The default Django user profile fields are username, password, email, first_name and last_name, with username and password required for login. If you don't want to use all these fields or if you want users to login with their email address rather then username then you need to create a custom user profile.</li>
+              <li>As with extending the default user profile, you create a subclass of the existing user model so you don't have to recreate all the existing code. Django has two user model classes. We created a subclass of the AbstractUser class when we extended the user profile. Django also has a stripped down class called AbstractBaseUser that includes only the Password field, last login date, and is_active=True. You can create whatever fields you like.</li>
+              <li>Our custom user profile will use email as the username and require a password and city. It will not include first_name or last_name.</li>
+              <li>To create a custom user profile we need to create an app (we'll call it profile), and in it populate the models.py and admin.py files.</li>
+            </ul>
+            
+            <!-- Set Up the Project -->
+            <h3 id="custom-setup" class="adjust-anchor">Setup</h3>
+            <ul>
+              <li>Create a separate user profile app within your project folder.</li>
               <ul>
-                <li>A user signs up for an account by supplying a username, email address and password.</li>
-                <li>From this information, a new User object is created, with its is_active field set to False. Additionally, an activation key is generated and stored, and an email is sent to the user containing a link to click to activate the account.</li>
-                <li>Upon clicking the activation link, the new account is made active (the is_active field is set to True); after this, the user can log in.</li>
+                <li>Open your command line interface (e.g., Terminal for Mac, Command Prompt for Windows, Bash for Linux).</li>
+                <li>Change Directories to your site's upper directory <code>cd /localsites/simplesite</code> or whatever the path is to the manage.py file.</li>
+                <li>Create the folder and files for the application that we'll call profiles (you can call it whatever you like). In the command line enter <code>python manage.py startapp profiles</code></li>
+              </ul>
+              <li>Open the settings.py file in your site's main directory. In one of the rows under <code>INSTALLED_APPS = (</code> enter <code>'profiles',</code>. Now Django will know to include this app with your site.</li>
+              <li>At the bottom of the settings.py file add <code>AUTH_USER_MODEL = 'profiles.CustomUser' </code>. This will tell Django to substitute the CustomUser model for the standard User model.</li>
+            </ul>              
+            
+            <!-- MODELS -->
+            <h3 id="custom-models" class="adjust-anchor">Models</h3>
+            <ul>
+              <li>In the profiles folder, open the models.py file and insert the following:
+<pre>
+from django.db import models
+from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser, PermissionsMixin)
+
+
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, city, password=None):
+        """ Creates and saves a User with the given email, city, and password. """
+        if not email:
+            msg = "Please enter an email address"
+            raise ValueError(msg)
+
+        if not city:
+            msg = "Please enter your city"
+            raise ValueError(msg)
+
+        user = self.model(
+            email=CustomUserManager.normalize_email(email),
+            city=city,
+        )
+
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, city, password):
+        """ Creates and saves a superuser with the given email, city and password. """
+        user = self.create_user( email, password=password, city=city)
+        user.is_admin = True
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+        return user
+
+USERNAME_FIELD = "email"
+REQUIRED_FIELDS = ["city", ]
+
+
+class CustomUser(AbstractBaseUser, PermissionsMixin):
+    # Inherits from both the AbstractBaseUser and PermissionMixin.
+    email = models.EmailField(verbose_name ="email address", max_length=255, unique=True, db_index=True,)
+    city = models.CharField(max_length=255)
+    is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
+
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = USERNAME_FIELD
+    REQUIRED_FIELDS = REQUIRED_FIELDS
+
+    def get_full_name(self):
+        # The user is identified by their email and city
+        return self.email, self.city
+
+    def get_short_name(self):
+        # The user is identified by their email address
+        return self.email
+
+    def __unicode__(self):
+        return self.email
+</pre>
+              </li>
+              <li>The CustomUserManager class (you can name it whatever you want) is for creating new users and superusers. It is a subclass of the BaseUserManager class, part of the Django Auth module. You can see the details of the class in the Django Auth module located in (from your Python or Virtualenvs folder) lib/site-packages/django/contrib/auth/models.py. </li>
+              <li>The <code>USERNAME_FIELD</code> constant is where you define the unique identifier. The default is username, but here we assigned it to the email field. This field must be set to unique=True, and db_index=True.</li>
+              <li>The <code>REQUIRED_FIELDS</code> constant is where you set the required fields. The USERNAME_FIELD, email, is excluded because it is automatically required.</li>
+              <li>The CustomUser class (you can name it whatever you want) is a subclass of the AbstractBaseUser class. By inheriting from the AbstractBaseUser class, you keep a stripped down version of the Django default user model including the password field, last login date, and is_active=True.</li>
+              <li></li>
+            </ul>
+            
+            <!-- Admin -->
+            <h3 id="custom-admin" class="adjust-anchor">Manage Profiles Using the Admin Console</h3>
+            <ul>
+              <li>As the site administrator, you can use the Admin Console to view, add, modify, or delete users.</li>
+              <li>Activate Django's Admin App.</li>
+              <ul>
+                <li>Open the settings.py file. Under <code>INSTALLED_APPS</code> uncomment the Admin App line <code>'django.contrib.admin',</code>.</li>
+                <li>Now sync the database to create the database tables for the Admin app. Open the command line interface and change directories to the upper directory of your site (where manage.py is). Type <code>python manage.py syncdb</code>.</li>
+                <li>Edit the simplesite/urls.py file (in the same directory as settings.py) and uncomment the three lines that reference admin so it looks like the below (excluding other links or code you may have).
+<pre>
+from django.conf.urls import patterns, include, url
+
+from django.contrib import admin
+admin.autodiscover()
+
+urlpatterns = patterns('',
+    url(r'^admin/', include(admin.site.urls)),
+)
+</pre>
+                </li>
+              </ul>
+              <li>The admin console is now activated. Let's now add the ability to manage users through the Admin Console. Create a file named admin.py, save it to the profiles folder, and populate it with the following:
+<pre>
+from django import forms
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from profiles.models import CustomUser
+
+
+class CustomUserCreationForm(forms.ModelForm):
+    # A form for creating new users. Includes all the required fields, plus a repeated password.
+    password1 = forms.CharField(label="Password", widget=forms.PasswordInput)
+    password2 = forms.CharField(label="Password confirmation", widget=forms.PasswordInput)
+
+    class Meta:
+        model = CustomUser
+        fields = ("email", "city")
+
+    def clean_password2(self):
+        # Check that the two password entries match
+        data = self.cleaned_data
+        password1 = data.get("password1")
+        password2 = data.get("password2")
+        if password1 and password2 and password1 != password2:
+            msg = "Passwords do not match"
+            raise forms.ValidationError(msg)
+        return password2
+
+    def save(self, commit=True):
+        # Save the provided password in hashed format
+        user = super(CustomUserCreationForm, self).save(commit=False)
+        data = self.cleaned_data
+        user.set_password(data["password1"])
+        if commit:
+            user.save()
+        return user
+
+class CustomUserChangeForm(forms.ModelForm):
+    # A form for updating users. Includes all the fields on the user, but replaces the password field
+    # with admin's password hash display field.
+    password = ReadOnlyPasswordHashField()
+
+    class Meta:
+        model = CustomUser
+
+    def clean_password(self):
+        # Regardless of what the user provides, return the initial value. This is done here,
+        # rather than on the field, because the field does not have access to the initial value.
+        return self.initial["password"]
+
+
+class CustomUserAdmin(UserAdmin):
+    # Forms to add and change user instances
+    form = CustomUserChangeForm
+    add_form = CustomUserCreationForm
+
+    # The fields to be used in displaying the User model. These override the definitions on the
+    # base UserAdmin that reference specific fields on auth.User.
+    list_display = ("email", "city", "is_staff")
+    list_filter = ("is_staff", "is_superuser", "is_active", "groups")
+    search_fields = ("email", "city")
+    ordering = ("email",)
+    filter_horizontal = ("groups", "user_permissions",)
+    fieldsets = (
+        (None, {"fields": ("email", "password")}),
+        ("Personal info", {"fields": ("city",)}),
+        ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
+        ("Important dates", {"fields": ("last_login",)}),
+    )
+
+    add_fieldsets = (
+        (None, {
+            "classes": ("wide",),
+            "fields": ("email", "city", "password1", "password2")}
+        ),
+    )
+
+# Register the new Customuser and CustomUserAdmin classes
+admin.site.register(CustomUser, CustomUserAdmin)
+</pre>              
+              </li>
+              <li>The CustomUserCreationForm class is used to specify the fields for creating a new user.</li>
+              <li>The CustomUserChangeForm converts the raw password to a hashed password.</li>
+              <li>The CustomUserAdmin class sets up the Admin console for the custom user profile. Enter the fields and how you want them displayed.</li>
+              <li>We register both the CustomUser and the CustomUserAdmin class.</li>
+            </ul>
+             
+            <!-- TESTING -->
+            <h3 id="custom-testing" class="adjust-anchor">Testing</h3>
+            <ul>
+              <li>Syncronize the database settings with the actual database. Open the command line interface. From the upper site directory (the folder with the manage.py file in it) enter <code>python manage.py syncdb</code></li>
+              <li>Run the virtual server and test that the new profiles app is working in the Admin Console.</li>
+              <ul>
+                <li>from the upper site directory enter <code>python manage.py runserver</code></li>
+                <li>Go to the browser and put in your local ip address, port 8000, and /admin/ as the url: <a href="http://127.0.0.1:8000/admin/" target="_blank">http://127.0.0.1:8000/admin</a></li>
+                <li>Click on "profiles". It should take you to the Profiles Administration Page.</li>
+                <li>Click on Users, you should see yourself and the list of fields we put in the list_display.</li>
+                <li>Click on a user and you should see the fieldsets as we entered them under fieldsets. You can edit your info. Add a new user. Delete a user. If it works, you're done.</li>
               </ul>
             </ul>
               
-            <!-- DOWNLOAD -->
-            <h3 id="app-download" class="adjust-anchor">Download the App</h3>
+          </div> <!--/.span9 -->  
+          
+          <!-- SIDEBAR -->
+          <div class='span3'>
+            <ul class="nav nav-tabs nav-stacked">
+              <li><a href='#custom-overview'><i class="icon-chevron-left"></i> Overview</a></li>		
+              <li><a href='#custom-setup'><i class="icon-chevron-left"></i> Set Up the Project</a></li>					
+              <li><a href='#custom-models'><i class="icon-chevron-left"></i> Models</a></li>	 
+              <li><a href='#custom-admin'><i class="icon-chevron-left"></i> Admin</a></li>
+              <li><a href='#custom-testing'><i class="icon-chevron-left"></i> Testing</a></li>              
+            </ul>
+          </div> <!--/.span3 -->
+        </div> <!-- /.row -->
+      </div><!--/#V3- -->      
+      
+      
+      <!-------------------------------------------------------------------------------------------------------- 
+      -----------  CUSTOM PROFILE WITH LOGIN AND REGISTRATION  ------------------------------------------------>
+      <div class="tab-pane fade" id="loginreg">
+        <div class='row-fluid'>
+          <div class='span9 container-fluid'>
+
+            <h2>Custom Profile with Login and Registration</h2>
+            
+            <!-- Overview -->
+            <h3 id="loginreg-overview" class="adjust-anchor">Overview</h3>
             <ul>
-              <li>Instructions on installing the app are at <a href="https://django-registration.readthedocs.org/en/latest/">https://django-registration.readthedocs.org/en/latest/</a>.</li>
-              <li>Open your command line interface (e.g., Terminal for Mac, Command Prompt for Windows, Bash for Linux).</li>
-              <li>Optional: If you only want this app installed on this project then you should use a virtualenv. If you created your project in a virtualenv then you need to activate it before installing this app. Go to the scripts folder <code>cd <i>/virtualenvs/simpleproj</i>/scripts</code> (your path may differ) and type <code>activate</code>.</li>
-              <li>Use the pip utility to install the app <code>pip install django-registration</code></li>
-              <li>Now the app is installed in the Site-Packages folder, the same place the Django and pip packages reside (<i>/virtualenvs/simpleproj</i>/Lib/site-packages/registration). It will have all the same files as if you created the app yourself and put it in your site folder. That includes views.py, urls.py, forms.py, admin.py, models.py and more. It does not come with templates, so you'll need to create those yourself.</li>
-              <li>You can confirm that it's installed with the command line by entering <code>pip list</code> and all installed packages will show up.</li>
+              <li>This tutorial is the same as the Custom User Profile tutorial except it adds user login and registration forms, views and templates.</li>
+              <li>Django's user model is part of the built-in Auth module. The various model classes are located in (from your Python or Virtualenvs folder) lib/site-packages/django/contrib/auth/models.py</li>
+              <li>The default Django user profile fields are username, password, email, first_name and last_name, with username and password required for login. If you don't want to use all these fields or if you want users to login with their email address rather then username then you need to create a custom user profile.</li>
+              <li>As with extending the default user profile, you create a subclass of the existing user model so you don't have to recreate all the existing code. Django has two user model classes. We created a subclass of the AbstractUser class when we extended the user profile. Django also has a stripped down class called AbstractBaseUser that includes only the Password field, last login date, and is_active=True. You can create whatever fields you like.</li>
+              <li>Our custom user profile will use email as the username and require a password and city. It will not include first_name or last_name.</li>
+              <li>To create a custom user profile we need to create an app (we'll call it profile), and in it populate the models.py and admin.py files.</li>
             </ul>
             
-            <!-- MODIFY -->
-            <h3 id="app-modify" class="adjust-anchor">Modify Your Files to Integrate the App</h3>
+            <!-- Set Up the Project -->
+            <h3 id="loginreg-setup" class="adjust-anchor">Setup</h3>
             <ul>
-              <li>Open the settings.py file. In one of the rows under <code>INSTALLED_APPS = (</code> enter <code>'registration',</code>.</li>
-              <li>In the settings.py file insert <code>ACCOUNT_ACTIVATION_DAYS = 7</code> (You can put it somewhere at the end of the file). This is the number of days the user has to activate their account. After 7 days the activation link that is emailed out will no longer work. We are using 7 here by you can set it to whatever you want.</li>
-              <li>Sync the registration model to your database. From the command line in the folder where the manage.py file is, type <code>python manage.py syncdb</code></li>
-              <li>Open the urls.py file and in a row under <code>urlpatterns = patterns('',</code> enter <code>(r'^accounts/', include('registration.backends.default.urls')),</code></li>
-            </ul>
+              <li>Create a separate user profile app within your project folder.</li>
+              <ul>
+                <li>Open your command line interface (e.g., Terminal for Mac, Command Prompt for Windows, Bash for Linux).</li>
+                <li>Change Directories to your site's upper directory <code>cd /localsites/simplesite</code> or whatever the path is to the manage.py file.</li>
+                <li>Create the folder and files for the application that we'll call profiles (you can call it whatever you like). In the command line enter <code>python manage.py startapp profiles</code></li>
+              </ul>
+              <li>Open the settings.py file in your site's main directory. In one of the rows under <code>INSTALLED_APPS = (</code> enter <code>'profiles',</code>. Now Django will know to include this app with your site.</li>
+              <li>At the bottom of the settings.py file add <code>AUTH_USER_MODEL = 'profiles.CustomUser' </code>. This will tell Django to substitute the CustomUser model for the standard User model.</li>
+            </ul>              
             
+            <!-- MODELS -->
+            <h3 id="loginreg-models" class="adjust-anchor">Models</h3>
+            <ul>
+              <li>In the profiles folder, open the models.py file and insert the following:
+<pre>
+from django.db import models
+from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser, PermissionsMixin)
+
+
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, city, password=None):
+        """ Creates and saves a User with the given email, city, and password. """
+        if not email:
+            msg = "Please enter an email address"
+            raise ValueError(msg)
+
+        if not city:
+            msg = "Please enter your city"
+            raise ValueError(msg)
+
+        user = self.model(
+            email=CustomUserManager.normalize_email(email),
+            city=city,
+        )
+
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, city, password):
+        """ Creates and saves a superuser with the given email, city and password. """
+        user = self.create_user( email, password=password, city=city)
+        user.is_admin = True
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+        return user
+
+USERNAME_FIELD = "email"
+REQUIRED_FIELDS = ["city", ]
+
+
+class CustomUser(AbstractBaseUser, PermissionsMixin):
+    # Inherits from both the AbstractBaseUser and PermissionMixin.
+    email = models.EmailField(verbose_name ="email address", max_length=255, unique=True, db_index=True,)
+    city = models.CharField(max_length=255)
+    is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
+
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = USERNAME_FIELD
+    REQUIRED_FIELDS = REQUIRED_FIELDS
+
+    def get_full_name(self):
+        # The user is identified by their email and city
+        return self.email, self.city
+
+    def get_short_name(self):
+        # The user is identified by their email address
+        return self.email
+
+    def __unicode__(self):
+        return self.email
+</pre>
+              </li>
+              <li>The CustomUserManager class (you can name it whatever you want) is for creating new users and superusers. It is a subclass of the BaseUserManager class, part of the Django Auth module. You can see the details of the class in the Django Auth module located in (from your Python or Virtualenvs folder) lib/site-packages/django/contrib/auth/models.py. </li>
+              <li>The <code>USERNAME_FIELD</code> constant is where you define the unique identifier. The default is username, but here we assigned it to the email field. This field must be set to unique=True, and db_index=True.</li>
+              <li>The <code>REQUIRED_FIELDS</code> constant is where you set the required fields. The USERNAME_FIELD, email, is excluded because it is automatically required.</li>
+              <li>The CustomUser class (you can name it whatever you want) is a subclass of the AbstractBaseUser class. By inheriting from the AbstractBaseUser class, you keep a stripped down version of the Django default user model including the password field, last login date, and is_active=True.</li>
+            </ul>
+
+            <!-- FORMS -->
+            <h3 id="loginreg-forms" class="adjust-anchor">Forms</h3>
+            <ul>
+              <li>Create a file named forms.py, save it in the profiles folder, and populate it with the following:
+<pre>
+from django import forms
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from profiles.models import CustomUser
+
+
+class CustomUserCreationForm(forms.ModelForm):
+    # A form for creating new users. Includes all the required fields, plus a repeated password.
+    password1 = forms.CharField(label="Password", widget=forms.PasswordInput)
+    password2 = forms.CharField(label="Password confirmation", widget=forms.PasswordInput)
+
+    class Meta:
+        model = CustomUser
+        fields = ("email", "city")
+
+    def clean_password2(self):
+        # Check that the two password entries match
+        data = self.cleaned_data
+        password1 = data.get("password1")
+        password2 = data.get("password2")
+        if password1 and password2 and password1 != password2:
+            msg = "Passwords do not match"
+            raise forms.ValidationError(msg)
+        return password2
+
+    def save(self, commit=True):
+        # Save the provided password in hashed format
+        user = super(CustomUserCreationForm, self).save(commit=False)
+        data = self.cleaned_data
+        user.set_password(data["password1"])
+        if commit:
+            user.save()
+        return user
+
+
+class CustomUserChangeForm(forms.ModelForm):
+    # A form for updating users. Includes all the fields on the user, but replaces the password field
+    # with admin's password hash display field.
+    password = ReadOnlyPasswordHashField()
+
+    class Meta:
+        model = CustomUser
+
+    def clean_password(self):
+        # Regardless of what the user provides, return the initial value. This is done here,
+        # rather than on the field, because the field does not have access to the initial value.
+        return self.initial["password"]
+</pre>
+              </li>
+              <li>We moved the CustomUserCreationForm and CustomUserChangeForm from the admin.py file so it can be used both in the Admin console and by site users in the registration form.</li>
+            </ul>   
+            
+            <!-- Urls -->
+            <h3 id="loginreg-urls" class="adjust-anchor">URLs</h3>
+            <ul>
+              <li>Now we will dispatch the URLs.</li>
+              <li>Go to the lower simplesite folder (where settings.py is) and open the urls.py file. Below <code>urlpatterns = patterns('',</code> insert <code>    (r'^accounts/', include('profiles.urls')), </code>. This links the profiles urls to the main url dispatch file.</li>
+              <li>Create a file called urls.py, save it to the profiles directory, and populate it with the following:
+<pre>
+from django.conf.urls import patterns, url
+
+
+urlpatterns = patterns('',
+    # login URLs:
+    url(r'^login/$', 'django.contrib.auth.views.login', name='login'),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout'),
+    url(r'^loggedin/$', 'profiles.views.loggedin', name='loggedin'),
+    # Registration URLs
+    url(r'^register/$', 'profiles.views.register', name='register'),
+    url(r'^register/complete/$', 'profiles.views.registration_complete', name='registration_complete'),
+)  
+</pre>
+              </li>
+              <li>Open the settings.py file and at the bottom insert <code>LOGIN_REDIRECT_URL = '/accounts/loggedin/'</code>. Django's default is to redirect to <code>/accounts/profile</code> when you log in, which is fine if you have an profile page at that url. If not you need to change your settings default for the Login redirect url to the one holding your loggedin.html page.</li>
+            </ul>             
+            
+            <!-- Views -->
+            <h3 id="loginreg-views" class="adjust-anchor">Views</h3>
+            <ul>
+              <li>Create a file called views.py, save it to the profiles folder and populate it with the following:
+<pre>
+from django.shortcuts import render_to_response
+from django.http import HttpResponseRedirect
+from profiles.forms import CustomUserCreationForm
+from django.core.context_processors import csrf
+
+
+def loggedin(request):
+    return render_to_response('registration/loggedin.html',
+                              {'email': request.user.email})
+
+
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/accounts/register/complete')
+
+    else:
+        form = CustomUserCreationForm()
+    token = {}
+    token.update(csrf(request))
+    token['form'] = form
+
+    return render_to_response('registration/registration_form.html', token)
+
+
+def registration_complete(request):
+    return render_to_response('registration/registration_complete.html')
+</pre>
+              </li>
+              <li>You don't need to create functions rendering the login and logout pages because these are done through the Django Auth module.</li>
+              <li>We added a variable called email in the loggedin function to be passed to the loggedin.html template.</li>
+            </ul>             
+       
             <!-- Templates -->
-            <h3 id="app-templates" class="adjust-anchor">Templates</h3>
+            <h3 id="loginreg-templates" class="adjust-anchor">Templates</h3>
             <ul>
-              <li>We will assume your site already has a templates directory and a base.html file with the navigation bar. Open the base.html file and in the nav element add a navigation menu link to the registration page <code>&lt;a href="/accounts/register">register&lt;/a></code></li>
-              <li>If one is not already there, create a directory called registration inside the templates folder.</li>
-              <li>Create a file called registration_form.html, save it to the templates/registration folder, then populate it with the following:
+              <li>We will assume your site already has a templates directory and a base.html file with a navigation bar. Open the base.html file and in the nav element add the following navigation menu links:
+<pre>
+&lt;a href="/accounts/register">Register&lt;/a>
+&lt;a href="/accounts/login">Login&lt;/a>
+&lt;a href="/accounts/logout">Logout&lt;/a>
+&lt;a href="/admin">Admin&lt;/a>
+</pre>              
+              </li>
+              <li>Create a directory called registration inside the templates folder. If you do this through the command line, type <code>mkdir registration</code></li>
+              <li>Start with the login templates. Create a file called login.html, save it to the templates/registration folder, and populate it with the following:
+<pre>
+{% extends "base.html" %}
+{% block title %}Log In{% endblock %}
+{% block content %}
+
+&lt;form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+{% csrf_token %}
+&lt;table>
+  {{ form.as_table }}
+&lt;/table>
+
+&lt;input type="submit" value="login" />
+&lt;/form>
+
+{% endblock %}
+</pre>
+              </li>
+              <li><code>{{ form.as_table }}</code> uses the Django Forms module to create the form. You can create an unformatted form by using <code>{{ form }}</code> without the HTML table tags, or have each field put inside paragraph tags with <code>{{ form.as_p }}</code>, or as an unordered list <code>{{ form.as_ul }}</code></li>
+              <li>Create a file called loggedin.html, save it to the templates/registration folder, and populate it with the following:
+<pre>
+{% extends "base.html" %}
+{% block title %}Logged In{% endblock %}
+{% block content %}
+
+&lt;h1>Welcome {{email}}&lt;/h1>
+&lt;p>Thank you for logging in.&lt;/p>
+&lt;p>&lt;a href="/accounts/logout/">Logout&lt;/a>&lt;/p>
+
+{% endblock %}
+</pre>              
+              </li>
+              <li>Create a file called logged_out.html, save it to the templates/registration folder and populate it with the following:
+<pre>
+{% extends "base.html" %}
+{% block title %}Logged Out{% endblock %}
+{% block content %}
+
+  &lt;h2>Logged out!&lt;/h2>
+  &lt;p>&lt;a href="/accounts/login/">Log back in&lt;/a>&lt;/p>
+
+{% endblock %}
+</pre>
+              </li>
+              <li>Now on to the registration templates. Create a file called registration_form.html, save it to the templates/registration folder, and populate it with the following:
 <pre>
 {% extends "base.html" %}
 {% block title %}Register{% endblock %}
@@ -411,98 +785,139 @@ admin.site.register(ExpandedUser, ExpandedUserAdmin)
 
   &lt;h2>Registration&lt;/h2>
 
-&lt;form action="." method="post">{% csrf_token %}
-  {{ form.as_p }}
+  &lt;form action="/accounts/register/" method="post">{% csrf_token %}
+    {{form.as_p}}
   &lt;input type="submit" value="Register" />
-&lt;/form>
+
+  &lt;/form>
 
 {% endblock %}
-</pre>       
+</pre>
               </li>
               <li>Create a file called registration_complete.html, save it to the templates/registration folder, and populate it with the following:
 <pre>
 {% extends "base.html" %}
-{% block title %}Email Sent{% endblock %}
-{% block content %}
-    
-    &lt;h3>Activation Email Sent&lt;/h3>
-    &lt;p>There is one more step. An activation link has been sent to your email address. Please open it and click on the link to complete your registration.&lt;/p>
-    
-{% endblock %}
-</pre>                           
-              </li>
-              <li>Create a file called activation_complete.html, save it to the templates/registration folder, and populate it with the following:
-<pre>
-{% extends "base.html" %}
-{% block title %}Account Activated{% endblock %}
+{% block title %}You are Registered{% endblock %}
 {% block content %}
 
-&lt;h4>Registration Activated&lt;/h4>
-&lt;p>Your account is now activated.&lt;/p>
-&lt;p>&lt;a href="{% url 'auth_login' %}">Log in&lt;/a>&lt;/p>
+  &lt;h2>Thank you for Registering&lt;/h2>
+  &lt;p>&lt;a href="/accounts/login/">Please Login&lt;/a>&lt;/p>
 
 {% endblock %}
-</pre>              
-              </li>
-              <li>Create a file called activation_email_subject.txt, save it to the templates/registration folder, and populate it with the following:
-<pre>
-Account activation on {{ site.name }}
-</pre>              
-              </li>
-              <li>Create a file called activation_email.txt, save it to the templates/registration folder, and populate it with the following:
-<pre>
-Activate account at {{ site.name }}:
-
-http://{{ site.domain }}{% url 'registration_activate' activation_key %}
-
-Link is valid for {{ expiration_days }} days.
-</pre>              
-              </li>
+</pre>
+              </li>              
             </ul>
-
-            <!-- Testing -->
-            <h3 id="app-testing" class="adjust-anchor">Testing</h3>
+       
+            <!-- Admin -->
+            <h3 id="loginreg-admin" class="adjust-anchor">Manage Profiles Using the Admin Console</h3>
             <ul>
-              <li>Now test it to make sure it works. You'll need to take some added steps to test that the emails are being sent. There are two simple ways you can do this using the core Django mail module. In both methods you need to open the settings.py file and add code to the very bottom of the file.</li>
+              <li>As the site administrator, you can use the Admin Console to view, add, modify, or delete users.</li>
+              <li>Activate Django's Admin App.</li>
               <ul>
-                <li>The first method is just to print the email into your Command Line Interface once it is sent. To do that you add the following line to the bottom of your settings.py file: <code>EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'</code></li>
-                <li>In the second method, Python creates a text file with the email contents. To do this pick or create a directory to hold the email. For simplicity we'll assume you create a folder in the root directory called <i>messages</i>. 
-                <li>Then add the following two lines to the bottom of your settings.py file:
+                <li>Open the settings.py file. Under <code>INSTALLED_APPS</code> uncomment the Admin App line <code>'django.contrib.admin',</code>.</li>
+                <li>Now sync the database to create the database tables for the Admin app. Open the command line interface and change directories to the upper directory of your site (where manage.py is). Type <code>python manage.py syncdb</code>.</li>
+                <li>Edit the simplesite/urls.py file (in the same directory as settings.py) and uncomment the three lines that reference admin so it looks like the below (excluding other links or code you may have).
 <pre>
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-    EMAIL_FILE_PATH = '/<i>messages</i>'
+from django.conf.urls import patterns, include, url
+
+from django.contrib import admin
+admin.autodiscover()
+
+urlpatterns = patterns('',
+    url(r'^admin/', include(admin.site.urls)),
+)
 </pre>
                 </li>
-                <li>This is only used in development not production. The conditional if DEBUG statement will prevent this from executing in production if you set DEBUG to false when you deploy your site (as you should). Alternatively you could just delete the EMAIL_BACKEND and EMAIL_FILE_PATH lines before deploying.</li>
               </ul>
-              <li>Now run the virtual server and test that the process is working.</li>
+              <li>The admin console is now activated. Let's now add the ability to manage users through the Admin Console. Create a file named admin.py, save it to the profiles folder, and populate it with the following:
+<pre>
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from profiles.models import CustomUser
+from profiles.forms import CustomUserCreationForm, CustomUserChangeForm
+
+
+class CustomUserAdmin(UserAdmin):
+    # Forms to add and change user instances
+    form = CustomUserChangeForm
+    add_form = CustomUserCreationForm
+
+    # The fields to be used in displaying the User model. These override the definitions on the
+    # base UserAdmin that reference specific fields on auth.User.
+    list_display = ("email", "city", "is_staff")
+    list_filter = ("is_staff", "is_superuser", "is_active", "groups")
+    search_fields = ("email", "city")
+    ordering = ("email",)
+    filter_horizontal = ("groups", "user_permissions",)
+    fieldsets = (
+        (None, {"fields": ("email", "password")}),
+        ("Personal info", {"fields": ("city",)}),
+        ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
+        ("Important dates", {"fields": ("last_login",)}),
+    )
+
+    add_fieldsets = (
+        (None, {
+            "classes": ("wide",),
+            "fields": ("email", "city", "password1", "password2")}
+        ),
+    )
+
+# Register the new Customuser and CustomUserAdmin classes
+admin.site.register(CustomUser, CustomUserAdmin)
+</pre>              
+              </li>
+              <li>The CustomUserAdmin class sets up the Admin console for the custom user profile. Enter the fields and how you want them displayed.</li>
+              <li>We register both the CustomUser and the CustomUserAdmin class.</li>
+            </ul>
+             
+            <!-- TESTING -->
+            <h3 id="loginreg-testing" class="adjust-anchor">Testing</h3>
+            <ul>
+              <li>Run the virtual server:</li>
               <ul>
-                <li>Open the command line interface.</li>
-                <li>from the upper site directory (the folder with the manage.py file in it) enter <code>python manage.py runserver</code></li>
-                <li>Go to the browser and put in your local ip address, port 8000 as url: <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+                <li>from the upper site directory enter <code>python manage.py runserver</code></li>
+                <li>Go to the browser and put in your local ip address, port 8000, and /admin/ as the url: <a href="http://127.0.0.1:8000/admin/" target="_blank">http://127.0.0.1:8000/admin</a></li>
+              </ul>
+              <li>Test the Login Process</li>
+              <ul>
+                <li>Click on the navigation bar's "login" link. It should take you to the login page.</li>
+                <li>Fill out the form both incorrectly, to see the error messages, and correctly.</li>
+                <li>When filled out correctly you should be directed to the loggedin page.</li>
+                <li>Click Logout.</li>
+              </ul>
+              <li>Test the Registration Process</li>
+              <ul>
                 <li>Click on the navigation bar's "register" link. It should take you to the registration page.</li>
                 <li>Fill out the form both incorrectly, to see the error messages, and correctly.</li>
-                <li>When filled out correctly you should be directed to the thanks page.</li>
-                <li>If you used the console testing method then check your command line interface to see the email message contents. If you used the file method then go to the messages folder and there should be a file with the email content.</li>
-              </ul>  
-              <li>Note the email domain will be example.com. Cut and paste the activation key to 127.0.0.1:8000 to activate it. To change the domain go to the Admin Console <a href="http://127.0.0.1:8000/admin/" target="_blank">http://127.0.0.1:8000/admin/</a> (See the tutorial on activating the Admin console). Click on the sites link. Change example.com to your site's domain name, or the development IP address 127.0.0.1:8000.</li>
-            </ul>  
-            
+                <li>When filled out correctly you should be directed to the register_done page.</li>
+              </ul>
+              <li>Test the Admin Console</li>
+              <ul>
+                <li>Click on the navigation bar's "admin" link. It should prompt you for your email and password, then take you to the Admin Console.</li>
+                <li>Click on Users, you should see yourself and the list of fields we put in the list_display.</li>
+                <li>Click on a user and you should see the fieldsets as we entered them under fieldsets. You can edit your info. Add a new user. Delete a user. If it all works, you're done.</li>
+              </ul>
+            </ul>
+              
           </div> <!--/.span9 -->  
           
           <!-- SIDEBAR -->
           <div class='span3'>
             <ul class="nav nav-tabs nav-stacked">
-              <li><a href='#app-overview'><i class="icon-chevron-left"></i> Overview</a></li>					
-              <li><a href='#app-download'><i class="icon-chevron-left"></i> Download the App</a></li>	
-              <li><a href='#app-modify'><i class="icon-chevron-left"></i> Modify Your Files</a></li>	
-              <li><a href='#app-templates'><i class="icon-chevron-left"></i> Templates</a></li>	
-              <li><a href='#app-testing'><i class="icon-chevron-left"></i> Testing</a></li>	
+              <li><a href='#loginreg-overview'><i class="icon-chevron-left"></i> Overview</a></li>		
+              <li><a href='#loginreg-setup'><i class="icon-chevron-left"></i> Set Up the Project</a></li>					
+              <li><a href='#loginreg-models'><i class="icon-chevron-left"></i> Models</a></li>	 
+              <li><a href='#loginreg-forms'><i class="icon-chevron-left"></i> Forms</a></li>	 
+              <li><a href='#loginreg-urls'><i class="icon-chevron-left"></i> Urls</a></li>	 
+              <li><a href='#loginreg-views'><i class="icon-chevron-left"></i> Views</a></li>	 
+              <li><a href='#loginreg-templates'><i class="icon-chevron-left"></i> Templates</a></li>	 
+              <li><a href='#loginreg-admin'><i class="icon-chevron-left"></i> Admin</a></li>
+              <li><a href='#loginreg-testing'><i class="icon-chevron-left"></i> Testing</a></li>              
             </ul>
           </div> <!--/.span3 -->
         </div> <!-- /.row -->
-      </div><!--/#module- -->
+      </div><!--/#loginreg -->      
           
           
       

@@ -1,0 +1,326 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+	<meta charset="utf-8"> 
+	<title>Upload Images | Python Django Starter Kit</title> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Various tools and reference material to get started and up to speed with Python Django.">
+  <meta name="author" content="Steve Carey, TechandStartup.com founder">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />  
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css" />  
+	<style type="text/css">
+		body {
+			padding-top:60px;
+		}
+		/* The adjust-anchor class is also related to the navbar-fixed-top class. It is needed when you have internal links on the page. Without it the top line of the anchored link would be hidden by the navbar. */
+		.adjust-anchor {
+			padding-top: 40px; 
+			margin-top: -40px;
+		}
+	</style>
+</head>
+<body>
+
+	<!-- NAVBAR -->
+  <div class="navbar navbar-inverse navbar-fixed-top">  
+    <div class="navbar-inner">
+			<div class="container">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="#">Python Django Starter Kit</a>
+				<div class="nav-collapse collapse">
+					<ul class="nav pull-right">
+						<li><a href="index.html">Home</a></li>
+						<!-- Tools Dropdown Menu  -->
+						<li class="dropdown"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Tools
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+                <li><a href="python-tools.html">Django Environment</a></li>
+                <li><a href="python-postgres.html">Install PostgreSQL</a></li>
+              </ul>
+						</li>
+						<!-- Reference Dropdown Menu  -->
+						<li class="dropdown"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Code Reference
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+                <li><a href="python-command.html">Command Line</a></li>
+                <li><a href="python-reference.html">Python Reference</a></li>                
+                <li><a href="#">Django Reference (coming soon)</a></li>
+              </ul>
+						</li>
+						<!-- Django Apps Dropdown Menu  -->
+						<li class="dropdown active"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Django Apps
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a href='python-pollsapp.html'>Pollsapp</a></li>
+								<li><a href='python-simple-site.html'>Simple Site</a></li>
+								<li><a href='python-contact.html'>Contact Form</a></li>
+                <li><a href='python-admin.html'>Admin Console</a></li>
+                <li><a href='python-login.html'>Login</a></li>
+                <li><a href='python-registration.html'>Registration</a></li>
+                <li><a href='python-pwreset.html'>Password Reset</a></li>
+                <li><a href='python-pwchange.html'>Change Password</a></li>
+                <li><a href='python-profiles.html'>Profiles</a></li>
+                <li><a href='python-stuff.html'>Stuff App</a></li>
+                <li class="active"><a href='python-images.html'>Upload Images</a></li>
+              </ul>
+						</li>
+            <li><a href="python-heroku.html">Heroku Hosting</a></li>
+					</ul>
+				</div><!--/.nav-collapse -->
+			</div><!--/.container -->	
+    </div><!--/.navbar-inner -->
+  </div><!--/.navbar -->
+	
+	<!-- CONTENT -->
+	<div class="container">
+
+        
+    <!-- Page Header -->
+    <div class="well">  <!-- <div class="page-header">  -->
+      <h1>Upload Image Files <small>Add Image Files to the Stuff App</small></h1>
+      <hr/>
+
+      <p>In the last tutorial we created a CRUD (Create-Read-Update-Delete) application template called the Stuff App. In this tutorial we will add an image field to this so that users can upload a picture of their stuff. We are not going to recreate the Stuff App, rather we will add in the code to the existing app. If you have not created the stuff app, please do so before proceeding.</p>
+    </div>
+
+    <!-- TABS TO SELECT ENVIRONMENT 
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#basic" data-toggle="tab">Stuff App</a></li>
+      <li><a href="#images" data-toggle="tab">Add Images</a></li>
+    </ul>  -->
+        
+    <div id="myTabContent" class="tab-content">
+
+<!-------------------------------------------------------------------------------------------------------------
+------  STUFF APP WITH IMAGES -------------------------------------------------------------------------------->     
+      <!-- <div class="tab-pane fade" id="images">  -->
+        <div class='row-fluid'>
+          <div class='span9 container-fluid'>
+            <h2>Add Image Files to the Stuff App</h2>
+
+            <!-- Set Up -->
+            <h3 id="images-setup" class="adjust-anchor">Setup</h3>
+            <ul>
+              <li>We will need to do three things:
+              <ul>
+                <li>Create a media folder to hold the images that our site's users will upload.</li>
+                <li>Add a field to the Thing table in the database to hold the image name.</li>
+                <li>Add code to our models, settings, and templates files.</li>
+              </ul>
+              <li>First create a folder to hold the image file uploads. Go to the static directory and inside that create a folder called <i>stuff_images</i> (or whatever name you like).</li>
+              <li>Go to the settings.py file and add the path for the uploaded image files. Change <code>MEDIA_ROOT = ''</code> to <code>MEDIA_ROOT = os.path.join(os.path.dirname(__file__), '..', 'static').replace('\\','/') </code></li>
+              <li>Your database does not have a stuff_image field. You cannot add it by running syncdb. Syncdb will only create new tables, not modify existing tables. So you can do one of three things.
+              <ul>
+                <li>Start from scratch by going to the lower site folder and deleting the sqlite.db database file. You will lose all existing records in your database doing this.</li>
+                <li>Install the Sqlite Manager plugin for the Mozilla Firefox browser. Then go to the database and delete the Thing table by following these steps from the Firefox browser: Click on the Firefox menu -> Web Developer -> SQLite Manager -> Database menu -> Connect Database -> browse to the lower simplesite directory -> select db.sqlite -> select Stuff_Thing table -> Drop. You will lose any records you have in the table doing this.</li>
+                <li>Install the Sqlite Manager plugin for the Mozilla Firefox browser. Then go to the database and edit the Thing table. Add a column called stuff_images with type set to Varchar by following these steps from the Firefox browser: Click on the Firefox menu -> Web Developer -> SQLite Manager -> Database menu -> Connect Database -> browse to the lower simplesite directory -> select db.sqlite -> select Stuff_Thing table -> Select the Structure tab -> At the bottom in the name field enter <i>stuff_images</i> -> in the type field enter <i>varchar</i> -> click Add Column. This way you will NOT lose records you already have in the table.</li>
+              </ul>
+              </li>
+            </ul>                
+            
+            <!-- Models -->
+            <h3 id="images-models" class="adjust-anchor">Models.py</h3>
+            <ul>
+              <li>Open the models.py file in the stuff folder. In the Thing Class go one line below <code>creation_date</code> and insert <code>    stuff_image = models.FileField(upload_to="stuff_images/") </code>. This will add a field called stuff_image that will store the image file name and path from your media root directory. The database does not store the image file itself, rather that is saved to the directory you specified in the settings file under media_root. The FileField class is part of the built-in Django models module. It is located at (from your Python or Virtualenv folder) lib/site-packages/django/db/models/fields/files.py</li>
+              <li>So now the models.py file should look like:
+<pre>
+from django.db import models
+
+
+class Thing(models.Model):  
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    quantity = models.IntegerField()
+    creation_date = models.DateTimeField(auto_now_add=True)
+    stuff_image = models.FileField(upload_to="stuff_images/")
+
+    def __unicode__(self):
+        return self.title
+        
+    class Meta:
+        ordering = ['title']
+</pre>              
+              </li>
+              <li>This folder can get filled up quickly so one solution is to create subfolders based on the date submitted. To create cascading subfolders for the year, month and day, change <code>stuff_image = models.FileField(upload_to="stuff_images/")</code> to <code>stuff_image = models.FileField(upload_to="stuff_images/%Y/%m/%d") </code></li>
+              <li>Use the ImageField Class</h3>
+              <ul>
+                <li>We used the FileField class for the image files which works for any kind of file uploads. However, there is a subclass of the FileField called ImageField that validates that the file is a valid image, and includes optional height and width arguments.</li>
+                <li>This class requires that you install the Python Image Library to your Python site-packages folder. You can download that from <a href='http://www.pythonware.com/products/pil/'>www.pythonware.com/products/pil/</a> and install it in just a few minutes.</li>
+                <li>Now change the <code>stuff_image = models.<i>FileField</i>(upload_to="stuff_images/")</code> variable from <code>FileField</code> to <code>ImageField </code>. Django will now verify that any file uploads are valid image formats like png and jpg.</li>
+              </ul>
+              <li>Create an autogenerated filename</li>
+              <ul>
+                <li>So far, we are just using the file name that the user named it. If two users upload the same file name, it will be appended with _1 so there won't be a conflict. However, you still may want to change the file name. We will use use something random like time.</li> 
+                <li>At the top of the models.py file import the time module <code>from time import time </code>. In the <i>Thing</i> class go to the <i>stuff_image</i> field and change <code>upload_to="stuff_images/")</code> to call a function called generate_fieldname <code>upload_to=generate_filename</code></li>
+                <li>Above the Thing class insert the <i>generate_fieldname</i> function as follows:
+<pre>
+def generate_filename(instance, filename):
+    ext = filename.split('.')[-1]
+    return 'stuff_images/' + str(int(time())) + '.' + ext
+</pre>                
+                </li>
+                <li>This function takes the user's filename and splits out the extension (e.g., png, jpg). It converts the current time to an integer to eliminate any decimal points, then converts the integer into a string so it can be used in the filename. The function returns a concatenation of the <i>stuff_images/</i> path, the current time, and the file extension. Now you have a system generated filename.</li>
+              </ul>
+              <li>Delete the image file:</li>
+              <ul>
+                <li>If you click on <i>Delete This Stuff</i> in your browser, it will delete the record from the database, including the stuff_image field. But that only contains the link to the image, not the image file itself. In order to delete the image file from our media directory when the database record is deleted we need to add a function to the models.py file.</li>
+                <li>At the top of the models.py file add two imports:
+<pre>
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
+</pre>                
+                </li>
+                <li>At the bottom of the models.py file insert the following function:
+<pre>
+@receiver(post_delete, sender=Thing)
+def stuff_post_delete_handler(sender, **kwargs):
+    Thing = kwargs['instance']
+    storage, path = Thing.stuff_image.storage, Thing.stuff_image.path
+    storage.delete(path)
+</pre>                
+                </li>
+                <li>Now when you click <i>Delete This Stuff</i>, the database record will be deleted and a signal will be sent to execute the stuff_post_delete_handler function. This will delete the image file from your media folder.</li>
+              </ul>
+              <li>Below is what your models.py file will look like if you add the above changes, with the exception of using %Y/%m/%d to create subfolders.
+<pre>
+from time import time
+from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
+
+
+def generate_filename(instance, filename):
+    ext = filename.split('.')[-1]
+    return 'stuff_images/' + str(int(time())) + '.' + ext
+
+
+class Thing(models.Model):  
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    quantity = models.IntegerField()
+    creation_date = models.DateTimeField(auto_now_add=True)
+    stuff_image = models.ImageField(upload_to=generate_filename)
+
+    def __unicode__(self):
+        return self.title
+        
+    class Meta:
+        ordering = ['title']
+
+
+@receiver(post_delete, sender=Thing)
+def stuff_post_delete_handler(sender, **kwargs):
+    Thing = kwargs['instance']
+    storage, path = Thing.stuff_image.storage, Thing.stuff_image.path
+    storage.delete(path)
+</pre>              
+              </li>
+            </ul> 
+
+            <!-- Templates -->
+            <h3 id="images-templates" class="adjust-anchor">Templates</h3>
+            <ul>
+              <li>In order to upload a file as part of a form you have to add the attribute <code>enctype="multipart/form-data"</code> to the opening form tag.</li>
+              <ul>
+                <li>Open the create_stuff.html file and change <code>&lt;form action="" method="post"></code> to <code>&lt;form action="" method="post" enctype="multipart/form-data"></code></li>
+                <li>Open the edit_stuff.html file and change <code>&lt;form action="" method="post"&gt;</code> to <code>&lt;form action="" method="post" enctype="multipart/form-data"&gt;</code></li>
+              </ul>
+              <li>Add the image field to the thing_details.html file.</li>
+              <ul>
+                <li>Open thing_details.html and insert <code>&lt;p>&lt;img src="/static/{{ thing.stuff_image }}" width="200"/>&lt;/p> </code>. This pulls the image name from the database and appends it to the source folder. We added the width attribute because we did not resize the image when we loaded it.</li>
+                <li>If including an image is optional you can put it inside an if statement. So now the thing_details.html file would look like the following:
+<pre>
+{% extends 'base.html' %}
+{% block title %}Details{% endblock %}
+{% block content %}
+
+  &lt;h2>{{ thing.title }}&lt;/h2>
+  &lt;p>&lt;b>Created:&lt;/b> {{ thing.creation_date|date:"D, Y/m/d" }}&lt;/p>
+  &lt;p>&lt;b>Description:&lt;/b> {{ thing.description }}&lt;/p>
+  &lt;p>&lt;b>Quantity:&lt;/b> {{ thing.quantity }}&lt;/p>
+  {% if thing.stuff_image %}
+  &lt;p>&lt;img src="/static/{{ thing.stuff_image }}" width="200"/>&lt;/p>
+  {% endif %}
+
+  &lt;p>&lt;a href="{% url "edit_stuff" thing.id %}">Edit Your Stuff&lt;/a>&lt;/p>
+  &lt;p>&lt;a href="{% url "delete_stuff" thing.id %}">Delete This Stuff&lt;/a>&lt;/p>
+
+{% endblock %}
+</pre>              
+                </li>
+              </ul>
+            </ul>   
+            
+            <!-- Views -->
+            <h3 id="images-views" class="adjust-anchor">Views</h3>
+            <ul>
+              <li>Open the views.py file in the stuff folder. Add <code>request.FILES</code> to the Form variable.</li>
+              <li>In the create_stuff function change <code>form = StuffForm(request.POST)</code> to <code>form = StuffForm(request.POST, request.FILES)</code></li>
+              <li>In the edit_stuff function change <code>form = StuffForm(request.POST, instance=thing)</code> to <code>form = StuffForm(request.POST, request.FILES, instance=thing)</code></li>           
+              <li>Now let's test it.</li>
+            </ul>
+            
+            <!-- TESTING -->
+            <h3 id="images-testing" class="adjust-anchor">Testing</h3>
+            <ul>
+              <li>Run the virtual server and test the app in your browser.</li>
+              <li>Open the command line interface.</li>
+              <li>from the upper site directory (the folder with the manage.py file in it) enter <code>python manage.py runserver</code></li>
+              <li>Go to the browser and put in your local ip address and port 8000 as url: <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+              <li>Click on the navigation bar's "stuff" link. It should take you to the index.html page listing any stuff you have... which is none at this point.</li>
+              <li>Click on the create stuff link. It should take you to the create_stuff form.</li>
+              <li>Fill out the form. Click Choose File and select an image from your computer. Click Submit.</li>
+              <li>When filled out correctly you should be directed back to the stuff page. You should see the item you just entered.</li>
+              <li>Click on the item and it should take you to the thing_detail page and show your image. Click on the Edit My Stuff link.</li>
+              <li>This should take you to the edit_stuff page with the form. Select a different image from your computer and click submit. You should be routed back to the thing_detail page with the new image displayed.</li>
+              <li>Test the delete function. Go to the stuff link and click on the details for a specific thing. Click "Delete This Thing". It should take you back to the main stuff page with the deleted record gone.</li>
+              <li>Click on the Admin link. You should see a category called stuff with a link called Thing. Click on Thing and you should see the records in your database. You can add, update, or delete records from the Admin Console.</li>
+              <li>If it all works you are not done. Well, you got a simple version working but we need to improve it to prevent huge files or non-image files from being uploaded.</li>
+            </ul>
+            
+          </div> <!--/.span9 -->  
+        	<!-- SIDEBAR -->
+          <div class='span3'>
+            <ul class="nav nav-tabs nav-stacked">
+              <li><a href='#images-setup'><i class="icon-chevron-left"></i> Setup</a></li>    
+              <li><a href='#images-models'><i class="icon-chevron-left"></i> Models</a></li>	
+              <li><a href='#images-templates'><i class="icon-chevron-left"></i> Templates</a></li>	
+              <li><a href='#images-views'><i class="icon-chevron-left"></i> Views</a></li>	
+              <li><a href='#images-testing'><i class="icon-chevron-left"></i> Testing</a></li>
+            </ul>
+          </div> <!--/.span3 -->
+        </div> <!-- /.row -->
+      <!-- </div> <!--/#basic -->    
+          
+          
+    </div><!--/#myTabContent -->
+    
+		<hr/>
+		<footer class="span9">
+			<center>Python Django Starter Kit  |  Posted by <a href="http://techandstartup.com">TechandStartup.com</a></center>
+		</footer>
+
+</div>  <!-- /container -->
+
+<!-- Javascript is at the end for faster page loading -->
+  <script src="js/jquery-1.10.1.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <!-- Or link to the js files hosted on a content delivery network
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>	-->
+</body>
+</html> 
+            

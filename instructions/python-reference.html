@@ -1,0 +1,571 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+	<meta charset="utf-8"> 
+	<title>Python Django Starter Kit | Page Title</title> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Various tools and reference material to get started and up to speed with Python Django.">
+  <meta name="author" content="Steve Carey, TechandStartup.com founder">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />  
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css" />  
+	<style type="text/css">
+		body {
+			padding-top:60px;
+		}
+		/* The adjust-anchor class is also related to the navbar-fixed-top class. It is needed when you have internal links on the page. Without it the top line of the anchored link would be hidden by the navbar. */
+		.adjust-anchor {
+			padding-top: 40px; 
+			margin-top: -40px;
+		}
+	</style>
+</head>
+<body>
+
+	<!-- NAVBAR -->
+  <div class="navbar navbar-inverse navbar-fixed-top">  
+    <div class="navbar-inner">
+			<div class="container">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="#">Python Django Starter Kit</a>
+				<div class="nav-collapse collapse">
+					<ul class="nav pull-right">
+						<li><a href="index.html">Home</a></li>
+						<!-- Tools Dropdown Menu  -->
+						<li class="dropdown"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Tools
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+                <li><a href="python-tools.html">Django Environment</a></li>
+                <li><a href="python-postgres.html">Install PostgreSQL</a></li>
+              </ul>
+						</li>
+						<!-- Reference Dropdown Menu  -->
+						<li class="dropdown active"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Code Reference
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+                <li><a href="python-command.html">Command Line</a></li>
+                <li class="active"><a href="python-reference.html">Python Reference</a></li>
+                <li><a href="django-reference.html">Django Reference (coming soon)</a></li>
+              </ul>
+						</li>
+						<!-- Django Apps Dropdown Menu  -->
+						<li class="dropdown"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Django Apps
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a href='python-pollsapp.html'>Pollsapp</a></li>
+								<li><a href='python-simple-site.html'>Simple Site</a></li>
+								<li><a href='python-contact.html'>Contact Form</a></li>
+                <li><a href='python-admin.html'>Admin Console</a></li>
+                <li><a href='python-login.html'>Login</a></li>
+                <li><a href='python-registration.html'>Registration</a></li>
+                <li><a href='python-pwreset.html'>Password Reset</a></li>
+                <li><a href='python-pwchange.html'>Change Password</a></li>
+                <li><a href='python-profiles.html'>Profiles</a></li>
+                <li><a href='python-stuff.html'>Stuff App</a></li>
+                <li><a href='python-images.html'>Upload Images</a></li>
+              </ul>
+						</li>
+            <li><a href="python-heroku.html">Heroku Hosting</a></li>
+					</ul>
+				</div><!--/.nav-collapse -->
+			</div><!--/.container -->	
+    </div><!--/.navbar-inner -->
+  </div><!--/.navbar -->
+	
+	<!-- CONTENT -->
+	<div class="container">
+
+<!-------------------------------------------------------------------------------------------------------------
+------  BEGIN CONTENT ----------------------------------------------------------------------------------------> 
+    <div class="well">  <!-- <div class="page-header">  -->
+      <h1>Python Reference <small>for web applications</small></h1>
+      <hr/>
+    </div>    
+
+    <div class='row-fluid'>
+      <div class='span9 container-fluid'>
+      
+<!-- OVERVIEW -->
+<h3 id="overview" class="adjust-anchor">Python Overview</h3>
+<ul>
+  <li>About Python:</li>
+  <ul>
+    <li>Python is a relatively new language, released in 1991. Guido van Rossum was the principal author, and he plays a central role in overseeing the directon of the language. Organizations that use Python as their primary or a primary backend programming language include Google, Youtube, NASA, Reddit, Quora, Dropbox, Yahoo, Instagram, Pinterest.</li>
+    <li>Python is a general purpose programming language, which includes web programming but is used in many other capacities, and is popular in scientific communities. </li>
+    <li>It is an object oriented programming languange meaning it is data-centered as opposed to function centered.</li>
+    <li>A script is a list of commands that can be executed without user interaction. Python is not specifically a scripting language like a pure web language such as PHP or JavaScript, but it's web programs are scripts.</li>
+    <li>Python is an interpreted language as opposed to a compiled language like C or C++. This means that the source files can be run directly without first creating an executable file. Because you don't have to take the step of compiling it, there are less steps involved in developing and testing. So in that sense, interpreted languages are easier for development. However, compiled languages optimize the code so they usually run faster.</li>
+    <li>Although Python is an interpreted language, Python converts it's files into byte code the first time you run them. Those are the files that end in pyc. This strips out unnecessary code like spaces and comments to make Python code run fast.</li>
+    <li>Python stands out among programming language for its explicit use of white space (spaces and blank lines). While most programming languages mostly ignore white space, and rely on things like colons, semicolons, curly braces etc. to distinguish between lines of code, Python generally uses indentation and blank lines to make these distinctions. As a result there are less arcane characters to type and mistype, and the layout of the code is very consistent, clean, and readable. This has contributed greatly to the language's popularity.</li>
+    <li>Python's documentation is considered very good. The website is <a href="http://www.python.org/"></a>www.python.org</li>, with the documentation at <a href="http://www.python.org/doc/">www.python.org/doc</a>
+    <!-- li>interpreted - Python is an interpreted language, as opposed to a compiled one (like C). This means that the source files can be run directly without first creating an executable which is then run. Interpreted languages typicaly have a shorter development/debug cycle than compiled ones, though their programs generally also run more slowly. </li>
+    <li>byte code - The internal representation of a Python program in the interpreter. The byte code is also cached in .pyc and .pyo files so that executing the same file is faster the second time (the step of compilation from source to byte code can be saved). This "intermediate language" is said to run on a "virtual machine" that calls the subroutines corresponding to each bytecode.</li-->
+  </ul>
+
+  <li>Python versions:</li>
+  <ul>
+    <li>At the time of this writing, the current version of Python was 3.3. The latest 2.x version was 2.7. The Django framework was not compatible with Pyton 3.x until the release of Django 1.5 in Feb 2013. Django 1.5 is compatible with both Python 3.3 and 2.7. So which should you use? More and more Python applications are converting to 3.x. But many third party site packages may not work properly with Python 3.x.</li>
+    <li>You can actually download both and run either on your machine to test code. But you have to take a couple of steps. Obviously the Python folder names will be different, like python27 and python33. You don't want to run both versions of Python at the same time so you need to change your Path from Python27 to Python33 or viceversa. Additionally, at least on Windows machines you should open the verion you are not using and change the .exe file names. So if you want to use python 2.7 and not python 3.3 then go to the Python33 folder and change python.exe to python33.exe, and pythonw.exe to pythonw33.exe (or could be any name really). Your system will search for Python.exe so by changing the name of one set it won't execute the wrong one.</li>
+  </ul>
+  <li>Official Python glossary <a href="https://wiki.python.org/moin/PythonGlossary">of terms</a> and <a href="https://wiki.python.org/moin/PythonGlossary?action=AttachFile&do=view&target=PySymbols.html">of symbols</a>.</li>
+  <li>Python concepts you need to be familiar with: variables, strings, numbers, lists, tuples, dictionaries, functions, classes, modules and packages, loops, conditionals (e.g., if statements), and regular expressions.
+  </li>
+</ul>   
+
+
+<!-- SYNTAX -->
+<h3 id="syntax" class="adjust-anchor">General Syntax and Style</h3>
+<ul>
+  <li>Python has an official style guide called Pep8 found at <a href="http://www.python.org/dev/peps/pep-0008/">www.python.org/dev/peps/pep-0008</a>. Some things are required to make your code work (such as the right number of spaces), and others are good practices, but your code will still work without following them. But in general... follow them.</li>
+  <li>Use 4 spaces for each indentation level. Don't use tabs for indentation.</li>
+  <li>Limit all lines to a maximum of 79 characters.</li>
+  <li>Comments:</li>
+  <ul>
+    <li>Single line comments: start with the pound sign <code># enter single line comment here</code></li>
+    <li>For multiple line comments, you can either put a <code>#</code> in front of each line, or start and end the comment block with three quotation marks <code>""" enter multiple line comments here """</code></li>
+    <li>Comments should describe why you are doing what you're doing. They should help another programmer, or you if you are reading your code months or years later, understand what the code is for. Keep them relatively short and to the point.</li>
+  </ul>
+  <li>Each category below includes the syntax and style that applies to it.</li>
+</ul>   
+
+<!-- VARIABLES AND CONSTANTS -->
+<h3 id="datatypes" class="adjust-anchor">Variables and Constants</h3>
+<ul>
+   <li>Variable: A symbol or name that stands for (represents) a value. Example: <code>first_name = "Steve"</code>. The variable's value can be changed at any time.</li> 
+   <li>Structure:</li>
+   <ul>
+    <li>The equal sign is used to assign values to variables.</li>
+    <li>The operand to the left of the = operator is the name of the variable. Variable names can include letters, numbers and underscores, but cannot start with a number. Use lower case letters. If more than one word is needed, separate them with underscores. Functions use this same naming convention.</li>
+    <li>The operand to the right of the = operator is the value stored in the variable.</li> 
+    <li>Variables must have a data type. The data type does not need to be explicitly declared (variable x is a string). Rather it is implied by the syntax around the value. If the value is a string, put it in quotes. A number without quotes is an integer, with quotes it is a string, and with decimal points it is a float. Multiple values inside square brackets are a list. Multiple values in parentheses or with no kind of brackets at all are tuples. Values in curly braces are dictionaries. A single word or word with underscores, but without quotes implies that you are assigning another variable to this variable <code>variable1 = variable2</code>.</li>
+   </ul>
+   <li>Scope:</li>
+   <ul>
+    <li>The variable's scope is how much of your program it applies to. A <i>global variable</i> applies to your entire program. A <i>local variable</i> applies to just one part of your code. For instance it can apply only to one function.</li>
+    <li>Whether a variable is global or local depends on where you place the variable. If you put it inside a class or function then it applies only to that class or function. You can add some code that passes the variable on to another part of your code too. For instance the user's username can be passed from a function to a template, so that the username can be displayed (hello <i>username</i>).</li>
+   </ul>
+   <li>Namespace: a namespace is where a variable is stored in Python's memory. <!--
+   namespace - The place where a variable is stored in a Python program's memory. Namespaces are implemented as a dictionary. There are the local, global and builtins namespaces and the nested namespaces in objects (in methods). Namespaces support modularity by preventing naming conflicts. For instance, __builtins__.open() and os.open() are distinguished by their namespaces. Namespaces also aid readability and maintainabilty by making it clear which modules implement a function. For instance, writing random.seed() and itertools.izip() will make it clear that those functions are implemented by the random and itertools modules respectively. --></li>
+   <li>Constant: A constant is like a variable but once it is set it doesn't change. The same structure that applies to variables applies to constants, except that CONSTANTS should be in ALL CAPITAL LETTERS to distinguish them from variables. </li>
+</ul>
+
+<!-- DATATYPES -->
+<h3 id="datatypes" class="adjust-anchor">Datatypes</h3>
+<ul>
+  <li>Data type is a "category" of data that differ in their properties (such as mutability and immutability), the methods and functions applicable to them, and in their representations. Python has built-in data types for stings, numbers, tuples, lists and dictionaries. </li>
+  <ul>
+    <li>Mutable objects can change their value but keep their id(), while immutable objects have fixed values that can't be altered.</li>
+  </ul>
+  <li>String data type:</li>
+  <ul>
+    <li>A string is a series of characters in single or double quotes, often used to display text to the user. Example: <code>error_message = <i>"You must enter a username"</i></code>. In this example <i>error_message</i> is a variable name that is set equal to a string.</li>
+    <li>Python lets you put variables into strings by using the percent symbol as a placeholder. To put a string variable in a string use %s. Example: <code>"My name is %s." % "Steve"</code>. Or if the variable is defined elsewhere, put the variable name without quotes. Example: <code>"My name is %s." % first_name</code></li>
+    <li>To put a digit variable in a string: use %d. Example: <code>"There are %d items on the list." % 10</code> or if the number if items is defined elsewhere in a variable called item_quantity: <code>"There are %d items on the list." % item_quantity</code>.</li>
+    <li>If you have multiple variables in one string, put them in parentheses, separated by commas. Example: <code>"There are %s articles published and %d articles unpublished." % ('five', 2)</code></li>
+    <li>To display a string on multiple lines you can use <code>\n</code>. Example: <code>weekdays = "Mon\nTues\nWed\nThurs\nFri"</code>.</li>
+    <li>To display a string on multiple lines you can also put it inside triple quotes. Example:
+<pre>
+Days = """
+Mon
+Tues
+Wed
+"""
+</pre>    
+    </li>
+    <li>To display a string starting with a tab use <code>\t</code>. Example <code>"\tMy name is Steve."</code></li>
+    <li>To escape special characters like quote use the forward slash <code>\</code>. Example: <code>quote_variable = "The politician said \"Don't quote me on that\"."</code></li>
+    <li>You could also put it in triple quotes: <code>quote_variable = """The politician said "Don't quote me on that"."""</code></li>
+  </ul> 
+  <li>Common Numeric data types:</li>  
+  <ul>
+    <li>Integer: a whole number. Has no decimal points and can be positive or negative.</li>
+    <li>Float (or Floating Decimal Point): A number with decimal points.</li>
+    <li>Boolean: data type that can only be True or False. Boolean is actually a subtype of Integer.</li>
+  </ul>
+  <li>List:</li>
+  <ul>
+    <li>A list is a sequence of values (i.e., a list of values). It can contain strings or numbers. The values of a list are mutable, meaning they can change. Other programming languages call this an array.</li> 
+    <li>Lists have square brackets. List items are separated by commas. If list items are strings put them in quotes.</li>
+    <li>Format: <i>list_name</i> = [value1, value2, value3]</li>
+    <li>Example: <code>students = ['Mike', 'Lisa', 'Victoria', 'Tom']</code>. Since there are new students every semester, the values of the list change.</li>
+    <!-- li>Each item in a list is assigned a sequential number starting with 0. So the first value is item 0, the second value is item 1, etc.</li-->
+    <!-- <li>list - A built-in Python datatype, which is a mutable sorted sequence of values. Note that only sequence itself is mutable; it can contain immutable values like strings and numbers. </li>
+    <li> A list is built-in Python datatype that is a container of values that are organized in order. Give the list a variable name, followed by square brackets to contain the list items. Separate list items with commas. If list items are strings put them in quotes. <code>Listname = ['item1', 'item2', 'item3']</code>. Some programming languages call this an array.</li>  -->
+  </ul>
+  
+  <li>Tuple:</li>
+  <ul>
+    <li>A tuple is a list that you can't modify (it's immutable). Once you set it, the values won't change.</li> 
+    <li>Instead of using square brackets like a list, tuples use parentheses. If a list has no brackets, it will default to a tuple. Separate values in a tuple with commas. If there is only one value in a tuple, you put a comma after it.</li>
+    <li>Format: <i>tuple_name</i> = (value1, value2, value3)</li>
+    <li>Example: <code>weekdays = ('Mon', 'Tues', 'Wed', 'Thurs', 'Fri')</code></li>
+  </ul>
+  <li>Dictionary:</li>
+  <ul>
+    <li>A dictionary (also called a dict) is a list of key and value pairs. The main operations on a dictionary are storing a value with some key and extracting the value given the key. Other programming languages call these associative arrays.
+    <li>The keys must be unique to the dictionary, but the values don't have to be. The key must be of one data type (strings, numbers, or tuples) and immutable (you can't change the keys). The values don't have to be unique and they are mutable (they can change).</li>
+    <li>Dictionaries are surrounded by curly braces. Each key and value is separated by a colon, and each pair is separated by a comma.</li>
+    <li>Format: <i>dict_name</i> = {key1:value, key2:value, key3:value}</li>
+    <li>Example: gadget_prices = {'laptop computer':2000, 'desktop computer':1000, 'printer':500, 'smart phone':300}</li>
+  </ul>
+</ul>  
+
+<!-- MODULES AND PACKAGES -->
+<h3 id="modules" class="adjust-anchor">Modules and Packages</h3>
+<ul>
+  <li>Module: A module is a file that contains variables, functions and classes related to a specific function or activity. For instance there are Authentication modules, Time and Date modules, Math modules, etc. Other programs call these libraries, and in Python they are also sometimes called libraries.</li>
+  <li>A Package is complilation of related modules. A package must include a file named __init__.py. The presence of this file tells Python that this is a Package. The file may or may not contain any code it it, but other files in the directory will contain functions and classes that make up the package. Apps are a type of package.</li>
+  <!--li>To see a list of functions and classes in a module, along with the description in the docstring, go to the command line interface, change directory to the module's folder. Then type <code>help(<i>module_name</i>)</code></li-->
+  <li>Module and Package sources:</li>
+  <ul>
+    <li>A) Built-in Python modules and packages:</li>
+    <ul>
+      <li>There are modules and packages built-in to the Python Standard Library that is installed with Python. Some examples include datetime, math, os.path for common path manipulations, string for string manipulations, sqlite3 for interfacing with that database, email, json, and more. The full list in on the <a href="http://docs.python.org/3/library/">Python website library docs page</a>.</li>
+      <li>Some modules are written in Python and some in C. The ones in C you can't view. The Python ones are located in the Python/lib folder.</li>
+      <li></li>For the full list of built-in functions go to the Python website functions page. 
+      <li>You can view a list of all the build-in modules and packages through the command line. Enter <code>python -v</code> and the list will print on your command line interface.</li>
+      <li>Within a particular module you can view all it's functions and classes through the command line as well using the dir() function. Using the Math module as an example, go to the command line and enter <code>python</code> --> <code>import math</code> --> <code>print dir(math)</code></li>
+    </ul>
+    <li>B) Framework Modules and Packages:</li>
+    <ul>
+      <li>Frameworks like Django are installed in Python's Site-Packages folder. Here's the path: Python/Lib/Site-Packages/.</li>
+      <li>But frameworks will have a number of modules within the framework. So Django modules are located within the Django folder Python/Lib/Site-Packages/django/.</li>
+      <li>Django has built-in modules related to user authentication, Caching, Logging, Sending emails, Syndication feeds (RSS/Atom), Comments,     Pagination, Messaging, Sessions, Static files management, Data validation and more. To see more go to <a href="https://docs.djangoproject.com/en/1.5/">docs.djangoproject.com</a>.</li>
+    </ul>
+    <li>C) Third Party Packages:</li>
+    <ul>
+      <li>Third parties create packages for Python such as pip, virtualenv, and virtualenv wrapper. There are also third party packages that plug into web frameworks like Django such as Django-Registration and Django-Contact to make registion and contact forms that work with Django.</li>
+      <li>There is a comprehensive list of all Pyton Packages including Django Apps indexed on Python's website <a href="https://pypi.python.org/pypi">https://pypi.python.org</a>. There is also a site just for Django packages <a href="https://www.djangopackages.com/">https://www.djangopackages.com/</a>, but not all the Django packages are there.</li>
+      <li>Packages are installed in the site-packages folder located at Python/Lib/Site-Packages/.</li>
+      <li>You can use pip or easy-install from the command line interface to quickly install third-party packages.</li>
+    </ul>
+    <li>D) Modules that you create yourself.</li>
+    <ul>
+      <li>When you create a function or class and save it to a file so it can be imported and used in another file, you have in essence created your own module.</li>
+    </ul>
+  </ul>
+  <li>Importing modules:</li>
+  <ul>
+    <li>You need to import the function or class from its module or package when you call it from a file.</li>
+    <li>Import Structure:</li>
+    <ul>
+      <li>The format is <code>from <i>module_name</i> import <i>function_or_class_name</i></code>.</li>
+      <li>All imports go at the top of the file. List each import on a separate line. If there are multiple functions imported from the same module you can include them on the same line, separated by commas <code>from <i>module</i> import <i>function1, function2</i></code></li>
+      <li>Don't put the .py in the module names. If the module is <i>forms.py</i> you just put <i>forms</i>.</li>
+      <li>For Django modules include django in front of the module name using dot notation. Example: <code>from django.db import models</code></li>
+    </ul>
+    <li>List the imports in the following order based on the source of the module. Examples are included:</li>
+    <ol>
+      <li>Standard Python Library imports. Example: <code>from math import sqrt</code></li>
+      <li>Core Django (or other framework) module imports. Example: <code>from django.shortcuts import render_to_response</code></li>
+      <li>Third Party app imports.</li>
+      <li>Imports from apps or files that you created in the project. Example: <code>from myapp.forms import UserProfileForm</code></li>
+    </ol>
+    <li>Python will search for the modules in the current folder, in Site-Packages folder, and in the PYTHONPATH. PYTHONPATH is not created by default. You create it and store it with your other Enviromental Variables like PATH only if you are storing modules outside where Python would orginarily look.</li>
+    <li>If the module is in the same folder as the file you are importing it to, then you leave out <i>from</i> and just include the import <code>import <i>module_name.function_or_class_name</i></code></li>
+  </ul>
+</ul>
+
+<!-- FUNCTIONS -->
+<h3 id="functions" class="adjust-anchor">Functions</h3>
+<ul>
+  <li>A function is a mini-script that executes one or more related commands.</li>     
+  <li>You first define the function. That means write the code that makes it work. Then you can call the function from somewhere else in your code. Could be from another function. Calling the function means running it, and passing it any input (aka arguments) it needs to return an output.</li>
+  <li>Function sources:</li>
+  <ul>
+      <li>There are functions built-in to the Python language like open() which opens a file. For the full list of built-in functions go to the <a href="http://docs.python.org/2/library/functions.html#built-in-funcs">Python website functions page</a>.</li>
+      <li>There are functions that are part of a framework like Django, or from other site packages. You need to import these before using them.</li> 
+      <li>Then there are functions that you write yourself called user-defined functions. These can be in the same file they are called from, or you can put them in separate files, then import them before calling them.</li>
+  </ul>
+  <li>If there is more than one function in a file, separate the functions with two blank lines.</li>
+  <li>Function Structure:
+<pre>
+# Imports, if any, go at the top of the file, followed by two blank lines.
+from <i>source</i> import <i>module_or_function_name</i>
+
+
+def <i>function_name</i>(<i>parameter1</i>, <i>parameter2</i>):
+    # doc statement explaining what the function does.
+    statements
+    return statement
+</pre>  
+  </li>
+  <li>Imports:</li>
+  <ul>
+    <li>Any imports used in a function should be listed at the top of the page.</li>
+    <li>List imports on separate lines. Put them in the following order:</li>
+    <ol>
+      <li>Standard Python Library imports.</li>
+      <li>Core Django module imports.</li>
+      <li>Third Party app imports.</li>
+      <li>Imports from apps or files that you created in the project.</li>
+    </ol>
+  </ul>
+  <li>The function itself is a block of code.</li>
+  <li>First line:</li>
+  <ul>
+    <li>The first line of a function includes <code>def</code> (for define), the function name, in parentheses any parameters that you give it, then a colon</li>
+    <li>A function is roughly analogous to a verb, so in general, use a verb as the function name. Best is a command type of verb like save() or close(). The function name should be lowercase. Keep the name short, but if multiple words are needed, separate them with underscores. The name can have numbers in it but cannot start with a number.</li>
+    <li>Parameters are like variable names that are placed in parentheses after the function name. Arguments are the values that are plugged into the parameters when you call the function. The terms <i>parameter</i> and <i>argument</i> are often used interchangeably, even though they are not exactly the same thing.</li>
+    <li>If there are multiple parameters/arguments, separate them by commas.</li> 
+    <li>If there is an undefined number of arguments you can put an asterisk before the parameter name.</li>
+    <li>If there are no arguments you just put empty parentheses.</li>
+  </ul>
+  <li>Optional Documentation String:</li>
+  <ul>
+    <li>Below the opening line you can insert a documenation string as a comment. This documents what the function does. It's not required but useful, especially if other programmers will be reading your code.</li>
+  </ul>
+  <li>Function statements:</li>
+  <ul>
+    <li>A statement is an instruction, written in a line or block of code.</li>
+    <li>All the statements that are part of the function must be indented four spaces.</li>
+    <li>Some (not all) functions include return statements that return a result as the output of the function. Once a result is returned, the function terminates.</li>
+  </ul>
+  <li>Calling a function:</li>
+  <ul>
+    <li>You call a function by using it's name followed by parentheses. If there are any arguments (i.e., the values you plug into the function), you put them in the parentheses separated by commas <code><i>function_name('argument1', 'argument2')</i></code>
+    <li>Call, run, use, and execute a function all mean the same thing.</li>
+    <li>If the program calling the function is in a different file than the function, you need to import it. Put imports at the top of the file: <code>from <i>foldername.filename</i> import <i>function_or_class_name</i></code>. For the filename you leave out the .py. <i>function_or_class_name</i> is the name of the function or class that's being imported.</li> 
+    <li>When you call an imported function you need to use dot notation <code><i>filename.function_name()</i></code>. With arguments: <code><i>filename.function_name('argument1', 'argument2')</i></code></li>
+  </ul>
+  <li>Decorator: A decorator is a function that modifies another function or method. <!--Its return value is typically a callable object, possibly the original function, but most often another function that modifies the original function's behavior in some fashion.--> Python decorators begin with <code>@</code> and are put in the line directly above the function they are modifying. As an example, the Django framework has a handy decorator that restricts pages to logged in users only. In the file that contains the function to open a page, you first import the decorator function <code>from django.contrib.auth.decorators import login_required</code>. Then insert the decorator above the function.
+<pre>
+@login_required 
+def open_restricted_page(request):
+    return render_to_response('restricted_page.html')
+</pre>  
+  </li>
+  <!--li>Use dot notation to execute functions. Include the name of the file or variable, a period, the name of the function, and parameters in parentheses. Example: saving a variable called form with no parameters <code>form.save()</code></li-->
+</ul>
+
+<!-- CLASSES -->
+<h3 id="classes" class="adjust-anchor">Classes</h3>
+<ul>
+  <li>A class is a grouping of functions and variables that are closely related. They are grouped under a class so they can interact with each other.</li>
+  <li>Python is an object oriented programming languange. An instance of a class is an object, and an object contains values (defined in the class attributes) and has a defined behavior (defined in the class methods).</li>
+  <li>If there is more than one class or function in a file, separate them by two blank lines.</li>
+  <li>Class Structure:
+<pre>
+# Imports, if any, go at the top of the file, followed by two blank lines.
+from <i>source</i> import <i>module_or_class_name</i>
+
+
+class <i>ClassName</i>(object):
+    # Doc statement describing the class.
+    attributes
+
+    methods
+</pre>  
+  </li>
+  <li>First line of a class:</li>  
+  <ul>
+    <li>The first line of a class includes <code>class</code>, the class name, in parentheses <i>object</i> or the name of a parent class you are inheriting from, then a colon</li>
+    <li>If a function is loosely analogous to a verb, then a class is loosely analogous to a noun. The class name generally will be a noun. Class names should be in CamelCase. That is first letter of each word is capitalized, and if there are more than one word they are put together with no space between them.</li>
+    <li>You can add on to an existing class by inheriting it. You create a new class called a child class or subclass, and put the name of the parent class inside the parentheses. In the new class will use all the code from the parent class, and will add to it or modify it with the code in the new child class.</li>
+    <li>If you are not inheriting a class, you put the word <code>(object)</code> in the parentheses. A class without any inheritance is called a base class.</li>
+  </ul>
+  <li>Body of the class:</li>
+  <ul>
+    <li>Functions that are inside a class are called methods. Separate methods in a class with one blank line.</li>
+    <li>A base class will often have it's first method name as <code>def __init__(self, <i>argument2, argument3</i>):</code>. __init__ tells Python to initiate an instance of the class.</li>
+    <li>The argument <i>self</i> is used in Python to mean the current instance of this class.</li>
+    <li>Variables inside a class are called attributes.</li>
+    <!--li>Attribute: Values associated with an individual object. Attributes are accessed using the 'dot syntax': a.x means fetch the x attribute from the 'a' object. </li-->    
+  </ul>
+  <li>Calling a class:</li>
+  <ul>
+    <li>You call a class the same way you call a function. Use it's name, followed by parentheses. You can tell whether the call is to a function or a class because a <i>function_name</i> will be all lower case, with underscores between words, while a <i>ClassName</i> will be CamelCase.</li>
+    <li>If the class is defined in a separate file you have to import the class at the top of the file.</li>
+  </ul>
+  <!--li>metaclass - The class of a class. Class definitions create a class name, a class dictionary, and a list of base classes. The metaclass is responsible for taking those three arguments and creating the class. Most object oriented programming languages provide a default implementation. What makes Python special is that it is possible to create custom metaclasses. Most users never need this tool, but when the need arises, metaclasses can provide powerful, elegant solutions. They have been used for logging attribute access, adding thread-safety, tracking object creation, implementing singletons, and many other tasks. </li-->
+  <!--li>When you work with classes much of your time is spent talking about making the class "do things." Instead of naming your functions after what the function does, instead name it as if it's a command you are giving to the class. Same as pop is saying "Hey list, pop this off." It isn't called remove_from_end_of_list because even though that's what it does, that's not a command to a list.</li-->
+</ul> 
+
+<!-- CONDITIONALS -->
+<h3 id="conditionals" class="adjust-anchor">Conditionals (e.g., If Statements)</h3>
+<ul>
+  <li>An if-statement creates a branch in the code. If the boolean expression is True then run the code under it, otherwise, skip over it.</li>
+  <li>The if statement starts with <code>if <i>condition</i>:</code></li>
+  <li>This is essentially saying if the condition is true, or if it exists, then run the the code below it. While you don't explicitly compare the conditional to true <code>if <i>condition</i> == True:</code>, that is sort of or in some cases exactly what you are doing.</li>
+  <li>The if statement clauses are placed below the <code>if <i>condition</i>:</code> line, and must be indented four spaces.</li>
+  <li>If statements should be followed by an <code>else:</code> statement that runs if the if statement is false.</li>
+  <li>You can include multiple if conditionals by including <li>elif</li> statements. Python will go down the list in order until one is true, then it will run the code.</li>
+  <li>Nested if statements are if statements inside of if statements.</li>
+  <li>if statement structure:
+<pre>
+if <i>condition</i>:
+    <i>do this</i>
+    <i>and this</i>
+elif <i>condition</i>:
+    <i>do this</i>
+else:
+    <i>do this if the above conditions are false.</i>
+</pre>  
+  </li>
+</ul> 
+
+<!-- LOOPS -->
+<h3 id="loops" class="adjust-anchor">Loops</h3>
+<ul>
+  <li>A loop runs a block of code over and again. A for loop runs a block of code for each item in a list.</li>
+  For loop: If you want to do something with every item in the list, you can use a for loop. Syntax:
+A variable name follows the for keyword; it will be assigned the value of each list item in turn. in list_name designates list_name as the list the loop will work on. The line ends with a colon (:) and the indented code that follows it will be executed once per item in the list.
+for loops allow us to iterate through all of the elements in a list from the left-most (or zeroth element) to the right-most element. 
+
+  <li>For loop format:
+<pre>
+for <i>variable_name</i> in <i>list_name</i>:
+    <i>do this</i>
+</pre>  
+  </li>
+  <li>You can create the variable_name just for this for loop. The variable_name will be assigned a new value every time the loop goes through the list.</li>
+  <li>For example, you can use a for loop to display all the records from a database.</li>
+  <li>You can also limit the output by including an if statement in the for loop.
+<pre>
+for <i>variable_name</i> in <i>list_name</i>:
+    if <i>condition</i>:     
+        <i>do this</i>
+</pre>  
+  </li>
+  <li>You can create a new list, then populate it with a for loop. To do that start by creating a variable name and assigning it to an empty list <code><i>listname</i> = []</code>. Then run the for loop, and assign the results to the list name. 
+  </li>
+  <li>A while loop is similar to a for loop, but it does something while a condition is true. It runs the danger of creating an endless loop. For that reason it's better to use a for loop if you can, but there are occasions when a while loop may be the best option.</li>
+  <li>While loop format:
+<pre>
+while <i>condition</i>:
+    <i>do this</i>
+</pre>  
+  </li>
+</ul>   
+
+<!-- OPERATORS -->
+<h3 id="operators" class="adjust-anchor">Python Operators</h3>
+<ul>
+  An operator is a symbol that represents a specific action, such as a plus sign representing addition.
+</ul>
+  <h5>Arithmatic Operators:</h5>
+  <table class="table table-condensed">
+    <tr><td>+   </td><td>addition</td></tr>
+    <tr><td>-  </td><td>subtraction</td></tr>
+    <tr><td>*   </td><td>multiplication</td></tr>
+    <tr><td>/  </td><td>division</td></tr>
+    <tr><td>%  </td><td>modus. Divides left hand operand by right hand operand and returns remainder. Examples: 52%10 returns 2; 16%10 returns 6</td></tr>
+    <tr><td>**  </td><td>exponent</td></tr>
+  </table>
+  <ul>
+    Mathmatical expressions are executed in the following order: Parentheses, Exponents, Multiplication, Division, Addition, Subtraction.
+  </ul>
+
+  <h5>Comparison Operators. Also called Boolean Operators because they return True or False. Used in conditional statements:</h5>
+  <table class="table table-condensed">
+    <tr><td><   </td><td>less than</td></tr>
+    <tr><td><=  </td><td>less than or equal to</td></tr>
+    <tr><td>>   </td><td>greater than</td></tr>
+    <tr><td>>=  </td><td>greater than or equal to</td></tr>
+    <tr><td>!=  </td><td>not equal to</td></tr>
+    <tr><td>==  </td><td>equal to. Use two equal signs. One equal sign is used to assign values to variables.</td></tr>
+  </table>
+  <h5>Assignment Operators:</h5>
+  <ul>
+    Below is a simple assignment operator, and four contraction operators.
+  </ul>
+  <table class="table table-condensed">
+    <tr><td>=   </td><td>Assigns values from right side operands to left side operand</td><td><i>variable_name</i> = <i>value</i></td></tr>
+    <tr><td>+=  </td><td>Contraction of Addition and Assignment Operators. Adds right operand to the left operand and assigns the result to left operand</td><td>Example: a+=b is a shortcut way to add b+a then assign the result back to a.</td></tr>
+    <tr><td>-=  </td><td>Contraction of Subtraction and Assignment Operators. Subtracts right operand from the left operand and assigns the result to left operand</td><td>Example: a-=b is a shortcut way to subtract b-a then assign the result back to a.</td></tr>
+    <tr><td>*=  </td><td>Contraction of Multiplication and Assignment Operators. Multiplies right operand by the left operand and assigns the result to left operand</td><td>Example: a*=b is a shortcut way to multiply b*a then assign the result back to a.</td></tr>
+    <tr><td>/=  <td>Contraction of Division and Assignment Operators. Divides left operand with the right operand and assigns the result to left operand</td><td>Example: a/=b is a shortcut way to divide c/a then assign the result back to a.</td></tr>
+  </table>   
+</ul> 
+
+<!-- REGEX -->
+<h3 id="regex" class="adjust-anchor">Regular Expressions (Regex)</h3>
+<ul>
+  <li>A regular expression (sometimes abbreviated as regex) is a formula for matching strings based on a pattern. It can be used to test input to a website to make sure it matches the input criteria. For instance it can check a name to make sure it only contains letters and spaces. It can check a password to ensure it contains numbers, letters and some special characters. Django uses it to check URLs for a specific pattern. If it matches it will route the page a certain way, if not it checks the next url regex pattern.</li>
+  <li>Python has a regex module called re that is part of it's standard library. To use it you insert an import at the top of your file <code>import re</code>. Django uses this module as part of it's urls module. Django's urls.py file starts with <code>from django.conf.urls import patterns, include, url</code>. This import has Python re module is embedded in it.</li>
+  <!--A regular expression is a special sequence of characters that helps you match or find other strings or sets of strings, using a specialized syntax held in a pattern.
+  <li>regular expression - A formula for matching strings that follow some pattern. Regular expressions are made up of normal characters and metacharacters. In the simplest case, a regular expression looks like a standard search string. For example, the regular expression "testing" contains no metacharacters. It will match "testing" and "123testing" but it will not match "Testing". Metacharacters match some expressions like '.' metacharacter match any single character in a search string. </li-->
+  <li>A full list of Python's regex syntax is at <a href="http://docs.python.org/3.3/library/re.html">http://docs.python.org/3.3/library/re.html</a></li>
+  </ul>
+  <h5>Commonly used regex special characters:</h5>
+  <table class="table table-condensed">
+    <tr><td>r'<i>regex</i>'</td><td>raw sting notation</td><td>With <i>r</i> followed by the regular expresssion in quotes avoids having to escape special characters.</td></tr>
+    <tr><td>\</td><td>special character escape (when you are not using raw string notation)</td><td>Put this before a Python special character that you want to escape such as <code>\"</code></td></tr> 
+    <tr><td>literal_character_match</td><td>To match a string exactly just enter it as the regex</td><td>Example of a literal character match of a url: <code>home/</code> will only match <i>home/</i></td></tr>    
+    <tr><td>^</td><td>start of the string</td><td><code>^home/</code> will match <i>home/</i> with no characters before it.</td></tr>
+    <tr><td>$</td><td>end of the string</td><td><code>^home/$</code> will match <i>home/</i> with no characters before it or after it.</td></tr>
+    <tr><td>.</td><td>matches any character but a newline</td><td><code>home.</code> matches <i>home/</i>, <i>homes</i>, <i>home3</i>, <i>home&</i>, etc.</td></tr>   
+    <tr><td>*</td><td>matches none to unlimited repetition of the character before it</td><td><code>a*</code> will match a blank, <i>a</i>, <i>aa</i>, <i>aaa</i>, etc.</td></tr>    
+    <tr><td>+</td><td>matches an unlimited repetition of the character before it</td><td><code>a+</code> will match <i>a</i>, <i>aa</i>, <i>aaa</i>, etc. but not a blank.</td></tr>    
+    <tr><td>?</td><td>matches the character before it or blank</td><td><code>a?</code> will match <i>a</i> or a blank.</td></tr>    
+    <tr><td>{<i>m</i>}</td><td>matches <i>m</i> occurences of the preceeding expression.</td><td><code>a{4}</code> will match <i>aaaa</i></td></tr>
+    <tr><td>{<i>m</i>,}</td><td>matches <i>m</i> or more occurences of the preceeding expression.</td><td><code>a{4,}</code> will match <i>aaaa</i>, <i>aaaaa</i>, etc.</td></tr>    
+    <tr><td>{<i>m</i>,<i>n</i>}</td><td>matches from <i>m</i> to <i>n</i> occurences of the preceeding expression.</td><td><code>a{4,6}</code> will match <i>aaaa</i>, <i>aaaaa</i>, and <i>aaaaaa</i></td></tr>   
+    <tr><td><i>a</i>|<i>b</i></td><td>matches either <i>a</i> or <i>b</i>.</td><td><code>1|2</code> matches either <i>1</i> or <i>2</i>.</td></tr>
+    <tr><td>[<i>chars</i>]</td><td>indicates one of a set of characters</td><td><code>[aeiouAEIOU]</code> matches a vowel, <code>[Ss]teve</code> matches <i>Steve</i> or <i>steve</i>.</td></tr>    
+    <tr><td>[<i>x</i>-<i>y</i>]</td><td>matches a range.</td><td><code>[0-9]</code> matches any number 0-9, <code>[a-z]</code> matches any lower case letter, <code>[A-Z]</code> matches any upper case letter, <code>[0-9][1-9]</code> matches any number from 01 to 99</td></tr>    
+    <tr><td>[<i>a</i>-<i>b</i><i>x</i>-<i>y</i>]</td><td>matches anything within the two specific rangers.</td><td><code>[a-zA-Z0-9]</code> matches any letter or number.</td></tr>   
+    <tr><td>[<i>sp char</i>]</td><td>Special characters lose their special meaning inside sets.</td><td><code>[(+*)]</code> matches <i>(</i> or <i>+</i> or <i>*</i> or <i>)</i></td></tr>  
+ http://docs.python.org/3.3/library/re.html
+ http://www.tutorialspoint.com/python/python_reg_expressions.htm
+(re)	Groups regular expressions and remembers matched text.
+    <tr><td>[^<i>chars</i>]</td><td>matches everything except what follows <code>^</code></td><td><code>[^0-9]</code> matches everything except a number.</td></tr>    
+    <tr><td>\d</td><td>matches a digit. It's the same as using [0-9].</td><td><code>\d+</code> matches one or more digits <i>4</i> or <i>42159048343</i>, <code>\d{3}[-]\d{4}</code> represents a phone number - Three digits, a dash, then four digits <i>555-5555</i></td></tr>    
+    <tr><td>\D</td><td>matches everything except a digit.</td><td></td></tr>    
+    <tr><td>\s</td><td>matches whitespace. Equivalent to [\t\n\r\f].</td><td></td></tr>       
+    <tr><td>\S </td><td>matches nonwhitespace </td><td> </td></tr>      
+    <tr><td>\w </td><td>matches any word character. Equivalent to [a-zA-Z0-9_] </td><td> </td></tr>   
+    <tr><td>\W </td><td>matches any non-word character. Equivalent to [^a-zA-Z0-9_]  </td><td> </td></tr>   
+    <tr><td>(<i>group-re</i>)</td><td>group regular expressions in parentheses</td><td><code>ab+</code> matches <i>ab</i>, <i>abb</i>, <i>abbb</i>, etc. <code>(ab)+</code> matches <i>ab</i>, <i>abab</i>, <i>ababab</i>, etc.</td></tr>        
+    <tr><td>(?P&lt;name>...) </td><td>matches a variable name representing a string</td><td><code>(?P&lt;poll_id>\d+)</code> matches the content of a variable named poll_id which is made up of one or more digits.</td></tr>        
+  </table>
+  
+
+        
+      </div> <!--/.span9 -->  
+      <!-- SIDEBAR -->
+      <div class='span3'>
+        <ul class="nav nav-tabs nav-stacked">
+          <li><a href='#overview'><i class="icon-chevron-left"></i> Python Overview</a></li>
+          <li><a href='#syntax'><i class="icon-chevron-left"></i> General Syntax and Style</a></li>	
+          <li><a href='#syntax'><i class="icon-chevron-left"></i> Variables and Constants</a></li>	
+          <li><a href='#datatypes'><i class="icon-chevron-left"></i> Data Types</a></li>	
+          <li><a href='#modules'><i class="icon-chevron-left"></i> Modules and Packages</a></li>	 
+          <li><a href='#functions'><i class="icon-chevron-left"></i> Functions</a></li>	
+          <li><a href='#classes'><i class="icon-chevron-left"></i> Classes</a></li>	
+          <li><a href='#conditionals'><i class="icon-chevron-left"></i> Conditionals (If Statements)</a></li>	
+          <li><a href='#loops'><i class="icon-chevron-left"></i> Loops</a></li>	
+          <li><a href='#operators'><i class="icon-chevron-left"></i> Python Operators</a></li>	
+          <li><a href='#regex'><i class="icon-chevron-left"></i> Regular Expressions</a></li>	
+        </ul>
+      </div> <!--/.span3 -->
+    </div> <!-- /.row -->
+
+		<hr/>
+		<footer class="span9">
+			<center>Python Django Starter Kit  |  Posted by <a href="http://techandstartup.com">TechandStartup.com</a></center>
+		</footer>
+
+</div>  <!-- /container -->
+
+<!-- Javascript is at the end for faster page loading -->
+  <script src="js/jquery-1.10.1.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <!-- Or link to the js files hosted on a content delivery network
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>	-->
+</body>
+</html> 
+            

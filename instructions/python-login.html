@@ -34,10 +34,29 @@
 				<div class="nav-collapse collapse">
 					<ul class="nav pull-right">
 						<li><a href="index.html">Home</a></li>
-            <li><a href="python-tools.html">Tools</a></li>
-						<li><a href="python-command.html">Command Line</a></li>
-						<!-- <li><a href="#">Link 2</a></li> -->
-						<!-- Dropdown Menu  -->
+						<!-- Tools Dropdown Menu  -->
+						<li class="dropdown"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Tools
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+                <li><a href="python-tools.html">Django Environment</a></li>
+                <li><a href="python-postgres.html">Install PostgreSQL</a></li>
+              </ul>
+						</li>
+						<!-- Reference Dropdown Menu  -->
+						<li class="dropdown"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Code Reference
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+                <li><a href="python-command.html">Command Line</a></li>
+                <li><a href="#">Django Reference (coming soon)</a></li>
+              </ul>
+						</li>
+						<!-- Django Apps Dropdown Menu  -->
 						<li class="dropdown active"> 
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 								Django Apps
@@ -49,14 +68,15 @@
 								<li><a href='python-contact.html'>Contact Form</a></li>
                 <li><a href='python-admin.html'>Admin Console</a></li>
                 <li class="active"><a href='python-login.html'>Login</a></li>
-                <li><a href='python-login2.html'>Login2</a></li>
-                <li><a href='python-registration.html'>Registration (coming soon)</a></li>
+                <li><a href='python-registration.html'>Registration</a></li>
                 <li><a href='python-pwreset.html'>Password Reset</a></li>
                 <li><a href='python-pwchange.html'>Change Password</a></li>
+                <li><a href='python-profiles.html'>Profiles</a></li>
+                <li><a href='python-stuff.html'>Stuff App</a></li>
+                <li><a href='python-images.html'>Upload Images</a></li>
               </ul>
 						</li>
             <li><a href="python-heroku.html">Heroku Hosting</a></li>
-            <li><a href="python-postgres.html">Install PostgreSQL</a></li>
 					</ul>
 				</div><!--/.nav-collapse -->
 			</div><!--/.container -->	
@@ -158,8 +178,7 @@ def loggedin(request):
               <li>We will assume your site already has a templates directory and a base.html file with the navigation bar. Open the base.html file and in the nav element add a navigation menu link to the login page <code>&lt;a href="/accounts/login">login&lt;/a></code></li>
               <li>Add a logout link too <code>&lt;a href="/accounts/logout">logout&lt;/a></code></li>
               <li>Create a directory called registration inside the templates folder. If you do this through the command line, type <code>mkdir registration</code></li>
-              <li>Create a file called login.html and save it to the templates/registration folder.</li>
-              <li>Populate the login.html template with the following:
+              <li>Create a file called login.html, save it to the templates/registration folder, and populate it with the following:
 <pre>
 {% extends "base.html" %}
 {% block title %}Log In{% endblock %}
@@ -178,7 +197,7 @@ def loggedin(request):
 </pre>
               </li>
               <li><code>{{ form.as_table }}</code> uses the Django Forms module to create the form. You can create an unformatted form by using <code>{{ form }}</code> without the HTML table tags, or have each field put inside paragraph tags with <code>{{ form.as_p }}</code>, or as an unordered list <code>{{ form.as_ul }}</code> 
-              <li>You can also lay out your own form structure, and use the form field tags as below:</li>
+              <li>Optionally, you can also lay out your own form structure and use the form field tags as follows:</li>
 <pre>
 {% extends "base.html" %}
 {% block title %}Log In{% endblock %}
@@ -221,7 +240,7 @@ def loggedin(request):
 {% endblock %}
 </pre>
               </li>
-              <li>If you want to display the username, you would make the adjustment to the view discussed in the views section. Then change the loggedin.html template to the below (change the working as you see fit):
+              <li>If you want to display the username, you would make the adjustment to the view discussed in the views section. Then change the loggedin.html template to the below (change the wording as you see fit):
 <pre>
 {% extends "base.html" %}
 {% block title %}Logged In{% endblock %}

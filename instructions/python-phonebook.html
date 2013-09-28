@@ -1,0 +1,607 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+	<meta charset="utf-8"> 
+	<title>Phonebook App | Python Django Starter Kit</title> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Various tools and reference material to get started and up to speed with Python Django.">
+  <meta name="author" content="Steve Carey, TechandStartup.com founder">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />  
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css" />  
+	<style type="text/css">
+		body {
+			padding-top:60px;
+		}
+		/* The adjust-anchor class is also related to the navbar-fixed-top class. It is needed when you have internal links on the page. Without it the top line of the anchored link would be hidden by the navbar. */
+		.adjust-anchor {
+			padding-top: 40px; 
+			margin-top: -40px;
+		}
+	</style>
+</head>
+<body>
+
+	<!-- NAVBAR -->
+  <div class="navbar navbar-inverse navbar-fixed-top">  
+    <div class="navbar-inner">
+			<div class="container">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="http://techandstartup.com">TechandStartup.com</a>
+				<div class="nav-collapse collapse">
+					<ul class="nav pull-right">
+						<li><a href="index.html">Python Django Starter Kit</a></li>
+						<!-- Tools Dropdown Menu  -->
+						<li class="dropdown"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Tools
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+                <li><a href="python-tools.html">Django Environment</a></li>
+                <li><a href="python-postgres.html">Install PostgreSQL</a></li>
+              </ul>
+						</li>
+						<!-- Reference Dropdown Menu  -->
+						<li class="dropdown"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Code Reference
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+                <li><a href="python-command.html">Command Line</a></li>
+                <li><a href="python-reference.html">Python Reference</a></li>                
+                <li><a href="#">Django Reference (coming soon)</a></li>
+              </ul>
+						</li>
+						<!-- Django Apps Dropdown Menu  -->
+						<li class="dropdown active"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Django Apps
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a href='python-pollsapp.html'>Pollsapp</a></li>
+								<li><a href='python-simple-site.html'>Simple Site</a></li>
+								<li><a href='python-contact.html'>Contact Form</a></li>
+                <li><a href='python-admin.html'>Admin Console</a></li>
+                <li><a href='python-login.html'>Login</a></li>
+                <li><a href='python-registration.html'>Registration</a></li>
+                <li><a href='python-pwreset.html'>Password Reset</a></li>
+                <li><a href='python-pwchange.html'>Change Password</a></li>
+                <li><a href='python-profiles.html'>Profiles</a></li>
+                <li class="active"><a href='python-stuff.html'>Stuff App</a></li>
+                <li><a href='python-images.html'>Upload Images</a></li>
+              </ul>
+						</li>
+            <li><a href="python-heroku.html">Heroku Hosting</a></li>
+					</ul>
+				</div><!--/.nav-collapse -->
+			</div><!--/.container -->	
+    </div><!--/.navbar-inner -->
+  </div><!--/.navbar -->
+	
+	<!-- CONTENT -->
+	<div class="container">
+
+        
+    <!-- Page Header -->
+    <div class="well">  <!-- <div class="page-header">  -->
+      <h1>Phonebook App <small></small></h1>
+      <hr/>
+      <p>In this tutorial we will create an application to store your contacts in a database. This builds off the concepts learned from the Stuff App tutorial for a Create-Read-Update-Delete application.</p>
+      <p>Prerequisites: This tutorial assumes you are familiar with HTML and CSS; a basic command line interface (e.g., Windows Command Prompt, OSX Terminal, Linux Bash); the basics of the Python Programming Language; and have gone through the other basic Django tutorials on this site. At a minimum, you should have the following already installed: A text editor, Python version 2.7 or above, and Django.</p>
+    </div>
+
+    <!-- TABS TO SELECT ENVIRONMENT
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#basic" data-toggle="tab">Stuff App</a></li>
+      <li><a href="#images" data-toggle="tab">Add Images</a></li>
+    </ul> -->
+        
+    <div id="myTabContent" class="tab-content">
+
+<!-------------------------------------------------------------------------------------------------------------
+------  STUFF APP ------------------------------------------------------------------------------>     
+      <!-- <div class="tab-pane fade in active" id="basic"> -->
+        <div class='row-fluid'>
+          <div class='span9 container-fluid'>
+            <!-- <h2>Stuff App - Create-Read-Update-Delete Template</h2>  -->
+
+            <!-- Set Up the Project -->
+            <h3 id="setup" class="adjust-anchor">Setup</h3>
+            <ul>
+              <li>Open your command line interface (e.g., Terminal for Mac, Command Prompt for Windows, Bash for Linux).</li>
+              <li>Change Directories to the folder where you want to create your web project. We'll assume a folder in your root directory called localsites <code>cd /localsites</code></li>
+              <li>First create your overall website. The Stuff app will be an application within your website, not the whole website itself. That way it is like a module within the website that can be disabled, removed, or installed in other sites.</li>
+              <li>Create the Django Site setup <code>django-admin.py startproject mysite </code>. This will create the basic file structure. Note there will now be two folders named mysite. The upper one will have just the manage.py command line utility file. The lower one will have important site-wide files such as settings.py and urls.py.</li>
+              <li>Change Directories to your site's upper directory <code>cd mysite</code></li>
+              <li>Now let's create the phonebook application that will put contact information in our database and pull it out to view, update, or delete. We'll call our application <i>phonebook</i>. In the command line enter <code>python manage.py startapp phonebook</code></li>
+              <li>A new folder named stuff will be created with some files in it (e.g., views.py, models.py).</li>
+              <li>Open the settings.py file. Insert a new row under <code>INSTALLED_APPS = (</code> and enter <code>'phonebook', </code>. Now Django will know to include this app with your site.</li>
+              <li>Use your browser to confirm that the basic Django files are now in place:</li>
+              <ul>
+                <li>Open a second instance of your command line interface so you can run the virtual server and still use the Command Line. In Windows Command Promt you can open a second instance by typing <code>start</code></li>
+                <li>from the upper simplesite directory <code>cd /localsites/simplesite</code> run the virtual server <code>python manage.py runserver</code></li>
+                <li>Go to the browser and put in your local ip address and port 8000 as url: <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+                <li>If the setup worked you will see an "It Worked" message in the browser.</li>
+              </ul>  
+            </ul>                
+
+            <!-- The settings.py file -->
+            <h3 id="settings" class="adjust-anchor">Settings.py file</h3>
+            <ul>
+              <li>Back to the settings.py file. At the very top of the file (first line) import the Django os module by inserting <code>import os</code>. This will enable relative references to our templates and static files.</li>
+              <li>Update the timezone for your region. If you are not in the default TIME_ZONE = 'America/Chicago' then change <i>America/Chicago</i> to one of these <a href="http://en.wikipedia.org/wiki/List_of_tz_database_time_zones" target="_blank">timezones</a>.</li>
+              <li>Setup the database. During development on your local machine we'll assume you are using sqlite, the lightweight database that's included with Django.</li>
+              <ul>
+                <li>Under <code>DATABASES = {</code>, change <code>'ENGINE': 'django.db.backends.',</code> to <code>'ENGINE': 'django.db.backends.sqlite3',</code></li>
+                <li>Change <code>'NAME': '',</code> to the path where you will put the sqlite database file. The relative path is <code>'NAME': os.path.join(os.path.dirname(__file__), 'db.sqlite').replace('\\','/'), </code>. You can also use the direct path <code>'NAME': '/localsites/simplesite/simplesite/db.sqlite',</code>. You could also name it simplesite.sqlite or whatever name you like.</li>
+                <li>The rest is unchanged. A database file called db.sqlite will be created in the lower simplesite directory. You can name the database db.simplesite or anything you like.</li>
+              </ul>
+              <li>Syncronize the database settings with the actual database. From the project folder enter <code>python manage.py syncdb</code></li>
+              <li>The first time you run syncdb for the site, you are prompted for a username and password which will make you the site administrator and first user.</li>
+            </ul>   
+            
+            <!-- Models -->
+            <h3 id="models" class="adjust-anchor">Create the Data Model</h3>
+            <ul>
+              <li>We will start by populating the models.py file. This is where we define the database table(s) and fields.</li>
+              <li>Go to the stuff folder, open the models.py file, then populate it with the following:
+<pre>
+from django.db import models
+
+class Phonebook(models.Model):  
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    phone_number = models.CharField(max_length=13, blank=True) 
+    email = models.EmailField()
+    notes = models.TextField() 
+    creation_date = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return self.title
+
+    class Meta:
+        ordering = ['last_name']
+</pre>             
+              This will do the following:
+              </li>
+              <li>Import the models module from django located at the following path (starting from your Python or Virtualenv folder) Lib/site-packages/django/db/models.</li>
+              <li>Create a class called Phonebook. When you sync your Django files with your database this will create a table called Phonebook. Each one of the attributes (first_name, last_name, phone_number, etc.) will become a field in the table.</li>
+              <li>You must assign each field to a field type (e.g., CharField, TextField, BooleanField). Django converts these to the database field type.</li>
+              <li>CharField requires that you specify the maximum number of characters (max_length). Most other parameters are optional.</li>
+              <li>Django automatically generates a field called id, assigns it an auto generated integer starting with 1, and makes "id" the primary key.</li>
+              <li>Creation_date will be automatically entered when the form is submitted and a record is created in the database.</li>
+              <li>At the end we added a class to sort the results alphabetically by last_name when they are displayed. To reverse the order (from z to a), put a minus sign before the fieldname.</li>
+            </ul> 
+            
+            <!-- FORMS -->
+            <h3 id="forms" class="adjust-anchor">Forms</h3>
+            <ul>
+              <li>Now we will create the form that will be displayed to users to create and update records in our database.</li>
+              <li>One of Django's core principles is Don't Repeat Yourself (DRY). If you leverage Django's functionality then you don't need to rewrite the fields in your form, rather you pull in the fields from the models.py file.</li>
+              <li>Create a file called forms.py, save it to the phonebook directory, and populate it with the following:
+<pre>
+from django import forms
+from phonebook.models import Phonebook
+
+class PhonebookForm(forms.ModelForm):
+
+    class Meta:
+        model = Phonebook
+        # uncomment the below line to include only specific fields.
+        # fields = ('first_name', 'last_name')
+</pre>              
+              </li>
+              <li>This imports Django's forms module, and it imports the Phonebook class we just created in our models.py file.</li>
+              <li>We create a class for the form that we're calling PhonebookForm. It converts the attributes in the Phonebook class into fields on the form so we don't have to reenter them.</li>
+              <li>Django excludes automatically generated fields from forms such as the "id" field and date created.</li>
+              <li>If we don't want all the fields in the Phonebook class to appear on our form then we can specifically exclude them. Right below <code>model = Phonebook</code> we would insert <code>exclude = ('notes')</code>. Or, conversely, we can list only the fields we want <code>fields = ('first_name', 'last_name')</code></li>
+            </ul>   
+
+            <!-- Templates -->
+            <h3 id="templates" class="adjust-anchor">Templates</h3>
+            <ul>
+              <li>In the upper mysite folder (where manage.py is) create a directory called templates <code>mkdir templates</code></li>
+              <li>Create a file named base.html and save it to the templates folder. This will be the template that all the other HTML files reference. Then populate it with the basic HTML and Django template tags, and the Navigation bar with a link to the stuff app and to the Admin console (explained later).
+<pre>
+&#123;% load staticfiles %} 
+&lt;!DOCTYPE html> 
+&lt;html lang="en"> 
+&lt;head> 
+  &lt;link rel="stylesheet" type="text/css" href="&#123;% static 'css/style.css' %}"&gt;
+  &lt;title>&#123;% block title %}&#123;% endblock %}&lt;/title> 
+&lt;/head>
+&lt;body>
+  &lt;nav>
+    &lt;a href="/">home&lt;/a>
+    &lt;a href="/phonebook">Phonebook&lt;/a>
+    &lt;a href="/admin">Admin&lt;/a>
+  &lt;/nav>
+  &#123;% block content %}
+  &#123;% endblock %}
+&lt;/body>
+&lt;/html> 
+</pre>              
+              </li>
+              <li>Create another file called index.html, save it to the templates folder, and populate it with the following bare bones content:
+<pre>
+&#123;% extends 'base.html' %}
+&#123;% block title %}Mysite | Home&#123;% endblock %}
+&#123;% block content %}
+
+&lt;h1>My Website&lt;/h1>
+&lt;p>Store your contacts in the Phonebook App.&lt;/p>
+
+&#123;% endblock %}
+</pre>              
+              Now your basic site templates are created. Let's make the templates for the phonebook app.
+              </li>
+              <li>Within the templates directory, create another directory called <i>phonebook</i>.</li>
+              <li>Create a file called index.html, save it to the templates/phonebook folder, and populate it with the following:
+<pre>
+{% extends 'base.html' %}
+{% block title %}Contacts List{% endblock %}
+{% block content %}
+
+&lt;h2>Contacts List&lt;/h2>
+
+    &lt;p>&lt;a href="{% url "create_contact" %}">Add New Contact&lt;/a>&lt;/p>
+    
+    {% if contacts %}
+
+        {% for contact in contacts %}
+            &lt;a href="{% url "contact_details" contact.id %}">{{ contact.first_name }} {{ contact.last_name }}&lt;/a>&lt;br/>
+        {% endfor %}
+
+    {% else %}
+        &lt;p>No Contacts &lt;/p>
+    {% endif %}
+
+{% endblock %}
+</pre>              
+              </li>
+              <ul>
+                <li>When this html page is opened it will have a link to "Add New Contact" and below that it will list all the records we have in the database. It uses a for loop to pull all the data in.</li>
+                <li>An if statement tests if there are any records in the database.</li>
+                <li>If there are records, a for loop is executed. The syntax of the first line in a for loop is <code>for <i>variable_name</i> in <i>list_name</i>:</code>. We are using <i>contact</i> as the variable name and <i>contacts</i> is the list name and is defined in the contacts function in the phonebook/views.py file as <code>contacts = Phonebook.objects.all()</code>. For each record the name fields are displayed with a hyperlink to the contact_details template with the phonebook.id appended to it.</li>
+                <li>If there are no records, the else statement displays a message.</li>
+              </ul>
+              <li>Create a file called contact_details.html, save it to the templates/phonebook folder, and populate it with the following:
+<pre>
+{% extends 'base.html' %}
+{% block title %}Contact Details{% endblock %}
+{% block content %}
+
+  &lt;h2>{{ contact.first_name }} {{ contact.last_name }}&lt;/h2>
+  &lt;p>&lt;b>Phone Number:&lt;/b> {{ contact.phone_number }}&lt;/p>
+  &lt;p>&lt;b>Email:&lt;/b> {{ contact.email }}&lt;/p>
+  {% if contact.notes %}
+  &lt;p>&lt;b>Notes:&lt;/b> {{ contact.notes }}&lt;/p>
+  {% endif %}
+  &lt;p>&lt;b>Created:&lt;/b> {{ contact.creation_date|date:"D, Y/m/d" }}&lt;/p>
+
+  &lt;p>&lt;a href="{% url "edit_contact" contact.id %}">Edit Contact Information&lt;/a>&lt;/p>
+  &lt;p>&lt;a href="{% url "delete_contact" contact.id %}">Delete Contact&lt;/a>&lt;/p>
+
+{% endblock %}
+</pre>              
+              <ul>
+                <li>This page shows the details of a specified individual record from your database. The database automatically generates a sequential id number for every record. The record is called when the URL is appended with <i>contact</i> and the record's id number like so <code>/contact/<i>1</i></code>
+                </li>
+                <li>The page displays the first and last name, phone number, email, and creation date.</li>
+                <li>We put the <i>notes</i> field inside an if statement to display only if there is a note for the contact. Use this if the field is optional.</li>
+                <li>At the bottom we include a link to the "edit_contact" page where you can edit the record. That is called by appending the url with <code>/contact/edit/<i>id number</i></code></li>
+                <li>Below that is a link that activates the delete function and removes the current record from the database.</li>
+              </ul>
+              <li>Create a file called create_contact.html, save it to the templates/phonebook folder, and populate it with the following:
+<pre>
+{% extends "base.html" %}
+{% block title %}Create New Contact{% endblock %}
+{% block content %}
+    &lt;h2>Create New Contact&lt;/h2>
+      &lt;form action="" method="post">{% csrf_token %}
+        {% for field in form %}
+            &lt;div class="field_container">
+                {{ field.errors }}
+                {{ field.label_tag }}&lt;/br>
+                {{ field }}
+            &lt;/div>
+        {% endfor %}
+      &lt;input type="submit" value="Submit" />
+      &lt;a href="/phonebook">&lt;input type="button" value="cancel" />&lt;/a>
+      &lt;/form>
+{% endblock %}
+</pre>              
+              </li>
+              <ul>
+                <li>We are displaying a form for creating a new record and inserting it into the database. It uses the post method.</li>
+                <li>The <code>{% csrf_token %}</code> is a security feature provided by Django's form module to prevent cross site request forgeries where data is inserted in your database bypassing the form.</li>
+                <li>A For Loop is used to generate the fields from the form.py file (which calls the fields from the models.py file). We are including a variable for the field error messages, the label tag and an input field to enter the data.</li>
+                <li>We added a cancel button which is actually a hyperlink back to the main phonebook page.</li>
+              </ul>
+              <li>Create a file called edit_contact.html, save it to the templates/phonebook folder, and populate it with the following:
+<pre>
+{% extends "base.html" %}
+{% block title %}Edit Contact{% endblock %}
+{% block content %}
+  &lt;form action="" method="post">{% csrf_token %}
+    &lt;h2>Edit Contact&lt;/h2>
+    {% for field in form %}
+        &lt;div class="field_container">
+            {{ field.errors }}
+            {{ field.label_tag }}&lt;/br>
+            {{ field }}
+        &lt;/div>
+    {% endfor %}
+  &lt;input type="submit" value="Submit" />
+  &lt;/form>
+{% endblock %}
+</pre>              
+              </li>
+              <ul>
+                <li>This form is essentially the same as the create_contact form except it calls an existing record in the database and allows you to modify the values in the fields.</li>
+              </ul>
+              <li>Go to the settings.py file and in the line under <code>TEMPLATE_DIRS = (</code> enter the relative path to the templates folder <code>os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\','/'), </code>. For just your local environment, the direct path would also work <code>    '/localsites/mysite/templates',</code></li>
+            </ul>   
+
+            <!-- URLs -->
+            <h3 id="urls" class="adjust-anchor">URLs</h3>
+            <ul>
+              <li>Now we will dispatch the URLs. </li>
+              <li>Go to the lower mysite folder (where settings.py is) and open the urls.py file. Below <code>urlpatterns = patterns('',</code> insert the following lines:
+<pre>
+    url(r'^$', 'mysite.views.home', name='home'),
+    (r'^phonebook/', include('phonebook.urls')),
+</pre>
+              </li>
+              <li>The first line routes a url with nothing appended to it to our home page.</li>
+              <li>The second line is activated any time "phonebook/" is appended to our URL. It calls in the urls file from our phonebook directory, which we will create next.</li>
+              <li>Create a file called urls.py, save it to the phonebook directory, and populate it with the following:
+<pre>
+from django.conf.urls import patterns, url
+
+urlpatterns = patterns('',
+    url(r'^$', 'phonebook.views.contacts', name="contacts"),
+    url(r'^(?P&lt;contact_id>\d+)/$',
+         'phonebook.views.contact_details',
+          name='contact_details'),
+    url(r'^create/$',
+         'phonebook.views.create_contact',
+          name="create_contact"),
+    url(r'^edit/(?P&lt;contact_id>\d+)/$',
+         'phonebook.views.edit_contact',
+         name='edit_contact'),
+    url(r'^delete/(?P&lt;contact_id>\d+)/$',
+        'phonebook.views.delete_contact',
+        name='delete_contact'), 
+)        
+</pre>              
+              </li>
+              <li>This file imports the url and patterns functions from Django's urls module located at (from your Python or virualenvs folder) Lib/site-packages/django/conf/urls</li>
+              <li>The patterns function looks for a match with the urls inside it when a URL is entered. The url function matches a URL with a view. It also allows you to give the URL a name.</li>
+              <li>You may notice that /phonebook/ is not part of these URLs. That's because we put that in the site's main urls.py file.</li>
+              <li>Note, we are using the option to give the urls names. That allows us to use the link name rather than the actual url when we put links throughout our site. That way if we change the URLs we can do it centrally in the URLs file and not have to change the links in the html files.</li>
+            </ul> 
+            
+            <!-- Views -->
+            <h3 id="views" class="adjust-anchor">Views</h3>
+            <ul>
+              <li>Now we will create the functions to display the pages and process the forms.</li>
+              <li>First let's create the view (function) to render our site's home page.</li>
+              <ul>
+                <li>Go to the lower mysite directory (where settings.py is), create a file called views.py, then populate it with the following:
+<pre>
+from django.shortcuts import render_to_response
+
+def home(request):
+    return render_to_response('index.html')
+</pre>                
+                </li>
+                <li>This will import the render_to_response function from the Django shortcuts module located in the (from your python folder or virtualenvs folder) Lib/site-packages/django/shortcuts/__init__.py file. It simply opens the index.html file.</li>
+              </ul>              
+              <li>Now lets create the views (functions) specific to our phonebook app. Open the views.py file in the stuff directory and populate it with the following:
+<pre>
+from django.shortcuts import get_object_or_404, render_to_response, redirect
+from django.template import RequestContext
+from phonebook.models import Phonebook
+from phonebook.forms import PhonebookForm
+
+
+def contacts(request):
+    contacts = Phonebook.objects.all()
+    return render_to_response('phonebook/index.html',
+                                      {'contacts': contacts},
+                      context_instance=RequestContext(request))
+
+def contact_details(request, contact_id):
+    contact = get_object_or_404(Phonebook, pk=contact_id)
+    return render_to_response('phonebook/contact_details.html',
+                                                  {'contact': contact},
+                                context_instance=RequestContext(request))
+
+def create_contact(request):
+    if request.method == 'POST':
+        form = PhonebookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('contacts')
+    else:
+        form = PhonebookForm()
+    return render_to_response('phonebook/create_contact.html',
+                                                          {'form': form},
+                                context_instance=RequestContext(request))
+
+def edit_contact(request, contact_id):
+    contact = get_object_or_404(Phonebook, pk=contact_id)
+    if request.method == 'POST':
+        form = PhonebookForm(request.POST, instance=contact)
+        if form.is_valid():
+            form.save()
+            return redirect('contact_details', contact_id)
+    else:
+        form = PhonebookForm(instance=contact)
+    return render_to_response('phonebook/edit_contact.html',
+                                                          {'form': form},
+                                context_instance=RequestContext(request))
+                                
+def delete_contact(request, contact_id):
+    contact = get_object_or_404(Phonebook, pk=contact_id)
+    contact.delete()
+    return redirect('contacts')                                
+</pre>              
+              </li>
+              <li>The contacts view (contacts function):</li>
+              <ul>
+                <li>At the top of the file we imported the Phonebook class from our models.py file. In the function we created a variable called <i>contacts</i> and populated it with all the objects in the Thing table in our database.</li>
+                <li>At the top of the file we also imported the render_to_response function from the Django Shortcuts module. This function will load the page we include as the first argument <code>'phonebook/index.html',</code>.</li>
+                <li>We are also passing the variable we just defined to the page we are rendering <code>{'contacts': contacts},</code>.</li>
+                <li>At the top of the file we imported the <code>context_instance=RequestContext(request)</code> function from the Django template module. Among other things, this function will process the csrf token.</li>
+              </ul>
+              <li>The contact_details view (contact_details function):</li>
+              <ul>
+                <li>This function includes the contact id as an argument. A variable called contact is created from the Phonebook table in the database based on the id number. The get_object_or_404 function will give a 404 page not found error if the id number is not in the database.</li>
+                <li>The render_to_response function renders the contact_details file and passes the <i>contact</i> variable we just created.</li>
+              </ul>
+              <li>Create_contact view:</li>
+              <ul>
+                <li>The create_contact template displays a template to create a new <i>contact</i> and add it to the <i>Phonebook</i> table in your db.sqlite database.</li>
+                <li>The create_contact view does two things. It renders create_contact.html template with an empty form to fill out. It also processes the form when it is submitted. It uses an if statement to know which action to take. 
+                <li>If the form is filled out it will be submitted using the "post" method, making <code>if request.method == 'POST':</code> True.</li> 
+                <li>At the top of the file we imported the PhonebookForm class from the forms.py file. Below the if statment we created a variable named "form" and populated it with the POST data that was submitted.</li>
+                <li>Django's form module does some validation to ensure the data entered is safe from sql injections. If so it saves the data and redirects you to the phonebook URL using the redirect function imported from Django shortcuts.</li>
+                <li>If the if statement was False (i.e., there was no POST data) then the else statement is executed. A variable named "form" is created and populated with the PhonebookForm class imported at the top of the file from the forms.py file. Then the create_contact.html file is rendered and the form variable is passed to it.</li>
+              </ul>
+              <li>Edit_contact view (edit_contact function):</li>
+              <ul>
+                <li>The edit_contact view is mostly the same as the create_contact view except it starts with an existing record rather than a blank record.</li>
+                <li>the function is called when a URL has a number following phonebook/edit/ (see the urls.py file). It takes the id number as an argument to the function.</li>
+                <li>You create a variable called <i>contact</i> and populate it with the database record, or if the id number doesn't exist it renders a 404 url not found error message.</li>
+                <li>The object data in the <i>contact</i> variable is passed to the form when the page is rendered.</li>
+              </ul>
+              <li>Delete_contact view: calls the delete() function, then redirects back to the phonebook url.</li>
+              <li>We are almost done. Let's sync the database to our Django project and see if everything is working.</li>
+              <ul>
+                <li>Open the command line interface.</li>
+                <li>Change directories to the upper site directory (the folder with the manage.py file in it) <code>cd /localsites/mysite </code>. Enter <code>python manage.py syncdb </code>. This will create the table and fields in the database from our models.py.</li>
+                <li>Let's run the virtual server. Type <code>python manage.py runserver</code></li>
+                <li>Go to the browser and put in your local ip address and port 8000 as url: <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+                <li>The home page should appear. Click on the navigation bar's <i>phonebook</i> link and it should take you to the index.html page listing your contacts... which is none at this point. So far so good. Let's give this site a minimal amount of styling.</li>
+              </ul>              
+            </ul>  
+
+            <!-- Static Files -->
+            <h3 id="static" class="adjust-anchor">Static Files</h3>
+            <ul>
+              <li>Create a directory called static to hold your css, images and javascript files. From the upper simplesite directory <code>cd /localsites/simplesite</code> enter <code>mkdir static && cd static</code>.</li>
+              <li>Create your static directories inside the static folder. We won't use all of them in this tutorial but we'll make them anyway. <code>mkdir css</code>, <code>mkdir img</code>, <code>mkdir js</code></li>
+              <li>Create a file called style.css and save it to the css folder.</li>
+              <li>Save some CSS style to the style.css file. Here's some bare bones styling:
+<pre>
+body {
+  background-color: ghostwhite; 
+  margin: auto;
+  width: 940px;
+}
+</pre>
+              </li>
+              <li>Go to the settings.py file and in the line below <code>STATICFILES_DIRS = (</code> enter the path to the static folder.
+              <ul>
+                <li>To just work in your local development environment you can put the direct path <code>    '/localsites/simplesite/static',</code>.</li>
+                <li>To be able to work in both a development and production environment use relative path <code>        os.path.join(os.path.dirname(__file__), '..', 'static').replace('\\','/'), </code>. Additionally change <code>STATIC_ROOT = ''</code> to <code>STATIC_ROOT = 'staticfiles'</code>. And static_url should be <code>STATIC_URL = '/static/'</code>.</li>
+              </ul>
+              <li>If you refresh your browser you should see the minimal styling we added <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+            </ul>             
+
+            <!-- Admin -->
+            <h3 id="admin" class="adjust-anchor">Activate the Admin Console</h3>
+            <ul>
+              <li>As the site administrator, you can use the Admin Console to create, read, update, or delete stuff.</li>
+              <li>Activate Django's Admin App.</li>
+              <ul>
+                <li>Open the settings.py file. Under <code>INSTALLED_APPS</code> uncomment the Admin App line <code>'django.contrib.admin',</code>.</li>
+                <li>Now sync the database to create the database tables for the Admin app. Open the command line interface and change directories to the upper directory of your site (where manage.py is). Type <code>python manage.py syncdb</code>.</li>
+                <li>Edit the simplesite/urls.py file (in the same directory as settings.py) and uncomment the three lines that reference admin so it looks like the below (excluding other links or code you may have).
+<pre>
+from django.conf.urls import patterns, include, url
+
+from django.contrib import admin
+admin.autodiscover()
+
+urlpatterns = patterns('',
+    url(r'^admin/', include(admin.site.urls)),
+)
+</pre>
+                </li>
+              </ul>
+              <li>The admin console is now activated. Let's now add the ability to manage the stuff app through the Admin Console. Create a file named admin.py, save it to the phonebook folder, and populate it with the following:
+<pre>
+from django.contrib import admin
+from phonebook.models import Phonebook
+
+admin.site.register(Phonebook)
+</pre>              
+              </li>
+              <li>Okay, we are done. Now let's test it.</li>
+            </ul>
+            
+            <!-- TESTING -->
+            <h3 id="testing" class="adjust-anchor">Testing</h3>
+            Run the virtual server and test the app in your browser.           
+            <ul>
+              <li>Open the command line interface.</li>
+              <li>from the upper site directory (the folder with the manage.py file in it) enter <code>python manage.py runserver</code></li>
+              <li>Go to the browser and put in your local ip address and port 8000 as url: <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+              <li>Click on the navigation bar's "stuff" link. It should take you to the index.html page listing any stuff you have... which is none at this point.</li>
+              <li>Click on the create stuff link. It should take you to the create_stuff form.</li>
+              <li>Fill out the form both incorrectly, to see the error messages, and correctly.</li>
+              <li>When filled out correctly you should be directed back to the stuff page. You should see the item you just entered.</li>
+              <li>Click on the item and it should take you to the thing_detail page. Click on the Edit My Stuff link.</li>
+              <li>This should take you to the edit_stuff page with the form. Fill out the form both incorrectly, to see the error messages, and correctly.</li>
+              <li>Test the delete function. Go to the stuff link and click on the details for a specific thing. Click "Delete This Thing". It should take you back to the main stuff page with the deleted record gone.</li>
+              <li>Click on the Admin link. You should see a category called stuff with a link called Thing. Click on Thing and you should see the records in your database. You can add, update, or delete records from the Admin Console.</li>
+              <li>If it all works, you are done!</li>
+              <li>Once you are comfortable with this app and how it works, you can modify it to a different kind of app that Creates, Reads, Updates, and Deletes data, like a blog, articles, surveys, catalog, photos, profiles, etc.</li>
+            </ul>
+
+            
+          </div> <!--/.span9 -->  
+        	<!-- SIDEBAR -->
+          <div class='span3'>
+            <ul class="nav nav-tabs nav-stacked">
+              <li><a href='#setup'><i class="icon-chevron-left"></i> Set Up the Project</a></li>
+              <li><a href='#settings'><i class="icon-chevron-left"></i> Settings</a></li>	    
+              <li><a href='#models'><i class="icon-chevron-left"></i> Models</a></li>	
+              <li><a href='#forms'><i class="icon-chevron-left"></i> Forms</a></li>	
+              <li><a href='#templates'><i class="icon-chevron-left"></i> Templates</a></li>	
+              <li><a href='#urls'><i class="icon-chevron-left"></i> URLs</a></li>	
+              <li><a href='#views'><i class="icon-chevron-left"></i> Views</a></li>	
+              <li><a href='#admin'><i class="icon-chevron-left"></i> Admin</a></li>	
+              <li><a href='#testing'><i class="icon-chevron-left"></i> Testing</a></li>	
+            </ul>
+          </div> <!--/.span3 -->
+        </div> <!-- /.row -->
+      <!-- </div> <!--/#basic -->            
+          
+    </div><!--/#myTabContent -->
+    
+		<hr/>
+		<footer class="span9">
+			<center>Python Django Starter Kit  |  Posted by <a href="http://techandstartup.com">TechandStartup.com</a></center>
+		</footer>
+
+  </div>  <!-- /container -->
+
+<!-- Javascript is at the end for faster page loading -->
+  <script src="js/jquery-1.10.1.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <!-- Or link to the js files hosted on a content delivery network
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>	-->
+</body>
+</html> 
+            

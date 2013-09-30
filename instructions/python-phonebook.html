@@ -94,7 +94,7 @@
       <h1>Phonebook App <small></small></h1>
       <hr/>
       <p>In this tutorial we will create an application to store your contacts in a database. This builds off the concepts learned from the Stuff App tutorial for a Create-Read-Update-Delete application.</p>
-      <p>Prerequisites: This tutorial assumes you are familiar with HTML and CSS; a basic command line interface (e.g., Windows Command Prompt, OSX Terminal, Linux Bash); the basics of the Python Programming Language; and have gone through the other basic Django tutorials on this site. At a minimum, you should have the following already installed: A text editor, Python version 2.7 or above, and Django.</p>
+      <p>Prerequisites: This tutorial assumes you are familiar with HTML and CSS; a basic command line interface (e.g., Windows Command Prompt, OSX Terminal, Linux Bash); the basics of the Python Programming Language; and have gone through the other basic Django tutorials on this site. At a minimum, you should have the following already installed: A text editor, Python version 2.7 or above, Django and pip.</p>
     </div>
 
     <!-- TABS TO SELECT ENVIRONMENT
@@ -157,20 +157,27 @@
             <h3 id="models" class="adjust-anchor">Create the Data Model</h3>
             <ul>
               <li>We will start by populating the models.py file. This is where we define the database table(s) and fields.</li>
-              <li>Go to the phonebook_app folder, open the models.py file, then populate it with the following:
+              <li>We will create two versions of the models.py file. A bare bones version with only the minimum input validation, and a second one that uses the various data input validation methods.</li>
+              <h5>Bare Bones Version</h5>
+              <li>First the bare bones version. Go to the phonebook_app folder, open the models.py file, then populate it with the following:
 <pre>
 from django.db import models
+
 
 class Phonebook(models.Model):  
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    phone_number = models.CharField(max_length=13, blank=True) 
+    phone_number = models.CharField(max_length=13)
     email = models.EmailField()
-    notes = models.TextField() 
+    address = models.CharField(max_length=100)
+    city = models.CharField(max_length=50)
+    state = models.CharField(max_length=50)
+    zip = models.CharField(max_length=5)
+    notes = models.TextField()
     creation_date = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
-        return self.last_name
+        return '%s %s' % (self.first_name, self.last_name)
 
     class Meta:
         ordering = ['last_name']
@@ -178,12 +185,62 @@ class Phonebook(models.Model):
               This will do the following:
               </li>
               <li>Import the models module from django located at the following path (starting from your Python or Virtualenv folder) Lib/site-packages/django/db/models.</li>
-              <li>Create a class called Phonebook. When you sync your Django files with your database this will create a table called Phonebook. Each one of the attributes (first_name, last_name, phone_number, etc.) will become a field in the table.</li>
+              <li>Create a class called Phonebook. When you sync your Django files with your database this will create a table called phonebook_app_phonebook (it concatenates the app and class names). Each one of the attributes (first_name, last_name, phone_number, etc.) will become a field in the table.</li>
               <li>You must assign each field to a field type (e.g., CharField, TextField, BooleanField). Django converts these to the database field type.</li>
-              <li>CharField requires that you specify the maximum number of characters (max_length). Most other parameters are optional.</li>
+              <li>CharField requires that you specify the maximum number of characters (max_length).</li>
               <li>Django automatically generates a field called id, assigns it an auto generated integer starting with 1, and makes "id" the primary key.</li>
               <li>Creation_date will be automatically entered when the form is submitted and a record is created in the database.</li>
-              <li>At the end we added a class to sort the results alphabetically by last_name when they are displayed. To reverse the order (from z to a), put a minus sign before the fieldname.</li>
+              <li>__unicode__(self) is a "magic method" that returns a unicode representation of an object. The admin consule uses this method to list each record in the phonebook database. We assigned two attributes (attributes are variables inside a class) to represent the Phonebook records, first_name last_name.</li>
+              <li>At the end we added a class meta to sort the results alphabetically by last_name when they are displayed. To reverse the order (from z to a), put a minus sign before the fieldname. Model metadata is any data that is not a field.</li>
+              <h5>Validation Version</h5>
+              <li>The second version includes full validation of each input to make sure they enter the right kind of data. The first time you go through this tutorial, run it with the first version. Once you have finished and tested it, then go back and make the following changes.</li>
+              <li>First import the django-localflavor package. That will ensure the phone number format and states are entered according to the local (in this case U.S.) format.</li>
+              <ul>
+                <li>Go to the command line interface and enter <code>pip install django-localflavor </code>. The package will be installed in (from your Python or Virtualenv folder) Lib/site-packages/localflavor with folders for various countries.</li>
+              </ul>
+              <li>Populate the models.py file with the following:</li>
+<pre>
+import re
+from django.db import models
+from django.core import validators
+from localflavor.us.models import USStateField, PhoneNumberField
+
+class Phonebook(models.Model):  
+    first_name = models.CharField(max_length=50, validators=[
+            validators.RegexValidator(re.compile('^[a-zA-Z \'\-]+$'), ('Enter a valid first_name'), 'invalid')
+        ])
+    last_name = models.CharField(max_length=50, blank=True, validators=[
+            validators.RegexValidator(re.compile('^[a-zA-Z \'\-]+$'), ('Enter a valid last_name'), 'invalid')
+        ])
+    phone_number = PhoneNumberField(blank=True, help_text=('Put their primary phone number here. '
+                                                           'Put additional phone numbers in the Notes field.'))
+    email = models.EmailField(blank=True, unique=True)
+    address = models.CharField(max_length=100, blank=True)
+    city = models.CharField(max_length=50, blank=True, default="San Francisco", validators=[
+            validators.RegexValidator(re.compile('^[a-zA-Z \'\-]+$'), ('Enter a valid city'), 'invalid')
+        ])
+    state = USStateField(blank=True)
+    zip = models.CharField("Zip Code", max_length=5, blank=True,
+                           validators=[validators.RegexValidator(re.compile('^\d{5}$'),
+                                                                 ('Enter a valid 5 digit zip code'), 'invalid')
+        ])
+    notes = models.TextField("Notes and Comments", blank=True)
+    creation_date = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return '%s %s' % (self.first_name, self.last_name)
+
+    class Meta:
+        ordering = ['last_name']
+</pre>              
+              <li>We added three imports to this version. We imported the core Python Regular Expression (re) module. We use that to compare the input to the characters we require such as only letters for the name and only digits for the zip code. We also imported the core Django validators module. Finally, we imported the PhoneNumberField and USStateField from the localflavor package we just installed.</li>
+              <li>We set every field except first_name to <code>blank=True</code> making those fields optional (they are allowed to be left blank).</li>
+              <li>We required that email addresses be unique to our database by setting <code>unique=True</code>. This prevents one person from having two accounts with the same email address.</li>
+              <li>We added verbose names to the zip and notes attributes. The database fields will use the attribute name, but the verbose name will be displayed on the forms when shown to the user.</li>
+              <li>We prefilled the city field using default="<i>default answer</i>".</li>
+              <li>We used the RegexValidator class to compare the input in the first_name, last_name, and city fields to the regular expression <code>('^[a-zA-Z \'\-]+$')</code>. See the Regular Expression section of the Python Reference page for the specific meaning of these characters. But basically it says the following: ^ means the beginning of the string and $ means the end of the string, so the whole string is covered. In square brackets we indicate that the input can be any lower case letter, any upper case letter, a space, an apostrophy or a dash. The back slash before the apostrophy and dash is required to escape it's special meaning. The RegexValidator class includes a message argument and a code override argumement <i>'invalid'</i> if the input doesn't match. </li>
+              <li>We did the same with the zip code, except instead of validating against letters and a few special characters we validated against </li>
+              <li>We added help text to the phone number attribute. We have to add the template variable {{ field.help_text }} to the create_contact.html template for the help text to display.</li>
             </ul> 
             
             <!-- FORMS -->
@@ -208,6 +265,22 @@ class PhonebookForm(forms.ModelForm):
               <li>We create a class for the form that we're calling PhonebookForm. It converts the attributes in the Phonebook class into fields on the form so we don't have to reenter them.</li>
               <li>Django excludes automatically generated fields from forms such as the "id" field and date created.</li>
               <li>If we don't want all the fields in the Phonebook class to appear on our form then we can specifically exclude them. Right below <code>model = Phonebook</code> we would insert <code>exclude = ('notes')</code>. Or, conversely, we can list only the fields we want <code>fields = ('first_name', 'last_name')</code></li>
+              <h5>Add additional form validation</h5>
+              <li>We added validation in the model.py file. However, there are a few things that work in the form class but not in the model class such as setting a minimum length <code>min_length</code>. List the fields that you want to add further validation to. After testing the app with the above forms.py file, substitute it with the below, and test the additional validation.
+<pre>
+from django import forms
+from phonebook_app.models import Phonebook
+
+class PhonebookForm(forms.ModelForm):
+
+    first_name = forms.CharField(min_length=3, max_length=50)
+    last_name = forms.CharField(min_length=3, max_length=50, required=False)
+
+    class Meta:
+        model = Phonebook 
+</pre>
+              <li>We added a minimum length of 3 characters to both the first and last names. We also included a maximum length of 50 characters. The max_length was already included in the Phonebook model class so it is redundant, except it behaves differently. It prevents the user from entering more than 50 characters. The max_length in the Phonebook model class allows the user to enter as many characters as they like, but returns an error message if it exceeds 50.</li>
+              <li>Any field you list in the forms class defaults to required=True. This overrides the fact that you may have set the field as blank=True in the models class, as we did with the last_name field. To make it optional again, we need to set <code>required=False</code></li>
             </ul>   
 
             <!-- Templates -->
@@ -292,10 +365,11 @@ class PhonebookForm(forms.ModelForm):
   &lt;h2>{{ contact.first_name }} {{ contact.last_name }}&lt;/h2>
   &lt;p>&lt;b>Phone Number:&lt;/b> {{ contact.phone_number }}&lt;/p>
   &lt;p>&lt;b>Email:&lt;/b> {{ contact.email }}&lt;/p>
+  &lt;p>&lt;b>Address:&lt;/b> {{ contact.address }}, {{ contact.city }}, {{ contact.state }} {{ contact.zip }}&lt;/p>
   {% if contact.notes %}
   &lt;p>&lt;b>Notes:&lt;/b> {{ contact.notes }}&lt;/p>
   {% endif %}
-  &lt;p>&lt;b>Created:&lt;/b> {{ contact.creation_date|date:"D, Y/m/d" }}&lt;/p>
+  &lt;p>&lt;b>Created:&lt;/b> {{ contact.creation_date|date:"D, m/d/Y" }}&lt;/p>
 
   &lt;p>&lt;a href="{% url "edit_contact" contact.id %}">Edit Contact Information&lt;/a>&lt;/p>
   &lt;p>&lt;a href="{% url "delete_contact" contact.id %}">Delete Contact&lt;/a>&lt;/p>
@@ -321,7 +395,7 @@ class PhonebookForm(forms.ModelForm):
             &lt;div class="field_container">
                 {{ field.errors }}
                 {{ field.label_tag }}&lt;/br>
-                {{ field }}
+                {{ field }} {{ field.help_text }}
             &lt;/div>
         {% endfor %}
       &lt;input type="submit" value="Submit" />
@@ -334,7 +408,11 @@ class PhonebookForm(forms.ModelForm):
                 <li>We are displaying a form for creating a new record and inserting it into the database. It uses the post method.</li>
                 <li>The <code>{% csrf_token %}</code> is a security feature provided by Django's form module to prevent cross site request forgeries where data is inserted in your database bypassing the form.</li>
                 <li>A For Loop is used to generate the fields from the form.py file (which calls the fields from the models.py file). We are including a variable for the field error messages, the label tag and an input field to enter the data.</li>
+                <li>Only include the  <code>{{ field.help_text }}</code> template variable if the models.py file has fields with help text.</li>
                 <li>We added a cancel button which is actually a hyperlink back to the main phonebook page.</li>
+                <li>An alternative to using the for loop is to replace it with <code>&lt;table> {{ form.as_table }} &lt;/table></code>. This displays the form as a table. You could also use <code> {{ form }} </code>, <code> {{ form.as_p }} </code>, or <code> {{ form.as_ul }} </code> to display the form with no formatting, with each field as paragragraph, or with the fields in an unordered list respectively.</li>
+                <li>You could also list each field on the template individually.</li>
+                <li>You can change the way errors are displayed with your CSS file. Django errors are assigned to the CSS class name <i>errorlist</i> which lists errors as a &lt;ul>.</li>
               </ul>
               <li>Create a file called edit_contact.html, save it to the templates/phonebook_app folder, and populate it with the following:
 <pre>
@@ -357,6 +435,9 @@ class PhonebookForm(forms.ModelForm):
               </li>
               <ul>
                 <li>This form is essentially the same as the create_contact form except it calls an existing record in the database and allows you to modify the values in the fields.</li>
+                <li>Instead of using the for loop, you can replace it with <code>&lt;table> {{ form.as_table }} &lt;/table></code>. This displays the form as a table. You could also use <code> {{ form }} </code>, <code> {{ form.as_p }} </code>, or <code> {{ form.as_ul }} </code> to display the form with no formatting, with each field as paragragraph, or with the fields in an unordered list respectively.</li>
+                <li>You could also list each field on the template individually.</li>
+                <li>You can change the way errors are displayed with your CSS file. Django errors are assigned to the CSS class name <i>errorlist</i> which lists errors as a &lt;ul>.</li>                
               </ul>
               <li>Go to the settings.py file and in the line under <code>TEMPLATE_DIRS = (</code> enter the relative path to the templates folder <code>os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\','/'), </code>. For just your local environment, the direct path would also work <code>    '/localsites/phonebook_proj/templates',</code></li>
             </ul>   
@@ -579,6 +660,7 @@ admin.site.register(Phonebook)
               <li>This should take you to the edit_contact page with the form. Fill out the form both incorrectly, to see the error messages, and correctly.</li>
               <li>Test the delete function. Go to the phonebook link and click on the details for a specific contact. Click "Delete Contact". It should take you back to the main contacts page with the deleted record gone.</li>
               <li>Click on the Admin link. You should see a category called phonebook with a link called Phonebooks. Click on Phonebooks and you should see the records in your database. You can add, update, or delete records from the Admin Console.</li>
+              <li>Play around with the models.py and form.py files to include the validation checks. Add some, take them out, move them around, until you are clear what each does and how it works.</li>
               <li>If it all works, you are done!</li>
             </ul>
 

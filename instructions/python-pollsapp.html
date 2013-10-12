@@ -1,0 +1,1226 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+	<meta charset="utf-8"> 
+	<title>Polls App | Python Django Starter Kit</title> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Various tools and reference material to get started and up to speed with Python Django.">
+  <meta name="author" content="Steve Carey, TechandStartup.com founder">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />  
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css" />  
+	<style type="text/css">
+		body {
+			padding-top:60px;
+		}
+		/* The adjust-anchor class is also related to the navbar-fixed-top class. It is needed when you have internal links on the page. Without it the top line of the anchored link would be hidden by the navbar. */
+		.adjust-anchor {
+			padding-top: 40px; 
+			margin-top: -40px;
+		}
+    .nobullet {list-style-type: none;}
+	</style>
+</head>
+<body>
+
+	<!-- NAVBAR -->
+  <div class="navbar navbar-inverse navbar-fixed-top">  
+    <div class="navbar-inner">
+			<div class="container">
+				<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="brand" href="http://techandstartup.com">TechandStartup.com</a>
+				<div class="nav-collapse collapse">
+					<ul class="nav pull-right">
+						<li><a href="index.html">Python Django Starter Kit</a></li>
+						<!-- Tools Dropdown Menu  -->
+						<li class="dropdown"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Tools
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+                <li><a href="python-tools.html">Django Environment</a></li>
+                <li><a href="python-postgres.html">Install PostgreSQL</a></li>
+              </ul>
+						</li>
+						<!-- Reference Dropdown Menu  -->
+						<li class="dropdown"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Code Reference
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+                <li><a href="python-command.html">Command Line</a></li>
+                <li><a href="python-reference.html">Python Reference</a></li>                
+                <li><a href="django-reference.html">Django Reference</a></li>
+              </ul>
+						</li>
+						<!-- Django Apps Dropdown Menu  -->
+						<li class="dropdown active"> 
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Django Apps
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a href='python-simple-site.html'>Simple Site</a></li>
+								<li><a href='python-contact.html'>Contact Form</a></li>
+                <li><a href='python-admin.html'>Admin Console</a></li>
+                <li><a href='python-login.html'>Login</a></li>
+                <li><a href='python-registration.html'>Registration</a></li>
+                <li><a href='python-pwreset.html'>Password Reset</a></li>
+                <li><a href='python-pwchange.html'>Change Password</a></li>
+                <li><a href='python-profiles.html'>Profiles</a></li>
+                <li><a href='python-stuff.html'>Stuff App</a></li>
+                <li><a href='python-images.html'>Upload Images</a></li>
+                <li><a href='python-phonebook.html'>Phonebook App</a></li>       
+                <li><a href='python-blog.html'>Blog App</a></li>  
+								<li class="active"><a href='python-pollsapp.html'>Polls App</a></li>                
+              </ul>
+						</li>
+            <li><a href="python-heroku.html">Heroku Hosting</a></li>
+					</ul>
+				</div><!--/.nav-collapse -->
+			</div><!--/.container -->	
+    </div><!--/.navbar-inner -->
+  </div><!--/.navbar -->
+	
+	<!-- CONTENT -->
+	<div class="container">
+
+        
+    <!-- Page Header -->
+    <div class="well">
+      <h1>The Polls App <small>Django's Tutorial</small></h1>
+      <p>Django's official website has a tutorial for building a poll app at <a href="https://docs.djangoproject.com/en/1.5/intro/tutorial01/">https://docs.djangoproject.com/en/1.5/intro/tutorial01/</a>. It's very comprehensive and touches the main features of Django. If you are an experienced programmer new to Django, it's a great place to start. If you are new to programming you may be better served going through the tutorials on this site before doing the Polls app tutorial.</p>
+      <p>There are two versions of this tutorial. In the first we use the same methodology for building a Create-Read-Update-Delete application that we used for the Stuff App tutorial. We will just highlight where it differs from the standard app. This mimicks the Dango Polls App tutorial with some modifications to keep it consistent with the other apps we've been creating. But it's mostly the same as the official Django tutorial. Once you complete that then go to the Django website and follow their tutorial step by step. One difference you will note is they will populate the polls app through the command line, while we've been doing it through the Admin Console.</p> 
+      <p>The second version of this tutorial is a summary of the code from the official Polls App tutorial on the Django website. You can use it to create and delete the site multiple times until you are comfortable with it. Note, the Polls app was created just for teaching purposes. You would not want to use the app as is without making some modifications starting with not encouraging people to vote multiple times. That may be fine for elections but it's not okay for a poll.</p>
+      <p>In this tutorial we are also introducing the concept of automated testing. That is an advanced topic but all professional developers use automated testing as an important quality control mechanism. See the Testing Including Automated Testing section below.</p>
+    </div>
+        
+    <!-- TABS TO SELECT ENVIRONMENT -->
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#basic" data-toggle="tab">Polls App</a></li>
+      <li><a href="#official" data-toggle="tab">Official Version</a></li>
+    </ul>
+        
+    <div id="myTabContent" class="tab-content">
+
+<!-------------------------------------------------------------------------------------------------------------
+------  POLLS APP -------------------------------------------------------------------------------------------->     
+      <div class="tab-pane fade in active" id="basic">
+        <div class='row-fluid'>
+          <div class='span9 container-fluid'>
+            <h2>Create a Polls App</h2>
+
+            <!-- Set Up the Project -->
+            <h3 id="setup" class="adjust-anchor">Setup</h3>
+            <ul>
+              <li>Open your command line interface (e.g., Terminal for Mac, Command Prompt for Windows, Bash for Linux).</li>
+              <li>Change Directories to the folder where you want to create your web project. We'll assume a folder in your root directory called localsites <code>cd /localsites</code></li>
+              <li>First create your overall website. The Polls app will be an application within your website, not the whole website itself. That way it is like a module within the website that can be disabled, removed, or installed in other sites.</li>
+              <li>Create the Django Site setup <code>django-admin.py startproject pollsite </code>. This will create the basic file structure.</li>
+              <li>There will now be two folders named <i>pollsite</i>. The upper one will have just the manage.py command line utility file. The lower one will have important site-wide files such as settings.py and urls.py. To avoid potential confusion, rename the upper <i>pollsite</i> folder to <i>pollproj</i>. You can do that in the command line from the upper phonebooksite directory. Enter <code>rename pollsite pollproj</code></li>
+              <li>Now let's create the polls application that will put contact information in our database and pull it out to view, update, or delete. We'll call our application <i>pollsapp</i>. In the command line, from the <i>pollproj</i> directory, enter <code>python manage.py startapp pollsapp</code></li>
+              <li>A new folder named pollsapp will be created with some files in it (e.g., views.py, models.py).</li>
+              <li>It is important to distinguish between the three folders we have created.</li>
+              <ul>
+                <li><i>pollproj</i> is your project's root directory. The manage.py Django utilities file is in this directory. And separate directories are created in this folder to hold your site's files (pollsite) and application files (pollapp). Later we will create additional folders to hold your template files (templates) and static css, image, and javascript files (static).</li>
+                <li><i>pollsite</i> holds files that apply to your entire site.</li>
+                <li><i>pollsapp</i> holds files that apply only to a specific app, in this case the polls app. This can be a little confusing if your site only has one application, but if your site had multiple applications the need for a separate app folder becomes clear.</li>
+              </ul>
+            </ul>                
+
+            <!-- The settings.py file -->
+            <h3 id="settings" class="adjust-anchor">Settings.py file</h3>
+            <ul>
+              <li>Go to the pollsite folder and open the settings.py file. Insert a new row under <code>INSTALLED_APPS = (</code> and enter <code>'pollsapp', </code>. Now Django will know to include this app with your site.</li>
+              <li>Use your browser to confirm that the basic Django files are now in place:</li>
+              <ul>
+                <li>Open a second instance of your command line interface so you can run the virtual server and still use the Command Line. In Windows Command Promt you can open a second instance by typing <code>start</code></li>
+                <li>from the pollproj directory <code>cd /localsites/pollproj</code> run the virtual server <code>python manage.py runserver</code></li>
+                <li>Go to the browser and put in your local ip address and port 8000 as url: <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+                <li>If the setup worked you will see an "It Worked" message in the browser.</li>
+              </ul>  
+              <li>Back to the settings.py file. At the very top of the file (first line) import the Django os module by inserting <code>import os</code>. This will enable relative references to our templates and static files.</li>
+              <li>Update the timezone for your region. If you are not in the default TIME_ZONE = 'America/Chicago' then change <i>America/Chicago</i> to one of these <a href="http://en.wikipedia.org/wiki/List_of_tz_database_time_zones" target="_blank">timezones</a>.</li>
+              <li>Setup the database. During development on your local machine we'll assume you are using sqlite, the lightweight database that's included with Django.</li>
+              <ul>
+                <li>Under <code>DATABASES = {</code>, change <code>'ENGINE': 'django.db.backends.',</code> to <code>'ENGINE': 'django.db.backends.sqlite3',</code></li>
+                <li>Change <code>'NAME': '',</code> to the path where you will put the sqlite database file. The relative path is <code>'NAME': os.path.join(os.path.dirname(__file__), 'db.sqlite').replace('\\','/'), </code>. You can also use the direct path <code>'NAME': '/localsites/pollproj/pollsite/db.sqlite',</code>. You could also name it poll.sqlite or whatever name you like.</li>
+                <li>The rest is unchanged.</li>
+              </ul>
+              <li>Syncronize the database settings with the actual database. From the project folder enter <code>python manage.py syncdb</code></li>
+              <li>The first time you run syncdb for the site, you are prompted for a username and password which will make you the site administrator and first user. A database file called db.sqlite will be created in the pollsite directory.</li>
+            </ul>   
+            
+            <!-- Models -->
+            <h3 id="models" class="adjust-anchor">Create the Data Model</h3>
+            <ul>
+              <li>We will start by populating the models.py file. This is where we define the database table(s) and fields.</li>
+              <li>Go to the pollsapp folder, open the models.py file, then populate it with the following:</li>
+<pre>
+from django.db import models
+import datetime
+from django.utils import timezone
+
+
+class Poll(models.Model):
+    question = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
+
+    def was_published_recently(self):
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=30)
+
+    def __unicode__(self):
+        return self.question
+
+
+class Choice(models.Model):
+    poll = models.ForeignKey(Poll)
+    choice_text = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+
+    def __unicode__(self):
+        return self.choice_text
+</pre>             
+              <li>Some things to note:</li>
+              <ul>
+                <li>We are creating two tables, Poll and Choice. The Choice table links to the Poll table using the ForeignKey field class. This will create a dropdown box where you select which poll your choices will relate to.</li>
+                <li>In the Poll class there is a method called <i>was_published_recently</i> with the number of days set to 30. You can use this in the Admin Console to see just the polls from the current month. You can of course change the number of days to whatever you want.</li>
+              </ul>
+
+            <!-- Templates -->
+            <h3 id="templates" class="adjust-anchor">Templates</h3>
+            <ul>
+              <li>In the pollproj folder (where manage.py is) create a directory called templates <code>mkdir templates</code></li>
+              <li>Create a file named base.html and save it to the templates folder. This will be the template that all the other HTML files reference. Then populate it with the basic HTML and Django template tags, and the Navigation bar with a link to the polls app and to the Admin console.
+<pre>
+{% load staticfiles %}
+&lt;!DOCTYPE html>
+&lt;html lang="en">
+&lt;head>
+  &lt;link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+  &lt;title>{% block title %}{% endblock %}&lt;/title>
+&lt;/head>
+&lt;body>
+  &lt;nav>
+    &lt;a href="{% url 'home' %}">Home&lt;/a>
+    &lt;a href="{% url 'pollsapp:poll-list' %}">Polls&lt;/a>
+    &lt;a href="/admin/">Admin&lt;/a>
+  &lt;/nav>
+  {% block content %}
+  {% endblock %}
+&lt;/body>
+&lt;/html>
+</pre>              
+              </li>
+              <li>Note, we are using URL namespacing in in the url tags. Here is how namespacing works:</li>
+              <ul>
+                <li>URL Namespacing is used to include the appname in the links. This makes it clearer what the link relates to, especially for large sites.</li>
+                <li>To use namespacing you alter the include function in the urls file and alter the links in the template files.</li>     
+                <li>When namespacing is used in the urls file you can use namespacing with your links in your template files using the following format <code>&lt;a href="{% url '<i>appname</i>:<i>urlname</i>' %}"><i>Link Text</i>&lt;/a></code> which for our app becomes <code>&lt;a href="{% url 'pollsapp:poll-list' %}">Polls&lt;/a></code></li>                   
+              </ul>              
+              
+              <li>Create another file called index.html, save it to the templates folder, and populate it with the following bare bones content:
+<pre>
+{% extends 'base.html' %}
+{% block title %}Poll Site | Home{% endblock %}
+{% block content %}
+
+&lt;h1>Poll Site&lt;/h1>
+&lt;p>Do you want to get paid for taking polls? Yeah, well good luck with that. In the mean time,
+click on the Polls link to see polls that you can take for free. Just pay the poll processing fee of $4.95.
+There is an optional limit 4 polls per user.&lt;/p>
+
+{% endblock %}
+</pre>              
+              Now your basic site templates are created. Let's make the templates for the polls app.
+              </li>
+              <li>Within the templates directory, create another directory called <i>pollsapp</i>.</li>
+              <li>Create a file called poll_list.html, save it to the templates/pollsapp folder, and populate it with the following:
+<pre>
+{% extends 'base.html' %}
+{% block title %}Poll List{% endblock %}
+{% block content %}
+
+&lt;h2>List of Polls&lt;/h2>
+
+{% if latest_poll_list %}
+    &lt;ul>
+    {% for poll in latest_poll_list %}
+        &lt;li>&lt;a href="{% url 'pollsapp:poll-detail' poll.id %}">{{ poll.question }}&lt;/a>&lt;/li>
+    {% endfor %}
+    &lt;/ul>
+{% else %}
+    &lt;p>No polls are available.&lt;/p>
+{% endif %}
+
+
+{% endblock %}
+</pre>              
+              </li>
+              <li>Create a file called poll_detail.html, save it to the templates/pollsapp folder, and populate it with the following:
+<pre>
+{% extends 'base.html' %}
+{% block title %}Details{% endblock %}
+{% block content %}
+
+&lt;h2>{{ poll.question }}&lt;/h2>
+
+{% if error_message %}&lt;p>&lt;strong>{{ error_message }}&lt;/strong>&lt;/p>{% endif %}
+
+&lt;form action="{% url 'pollsapp:poll-vote' poll.id %}" method="post">
+{% csrf_token %}
+{% for choice in poll.choice_set.all %}
+    &lt;input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+    &lt;label for="choice{{ forloop.counter }}">{{ choice.choice_text }}&lt;/label>&lt;br />
+{% endfor %}
+&lt;input type="submit" value="Vote" />
+&lt;/form>
+
+{% endblock %}
+</pre>              
+              <li>Create a file called poll_results.html, save it to the templates/phonebookapp folder, and populate it with the following:
+<pre>
+{% extends 'base.html' %}
+{% block title %}Results{% endblock %}
+{% block content %}
+
+
+&lt;h1>{{ poll.question }}&lt;/h1>
+
+&lt;ul>
+{% for choice in poll.choice_set.all %}
+    &lt;li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}&lt;/li>
+{% endfor %}
+&lt;/ul>
+
+&lt;a href="{% url 'pollsapp:poll-detail' poll.id %}">Vote again?&lt;/a>
+
+{% endblock %}
+</pre>              
+              </li>                                   
+              <li>Go to the settings.py file and in the line under <code>TEMPLATE_DIRS = (</code> enter the relative path to the templates folder <code>os.path.join(os.path.dirname(__file__), '..', 'templates').replace('\\','/'), </code>. For just your local environment, the direct path would also work <code>    '/localsites/pollproj/templates',</code></li>
+            </ul>   
+
+            <!-- URLs -->   
+            
+            <h3 id="urls" class="adjust-anchor">URLs</h3>
+            <ul>
+              <li>Now we will dispatch the URLs. </li>
+              <li>Go to the pollsite folder (where settings.py is) and open the urls.py file. Below <code>urlpatterns = patterns('',</code> insert the following lines:
+<pre>
+    url(r'^$', 'pollsite.views.home', name='home'),
+    url(r'^polls/', include('pollsapp.urls', namespace='pollsapp')),
+</pre>
+              </li>
+              <li>The first line routes a url with nothing appended to it to our home page.</li>
+              <li>The second line is activated any time "polls/" is appended to our URL. It calls in the urls file from our pollsapp directory, which we will create next.</li>
+              <li>We incorporated namespacing in our template urls tags. We also need to add the namespace argument in the include function.</li>
+              <li>The format is <code>url(r'^<i>path/</i>', include('<i>appname</i>.urls', namespace='<i>appname</i>')),</code> which for our app becomes <code>url(r'^polls/', include('pollsapp.urls', namespace='pollsapp')),</code></li>                  
+              <li>Create a file called urls.py, save it to the pollsapp directory, and populate it with the following:
+<pre>
+from django.conf.urls import patterns, url
+
+from pollsapp import views
+
+urlpatterns = patterns('',
+    url(r'^$', views.poll_list, name='poll-list'),
+    url(r'^(?P<poll_id>\d+)/$', views.poll_detail, name='poll-detail'),
+    url(r'^(?P<poll_id>\d+)/results/$', views.poll_results, name='poll-results'),
+    url(r'^(?P<poll_id>\d+)/vote/$', views.poll_vote, name='poll-vote'),
+)       
+</pre>              
+              </li>
+              <li>This file imports the url and patterns functions from Django's urls module located at (from your Python or virualenvs folder) Lib/site-packages/django/conf/urls</li>
+              <li>The patterns function looks for a match with the urls inside it when a URL is entered. The url function matches a URL with a view. It also allows you to give the URL a name.</li>
+              <li>You may notice that /polls/ is not part of these URLs. That's because we put that in the site's main urls.py file.</li>
+            </ul>             
+            
+            
+            <!-- Views -->
+            <h3 id="views" class="adjust-anchor">Views</h3>
+            <ul>
+              <li>Now we will create the functions to display the pages and process the forms.</li>
+              <li>First let's create the view (function) to render our site's home page.</li>
+              <ul>
+                <li>Go to the phonebooksite directory (where settings.py is), create a file called views.py, then populate it with the following:
+<pre>
+from django.shortcuts import render_to_response
+
+def home(request):
+    return render_to_response('index.html')    
+</pre>                
+                </li>
+                <li>This will import the render_to_response function from the Django shortcuts module located in the (from your python folder or virtualenvs folder) Lib/site-packages/django/shortcuts/__init__.py file. It simply opens the index.html file.</li>
+              </ul>              
+              <li>Now lets create the views (functions) specific to our polls app. Open the views.py file in the pollsapp directory and populate it with the following:
+<pre>
+from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+
+from pollsapp.models import Choice, Poll
+
+
+def poll_list(request):
+    latest_poll_list = Poll.objects.all().order_by('-pub_date')[:5]
+    context = {'latest_poll_list': latest_poll_list}
+    return render(request, 'pollsapp/poll_list.html', context)
+
+
+def poll_detail(request, poll_id):
+    poll = get_object_or_404(Poll, pk=poll_id)
+    return render(request, 'pollsapp/poll_detail.html', {'poll': poll})
+
+
+def poll_results(request, poll_id):
+    poll = get_object_or_404(Poll, pk=poll_id)
+    return render(request, 'pollsapp/poll_results.html', {'poll': poll})
+
+
+def poll_vote(request, poll_id):
+    p = get_object_or_404(Poll, pk=poll_id)
+    try:
+        selected_choice = p.choice_set.get(pk=request.POST['choice'])
+    except (KeyError, Choice.DoesNotExist):
+        # Redisplay the poll voting form.
+        return render(request, 'pollsapp/poll_detail.html', {
+            'poll': p,
+            'error_message': "You didn't select a choice.",
+        })
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(reverse('pollsapp:poll-results', args=(p.id,)))
+</pre>              
+              </li>
+              <!--li>Contact_list view:</li>
+              <ul>
+                <li>At the top of the file we imported the Phonebook class from our models.py file. In the function we created a variable called <i>contacts</i> and populated it with all the objects in the Phonebook table in our database.</li>
+                <li>At the top of the file we also imported the render function from the Django Shortcuts module. This function will load the page we include as the first argument <code>'phonebook/contact_list.html',</code>.</li>
+                <li>We are also passing the variable we just defined to the page we are rendering <code>{'contacts': contacts},</code>. Data such as variables is referred to as context when it is rendered along with a template.</li>
+              </ul>
+              <li>Contact_detail view:</li>
+              <ul>
+                <li>This function includes the contact id as an argument. A variable called contact is created from the Phonebook table in the database based on the id number. The get_object_or_404 function will give a 404 page not found error if the id number is not in the database.</li>
+                <li>The render function renders the contact_details file and passes the <i>contact</i> variable we just created.</li>
+              </ul>
+              <li>Create_contact view:</li>
+              <ul>
+                <li>The create_contact template displays a template to create a new <i>contact</i> and add it to the <i>Phonebook</i> table in your db.sqlite database.</li>
+                <li>The create_contact view does two things. It renders the create_contact.html template with an empty form to fill out. It also processes the form when it is submitted. It uses an if statement to know which action to take. 
+                <li>If the form is filled out it will be submitted using the "post" method, making <code>if request.method == 'POST':</code> True.</li> 
+                <li>At the top of the file we imported the PhonebookForm class from the forms.py file. Below the if statement we created a variable named <i>form</i> and populated it with the POST data that was submitted.</li>
+                <li>Django's form module does some validation to ensure the data entered is safe from sql injections. If so it saves the data and redirects you to the phonebook URL using the redirect function imported from Django shortcuts.</li>
+                <li>If the if statement was False (i.e., there was no POST data) then the else statement is executed. A variable named <i>form</i> is created and populated with the PhonebookForm class imported at the top of the file from the forms.py file. Then the create_contact.html file is rendered and the form variable is passed to it.</li>
+              </ul>
+              <li>Edit_contact view:</li>
+              <ul>
+                <li>The edit_contact view is mostly the same as the create_contact view except it starts with an existing record rather than a blank record.</li>
+                <li>the function is called when a URL has a number following phonebook/edit/ (see the urls.py file). It takes the id number as an argument to the function.</li>
+                <li>You create a variable called <i>contact</i> and populate it with the database record, or if the id number doesn't exist it renders a 404 url not found error message.</li>
+                <li>The object data in the <i>contact</i> variable is passed to the form when the page is rendered.</li>
+              </ul>
+              <li>Delete_contact view: </li>
+              <ul>
+                <li>This takes the contact.id as an argument.</li>
+                <li>It creates a variable called contact and assigns it to the record (object) pulled from the Phonebook model with contact_id as the primary key. The get_object_or_404 function from django's shortcut package pulls the object. It renders a 404 page not found error message if there is no record with the given contact_id number.</li>
+                <li>The if statement checks to see if there is data submitted using POST. If so that means the form has been submitted.</li>
+                <li>If the form was submitted, the delete() function is executed which deletes the record from the database.</li>
+                <li>The return value is the redirect function from django's shortcut package which redirects the user to the /phonebook/ url.</li>
+                <li>The if statement will be false if the user is just being taken to the form and hasn't seen it yet. Then the render function is returned from the django shortcut package. This opens the delete_contact template and passes it the contact variable as context.</li>
+              </ul>
+              <li>We are almost done. Let's sync the database to our Django project and see if everything is working.</li>
+              <ul>
+                <li>Open the command line interface.</li>
+                <li>Change directories to phonebookproj (the folder with the manage.py file in it) <code>cd /localsites/phonebookproj </code>. Enter <code>python manage.py syncdb </code>. This will create the table and fields in the database from our models.py.</li>
+                <li>Let's run the virtual server. Type <code>python manage.py runserver</code></li>
+                <li>Go to the browser and put in your local ip address and port 8000 as url: <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+                <li>The home page should appear. Click on the navigation bar's <i>phonebook</i> link and it should take you to the index.html page listing your contacts... which is none at this point. So far so good. Let's give this site a minimal amount of styling.</li>
+              </ul-->              
+            </ul>              
+
+
+            <!-- Static Files -->
+            <h3 id="static" class="adjust-anchor">Static Files</h3>
+            <ul>
+              <li>Create a directory called static to hold your css, images and javascript files. From the pollproj directory <code>cd /localsites/pollproj</code> enter <code>mkdir static && cd static</code>.</li>
+              <li>Create your static directories inside the static folder. We won't use all of them in this tutorial but we'll make them anyway. <code>mkdir css</code>, <code>mkdir img</code>, <code>mkdir js</code></li>
+              <li>Create a file called style.css and save it to the css folder.</li>
+              <li>Save some CSS style to the style.css file. Here's some bare bones styling:
+<pre>
+body {
+  background-color: ghostwhite; 
+  margin: auto;
+  width: 940px;
+}
+</pre>
+              </li>
+              <li>Go to the settings.py file and in the line below <code>STATICFILES_DIRS = (</code> enter the path to the static folder.
+              <ul>
+                <li>To just work in your local development environment you can put the direct path <code>    '/localsites/pollproj/static',</code>.</li>
+                <li>To be able to work in both a development and production environment use relative path <code>        os.path.join(os.path.dirname(__file__), '..', 'static').replace('\\','/'), </code>. Additionally change <code>STATIC_ROOT = ''</code> to <code>STATIC_ROOT = 'staticfiles'</code>. And static_url should be <code>STATIC_URL = '/static/'</code>.</li>
+              </ul>
+              <li>If you refresh your browser you should see the minimal styling we added <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+            </ul>             
+
+            <!-- Admin -->
+            <h3 id="admin" class="adjust-anchor">Activate the Admin Console</h3>
+            <ul>
+              <li>As the site administrator, you can use the Admin Console to create, read, update, or delete polls and choices once you activate the admin console and configure the pollsapp.</li>
+              <li>Activate Django's Admin console.</li>
+              <ul>
+                <li>The admin console is essentially a prepackaged app. Open the settings.py file. Under <code>INSTALLED_APPS</code> uncomment the Admin App line <code>'django.contrib.admin',</code>.</li>
+                <li>Now sync the database to create the database tables for the Admin app. Open the command line interface and change directories to phonebookproj (where manage.py is). Type <code>python manage.py syncdb</code>.</li>
+                <li>Edit the phonebooksite/urls.py file (in the same directory as settings.py) and uncomment the three lines that reference admin so it looks like the below (excluding all commented lines).
+<pre>
+from django.conf.urls import patterns, include, url
+
+from django.contrib import admin
+admin.autodiscover()
+
+urlpatterns = patterns('',
+    url(r'^$', 'pollsite.views.home', name='home'),
+    (r'^phonebook/', include('pollsapp.urls')),
+
+    url(r'^admin/', include(admin.site.urls)),
+)
+</pre>
+                </li>
+              </ul>
+              <li>The admin console is now activated. Let's now add the ability to manage the polls app through the Admin Console. Create a file named admin.py, save it to the pollsapp folder, and populate it with the following:
+<pre>
+from django.contrib import admin
+from pollsapp.models import Poll, Choice
+
+
+admin.site.register(Poll)
+admin.site.register(Choice)
+</pre>              
+              </li>
+              <li>Change the default admin console name:</li>
+              <ul>
+                <li>Create a directory called templates in the pollsite directory <code>cd /localsites/pollsite</code> and change directories into it <code>mkdir templates && cd templates</code></li>
+                <li>Go to the templates folder and create a new folder called admin. Using the command line <code>mkdir admin</code></li>
+                <li>Copy and paste the base_site.html file from django into the templates/admin folder. Go to (from your Python or Virtualenv folder) Lib/site-packages/django/contrib/admin/templates/admin/ and copy the base_site.html file.</li>
+                <li>Paste it into the templates/admin folder you just created <code>/localsites/pollproj/templates/admin/</code>.</li>
+                <li>Open the file and replace Django site admin and Django Administration with something like Polls App site admin and Polls App Administration.</li>
+              </ul>      
+              <li>Syncronize the database again. From the project folder enter <code>python manage.py syncdb</code></li>
+              
+              <li>Okay, test it, and if it works we can try it with a modified admin format and using generic views (class based views). Note, you'll be entering the poll questions and choices through the Admin console.</li>
+            </ul>
+            
+            <!-- CUSTOMIZE ADMIN -->
+            <h3 id="customizeadmin" class="adjust-anchor">Customize the Admin Console</h3>
+            <ul> 
+              <li>Go to the pollsapp folder, open the admin.py folder and populate it with the following:</li>
+<pre>
+from django.contrib import admin
+from pollsapp.models import Choice, Poll
+
+
+class ChoiceInline(admin.TabularInline):
+    model = Choice
+    extra = 3
+
+class PollAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None,               {'fields': ['question']}),
+        ('Date information', {'fields': ['pub_date'], 'classes': ['collapse']}),
+    ]
+    inlines = [ChoiceInline]
+
+    list_display = ('question', 'pub_date', 'was_published_recently')
+
+admin.site.register(Poll, PollAdmin)
+</pre> 
+              <li>Go to your browser, click on the admin link and look at the differences.</li>
+            </ul>
+            
+            <!-- GENERIC VIEWS -->
+            <h3 id="genericviews" class="adjust-anchor">Use Generic Views (Class Based Views)</h3>
+            <ul>
+              <li>Now lets change the function based views and urls to class based view using django's generic views package. Go to the pollsapp folder, open the views.py file, and replace the content with the following:</li>
+<pre>
+from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+from django.views import generic
+
+from pollsapp.models import Choice, Poll
+
+
+class PollListView(generic.ListView):
+    template_name = 'pollsapp/poll_list.html'
+    context_object_name = 'latest_poll_list'
+
+    def get_queryset(self):
+        """Return the last five published polls."""
+        return Poll.objects.order_by('-pub_date')[:5]
+
+class PollDetailView(generic.DetailView):
+    model = Poll
+    template_name = 'pollsapp/poll_detail.html'
+
+class PollResultsView(generic.DetailView):
+    model = Poll
+    template_name = 'pollsapp/poll_results.html'
+
+def poll_vote(request, poll_id):
+    p = get_object_or_404(Poll, pk=poll_id)
+    try:
+        selected_choice = p.choice_set.get(pk=request.POST['choice'])
+    except (KeyError, Choice.DoesNotExist):
+        # Redisplay the poll voting form.
+        return render(request, 'pollsapp/poll_detail.html', {
+            'poll': p,
+            'error_message': "You didn't select a choice.",
+        })
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(reverse('pollsapp:poll-results', args=(p.id,)))
+</pre>              
+              <li>From the pollsapp folder open the urls.py file and replace the content with the following:</li>
+<pre>
+from django.conf.urls import patterns, url
+
+from pollsapp import views
+
+urlpatterns = patterns('',
+    url(r'^$', views.PollListView.as_view(), name='poll-list'),
+    url(r'^(?P<pk>\d+)/$', views.PollDetailView.as_view(), name='poll-detail'),
+    url(r'^(?P<pk>\d+)/results/$', views.PollResultsView.as_view(), name='poll-results'),
+    url(r'^(?P<poll_id>\d+)/vote/$', views.poll_vote, name='poll-vote'),
+)
+</pre>              
+            <li>Now test it out to make sure it still works.</li>
+            <li>Now do the offical <a href="https://docs.djangoproject.com/en/1.5/intro/tutorial01/">Django Polls App tutorial</a>.</li>
+            </ul>
+            
+            <!-- TESTING -->
+            <h3 id="testing" class="adjust-anchor">Testing Including Intro to Automated Testing</h3>        
+            <ul>
+              <li>First test the the app the manual way. Run the virtual server and test the app in your browser.</li>
+              <ul>
+                <li>Open the command line interface.</li>
+                <li>from the pollproj directory (the folder with the manage.py file in it) enter <code>python manage.py runserver</code></li>
+                <li>Go to the browser and put in your local ip address and port 8000 as url: <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>
+                <li>You should see the home page. Click on the Admin link. It should prompt you to log in and then take you to the Admin Console. You should see a category called polls. Click the ad link and create a poll question, and the choices. Click save and add another. Play around in the admin console to see how it works. To exit the admin console go back to <a href="http://127.0.0.1:8000/" target="_blank">http://127.0.0.1:8000/</a></li>              
+                <li>Click on the navigation bar's <i>polls</i> link. It should take you to the poll_list.html page listing the polls you just created. Click on one, it should prompt you to vote in the poll. Vote. It should take you to the results page. Click vote again and vote again. Then click back to the home page.</li>
+                <li>If everything works then you are done, unless... you create automated tests.</li>
+              </ul>
+              <li>Automated Testing:</li>
+              <ul>
+                <li>Automated testing is where you write code to do the testing for you. The manual testing we have been doing is perfectly for small sites and apps like the ones we have been creating, but if you want to build a more complex site or if you want to be a professional developer you need to learn to write and use automated tests.</li>
+                <li>Automated testing is more of an advanced skill and is fairly involved. And there is not a standard way to do testing. If you google it you will find lots of different approaches. As such we won't be teaching it in this tutorial. Rather we are introducing the concept and will point you to additional resources.</li>
+                <li>Why do automated testing? Because you only need to write each test once. Then any time there is a change to the code, or a version upgrade of Python or Django, you simply run the test scripts to make sure everything still works. Sure, you could do it manually every time, but you'd be subject to human error (e.g., forgetting a test), and worse, you'd be doing brain dead work that could have been avoided by using your skills as a programmer. Or you could skip the testing and cross your fingers.</li>
+                <li>The first resource for automated testing is Python itself. Python has a built in unit test framework, and Django includes an interface to use it. Unit tests generally test at the lowest level such as a specific function or class to make sure it does what it's supposed to do.</li>
+                <li>When you create an app in Django it creates a file called tests.py where you can put your test code. You can follow this method of including test files within each app. If you have multiple apps in your site you could create a separate testing app to hold all your test files.</li>
+                <li>Your tests can be written as functions or classes. Django has a base class called TestCase that you can inherit in your test classes. The Django test module is located at (from your Python or Virtualenv folder) Lib/site-packages/django/test</li>
+                <li>How do you write tests? The <a href="https://docs.djangoproject.com/en/1.5/intro/tutorial05/">Django Polls App tutorial</a> has a chapter on automated testing. Start there. That will give you some idea of how to use the testing module, but not much.</li>
+                <li>Another resource is a <a href="http://www.youtube.com/watch?v=AcE4KTTBknc">Youtube tutorial</a> by UK Django developer Mike Hibbert on writing Django tests and using a third party site package called Coverage.</li>
+                <li>Coverage is an app you can download using pip <code>pip install coverage</code>. When used with your testing it will tell you how much of your code has been covered by your tests. It's a good way to point you in the right direction in terms of what needs to be tested.</li>
+                <li>Another testing app you can install is Sellenium. Use Sellenium to run tests in the browser to interact with your user interface the way a user of your site would. There are many other site packages available that can help you with testing, which you can look into once you get the basics down.</li>
+                <li>Test Driven Development: TDD is a programming concept where you create the tests first for what your code should do, then write the code that will pass the test. You have to be pretty proficient at programming to use this method. It does ensure that you have very thorough tests build into your projects.</li>
+                <li>There is an in depth <a href="http://www.tdd-django-tutorial.com/tutorial/1/">online tutorial</a> on using test driven development, Django Unit Testing, and Sellenium. The example it uses for the tutorial is... the Django Polls App. The author is working on a book on the subject.</li>
+              </ul>              
+            </ul>-->            
+          </div> <!--/.span9 -->  
+        	<!-- SIDEBAR -->
+          <div class='span3'>
+            <ul class="nav nav-tabs nav-stacked">
+              <li><a href='#setup'><i class="icon-chevron-left"></i> Set Up the Project</a></li>
+              <li><a href='#settings'><i class="icon-chevron-left"></i> Settings</a></li>	    
+              <li><a href='#models'><i class="icon-chevron-left"></i> Models</a></li>	
+              <li><a href='#templates'><i class="icon-chevron-left"></i> Templates</a></li>	
+              <li><a href='#urls'><i class="icon-chevron-left"></i> URLs</a></li>	
+              <li><a href='#views'><i class="icon-chevron-left"></i> Views</a></li>	
+              <li><a href='#admin'><i class="icon-chevron-left"></i> Admin</a></li>		
+              <li><a href='#customizeadmin'><i class="icon-chevron-left"></i> Customize Admin</a></li>	
+              <li><a href='#genericviews'><i class="icon-chevron-left"></i> Use Generic Views</a></li>
+              <li><a href='#testing'><i class="icon-chevron-left"></i> Testing/Automated Testing</a></li>              
+            </ul>
+          </div> <!--/.span3 -->
+        </div> <!-- /.row -->
+      </div> <!--/#basic -->                
+    
+<!-------------------------------------------------------------------------------------------------------------
+------  POLLS APP - OFFICIAL VERSION ------------------------------------------------------------------------->     
+      <div class="tab-pane fade" id="official">
+        <div class='row-fluid'>
+          <div class='span9 container-fluid'>
+            <h2>Django Official Polls App Tutorial - Code Summary</h2>    
+    
+
+        
+        <!-- Set Up the Project -->
+        <h3 id="official-setup" class="adjust-anchor">Set Up the Project</h3>
+        <ul>
+          <li>Create a folder to hold your web projects. We'll call it localsites but it can be anything. To make things simple we'll assume the folder is in the root directory (C:\ in Windows). If you put it elsewhere just modify the paths accordingly. From the command line go to the root directory <code>cd /</code> then create the directory <code>mkdir localsites</code></li>
+          <li>Change directories into it <code>cd /localsites</code>
+          <li>Create the Django Site setup <code>django-admin.py startproject pollsite</code>. This will create the basic file structure. We will call it pollsite, but note there will now be two folders named pollsite. The upper one will have just the manage.py command line utility file. The lower one will contain the various site-wide files.</li>
+          <li>Pollsite contains files relevant to an entire site. Now create the files for a particular application inside the site called pollsapp. From the upper pollsite directory <code>cd /localsites/pollsite</code> enter <code>python manage.py startapp pollsapp</code>
+          <li>Use your browser to confirm that the basic Django files are now in place:</li>
+          <ul>
+            <li>Open a second instance of the Command Prompt so you can run the virtual server and still use the Command Prompt <code>start</code></li>
+            <li>from the upper pollsite directory <code>cd /localsites/pollsite</code> run the virtual server <code>python manage.py runserver</code></li>
+            <li>Go to the browser and put in your local ip address and port 8000 as url: <a href="http://127.0.0.1:8000/">http://127.0.0.1:8000/</a></li>
+            <li>If the setup worked you will see an "It Worked" message in the browser.</li>
+          </ul> 
+        </ul>       
+
+        <!-- The settings.py file -->
+        <h3 id="official-settings" class="adjust-anchor">Settings.py file</h3>
+        <ul>
+          <li>Open the settings.py file. Update the timezone for your region. If you are not in the default TIME_ZONE = 'America/Chicago' then change it to one of these <a href="http://en.wikipedia.org/wiki/List_of_tz_database_time_zones" target="_blank">timezones</a>.
+          <li>In the settings.py file, setup the database:</li>
+          <ul>
+            <li>Under <code>DATABASES = {</code>, change <code>'ENGINE': 'django.db.backends.',</code> to <code>'ENGINE': 'django.db.backends.sqlite3',</code></li>
+            <li>Create the Sqlite database path by changing <code>'NAME': '',</code>, to <code>'NAME': '/localsites/pollsite/db.sqlite',</code></li>
+            <li>The rest is unchanged. Sqlite is a simple database that is perfectly fine for your development enviroment. A database file called db.sqlite will be created in the simplesite directory.</li>
+          </ul>
+          <li>Syncronize the database settings with the actual database. From the project folder enter <code>python manage.py syncdb</code></li>
+          <li>It will prompt you for a username, email and password. Enter those.</li>
+        </ul>        
+        
+        <!-- The models.py file -->
+        <h3 id="official-models" class="adjust-anchor">models.py file</h3>
+        <ul>
+          <li>Open the pollsapp/models.py file and enter the following:
+<pre>
+from django.db import models
+
+class Poll(models.Model):
+    question = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
+
+class Choice(models.Model):
+    poll = models.ForeignKey(Poll)
+    choice_text = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+</pre>
+          <li>Open the pollsite/settings.py file. In a line under <code>INSTALLED_APPS</code> add <code>'pollsapp',</code> (order doesn't matter, you can put it at the end).</li>
+          <li>To see the recommended database setup, in the command line from the upper pollsite folder enter <code>python manage.py sql pollsapp</code></li>
+          <li>Sync the databases again <code>python manage.py syncdb</code>
+        </ul>  
+
+        <!-- Use the Django Shell API -->
+        <h3 id="official-api" class="adjust-anchor">Use the Django Shell API</h3>
+        <ul>
+          <li>From the upper pollsite folder open the Django Shell and enter the following commands:</li>
+          <ul class="nobullet">
+            <li><code>python manage.py shell</code></li>
+            <li><code>from pollsapp.models import Poll, Choice</code></li>
+            <li><code>Poll.objects.all()</code></li>
+            <li><code>from django.utils import timezone</code></li>
+            <li><code>p = Poll(question="What's new?", pub_date=timezone.now())</code></li>
+            <li><code>p.save()</code></li>
+            <li><code>p.id</code></li>
+            <li><code>p.question</code></li>
+            <li><code>p.pub_date</code></li>
+            <li><code>p.question = "What's up?"</code></li>
+            <li><code>p.save()</code></li>
+            <li><code>Poll.objects.all()</code></li>
+            <li>Exit the Shell: Control Break</li>
+          </ul>
+          <li>Open the pollsapp/models.py file</li>
+          <li>At the end of the Poll Class add:
+<pre>
+    def __unicode__(self): 
+        return self.question
+</pre>
+          </li>
+          <li>At the end of the Choice Class add:
+<pre>
+    def __unicode__(self):  
+        return self.choice_text
+</pre>
+          </li>
+          <li>Add a custom method to the polls class just for demonstration:
+          <ul>
+            <li>At the top of the models.py file insert:	
+<pre>
+import datetime
+from django.utils import timezone
+</pre>
+            </li>
+            <li>Then at the end of the Polls class (not choice class) add:
+<pre>
+    def was_published_recently(self):
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+</pre>
+            </li>
+          </ul>
+          <li>Start a new Python interactive shell <code>cd /localsites/pollsite</code> and enter the following commands:</li>
+          <ul class="nobullet">
+            <li><code>python manage.py shell</code></li>
+	          <li><code>from pollsapp.models import Poll, Choice</code></li>
+	          <li><code>Poll.objects.all()</code></li>
+	          <li><code>Poll.objects.filter(id=1)</code></li>
+	          <li><code>Poll.objects.filter(question__startswith='What')</code></li>
+	          <li><code>from django.utils import timezone</code></li>
+	          <li><code>current_year = timezone.now().year</code></li>
+	          <li><code>Poll.objects.get(pub_date__year=current_year)</code></li>
+	          <li><code>Poll.objects.get(id=2)</code></li>
+	          <li><code>Poll.objects.get(pk=1)</code></li>
+	          <li><code>p = Poll.objects.get(pk=1)</code></li>
+	          <li><code>p.was_published_recently()</code></li>
+	          <li><code>p = Poll.objects.get(pk=1)</code></li>
+	          <li><code>p.choice_set.all()</code></li>
+	          <li><code>p.choice_set.create(choice_text='Not much', votes=0)</code></li>
+	          <li><code>p.choice_set.create(choice_text='The sky', votes=0)</code></li>
+	          <li><code>c = p.choice_set.create(choice_text='Just hacking again', votes=0)</code></li>
+	          <li><code>c.poll</code></li>
+	          <li><code>p.choice_set.all()</code></li>
+	          <li><code>p.choice_set.count()</code></li>
+	          <li><code>Choice.objects.filter(poll__pub_date__year=current_year)</code></li>
+	          <li><code>c = p.choice_set.filter(choice_text__startswith='Just hacking')</code></li>
+	          <li><code>c.delete()</code></li>
+            <li>Exit the Command Line: control break</li>
+          </ul>
+        </ul>
+        
+        <!-- Admin -->
+        <h3 id="official-admin" class="adjust-anchor">Admin</h3>
+        <ul>
+        <li>Activate the Admin site:</li>
+        <ul>
+          <li>In the settings.py file, under <code>INSTALLED_APPS</code> uncomment <code>Admin App ('django.contrib.admin',)</code>.</li>
+          <li>In the command line, from <code>cd /localsites/pollsproj</code>, sync the database again since there is now a new app <code>python manage.py syncdb</code></li>
+          <li>Edit the pollsite/urls.py file and uncomment the three lines that reference admin so it looks like this although you can leave the comments in.
+<pre>
+from django.conf.urls import patterns, include, url
+
+from django.contrib import admin
+admin.autodiscover()
+
+urlpatterns = patterns('',
+    url(r'^admin/', include(admin.site.urls)),
+)
+</pre>
+          </li>
+        </ul>
+        <li>Now the Admin page should be working. Run the virtual server <code>python manage.py runserver</code></li>
+        <li>Go to the browser and put in your local ip address and port 8000 and /admin/: <a href="http://127.0.0.1:8000/admin/">http://127.0.0.1:8000/admin/</a></li>
+        <li>The admin screen should appear prompting you to log in. Do so.</li>
+        <li>create a file called admin.py in the pollsapp directory.</li>
+        <li>Enter the following in it:
+<pre>
+from django.contrib import admin
+from pollsapp.models import Poll
+
+admin.site.register(Poll)
+</pre>
+        </li>Restart the development server to see polls added to the admin page (you have to restart it when you add a new file, but not when you modify an existing file).</li>
+        <li>Re-order the fields on the edit form by replacing <code>admin.site.register(Poll)</code> with:
+<pre>
+class PollAdmin(admin.ModelAdmin):
+    fields = ['pub_date', 'question']
+
+admin.site.register(Poll, PollAdmin)
+</pre>
+        </li>
+        <li>Split the form up into fieldsets. Change the PollAdmin class to:
+<pre>
+class PollAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None,               {'fields': ['question']}),
+        ('Date information', {'fields': ['pub_date']}),
+    ]
+</pre>
+        </li>
+        <li>Make a field collapsed. Change the PollAdmin class to:
+<pre>
+class PollAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None,               {'fields': ['question']}),
+        ('Date information', {'fields': ['pub_date'], 'classes': ['collapse']}),
+    ]
+</pre>
+        </li>
+        <li>To enable choices on the admin page	insert in the 3rd to 5th rows:
+<pre>
+from pollsapp.models import Choice
+
+admin.site.register(Choice)
+</pre>
+        </li>
+        <li>And add the class:
+<pre>
+class ChoiceInline(admin.StackedInline):
+    model = Choice
+    extra = 3
+</pre>
+        </li>
+        <li>After combining some of the imports and classes, the admin.py file should look like this:
+<pre>
+from django.contrib import admin
+from pollsapp.models import Choice, Poll
+
+
+class ChoiceInline(admin.TabularInline):
+    model = Choice
+    extra = 3
+
+class PollAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None,               {'fields': ['question']}),
+        ('Date information', {'fields': ['pub_date'], 'classes': ['collapse']}),
+    ]
+    inlines = [ChoiceInline]
+
+
+admin.site.register(Poll, PollAdmin)
+</pre>
+        </li>
+        <li>To make it tabular instead of stacked change choiceline to <code>class ChoiceInline(admin.TabularInline):</code></li>
+        <li>Tweek the change list page. Add a list display line to the bottom of the PollAdmin class <code>list_display = ('question', 'pub_date')</code></li>
+        <li>Add "was recently published" <code>list_display = ('question', 'pub_date', 'was_published_recently')</code></li>
+      </ul>
+        
+      <!-- Templates - Admin -->
+      <h3 id="official-templates-admin" class="adjust-anchor">Admin Templates</h3>
+      <ul>
+        <li>Create a directory called templates in the pollsite directory <code>cd /localsites/pollsite</code> and change directories into it <code>mkdir templates && cd templates</code></li>
+        <li>Inside of it make another folder called admin <code>mkdir admin</code></li>
+        <li>In the settings.py file in the line under <code>TEMPLATE_DIRS = (</code> enter the path to the templates folder <code>'/localsites/pollsite/templates',</code></li>
+        <li>Copy and paste the base_site.html file from django into the templates/admin folder. If Django is installed in your Python27 directory it would be at  <code>/Python27/Lib/site-packages/django/contrib/admin/templates/admin/base_site.html</code>. Paste it into <code>/localsites/pollsite/templates/admin/</code>.</li>
+        <li>Open the file and replace Django site admin and Django Administration with something like Polls App site admin and Polls App Administration.</li>
+        <li>Refresh your browser and you should see the changes.</li>
+      </ul>        
+        
+        <!-- Views and Templates -->
+        <h3 id="official-views" class="adjust-anchor">Views and Templates</h3>
+        <ul>
+          <li>Open the pollsapp/views.py file and enter the following code:</li>
+          <pre>
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse("Hello, world. You're at the poll index.")
+</pre>
+          </li>
+          <li>Create a file called urls.py and save it to the pollsapp directory.</li>
+        <li>Map the views you just created to urls. In the pollsapp/urls.py file enter:
+<pre>
+from django.conf.urls import patterns, url
+
+from pollsapp import views
+
+urlpatterns = patterns('',
+    url(r'^$', views.index, name='index'),
+)
+</pre>
+        </li>
+        <li>Now open the other urls.py file in the pollsite folder and in the line below <code>urlpatterns = patterns('',:</code> insert <code>url(r'^polls/', include('pollsapp.urls')),</code>. This connects the pollsapp urls to the pollsite.</li>
+        <li>Now test that it's working in your browser by going to /polls/ <a href="http://127.0.0.1:8000/polls/" target="_blank">http://127.0.0.1:8000/polls/</a></li>
+        <li>Add the following views to the pollsapp/views.py file:
+<pre>
+def detail(request, poll_id):
+    return HttpResponse("You're looking at poll %s." % poll_id)
+
+def results(request, poll_id):
+    return HttpResponse("You're looking at the results of poll %s." % poll_id)
+
+def vote(request, poll_id):
+    return HttpResponse("You're voting on poll %s." % poll_id)
+</pre>
+        </li>
+        </li>Connect these new views to URLs. Go to the pollsapp/urls.py file and below <code>url(r'^$', views.index, name='index'),</code> insert: the following URL calls: 
+<pre>
+    url(r'^(?P&lt;poll_id>\d+)/$', views.detail, name='detail'),
+    url(r'^(?P&lt;poll_id>\d+)/results/$', views.results, name='results'),
+    url(r'^(?P&lt;poll_id>\d+)/vote/$', views.vote, name='vote'),
+</pre>
+        </li>
+        <li>Test these in your browser by appending a number to the url such as 21 and "results" or "vote". <a href="http://localhost:8000/polls/21/" target="_blank">http://localhost:8000/polls/21/</a><br/>
+          <a href="http://localhost:8000/polls/21/results/" target="_blank">http://localhost:8000/polls/21/results/</a><br/> 
+          <a href="http://localhost:8000/polls/21/vote/" target="_blank">http://localhost:8000/polls/21/vote/</a>.</li>
+        <li>Create a view of the Polls in the pollsapp/views.py file. Import the Poll Class from the models.py file. Below <code>from django.http import HttpResponse</code> enter <code>from pollsapp.models import Poll</code>.
+        <li>Change the index function to:
+<pre>
+def index(request):
+    latest_poll_list = Poll.objects.order_by('-pub_date')[:5]
+    output = ', '.join([p.question for p in latest_poll_list])
+    return HttpResponse(output)
+</pre>
+        </li>
+        <h4>Now create templates:</h4>
+        <li>In the pollsapp directory <code>cd /localsites/pollsite/pollsapp</code> create a new directory called templates <code>mkdir templates && cd templates</code>.</li>
+        <li>Create another directory inside templates with the parent directory name <code>mkdir pollsapp</code>.</li>
+        <li>In that folder create a file called index.html</li>
+        <li>Insert the following into the index.html file:
+<pre>
+{% if latest_poll_list %}
+    &lt;ul>
+    {% for poll in latest_poll_list %}
+        &lt;li>&lt;a href="/polls/{{ poll.id }}/">{{ poll.question }}&lt;/a>&lt;/li>
+    {% endfor %}
+    &lt;/ul>
+{% else %}
+    &lt;p>No polls are available.&lt;/p>
+{% endif %}
+</pre>
+        </li>
+        <li>Update the index view in pollsapp/views.py to use the template. In the second row insert <code>from django.template import RequestContext, loader</code></li>
+        <li>Change the <code>def index(request):</code> function to:
+<pre>
+def index(request):
+    latest_poll_list = Poll.objects.order_by('-pub_date')[:5]
+    template = loader.get_template('pollsapp/index.html')
+    context = RequestContext(request, {
+        'latest_poll_list': latest_poll_list,
+    })
+    return HttpResponse(template.render(context))
+</pre>
+        </li>
+        <li>View it on your browser <a href="http://localhost:8000/polls/" target="_blank">http://localhost:8000/polls/</a></li>
+        <li>Shorten the views.py code using render. Replace everything from the second line down to the end of the def index(request) function with:
+<pre>
+from django.shortcuts import render
+
+from pollsapp.models import Poll
+
+def index(request):
+    latest_poll_list = Poll.objects.all().order_by('-pub_date')[:5]
+    context = {'latest_poll_list': latest_poll_list}
+    return render(request, 'pollsapp/index.html', context)
+</pre>
+        </li>
+        <li>Create a 404 error view if a poll request does not exist. In the views.py file insert into the second line <code>from django.http import Http404</code>. And replace the detail function with the following:
+<pre>
+def detail(request, poll_id):
+    try:
+        poll = Poll.objects.get(pk=poll_id)
+    except Poll.DoesNotExist:
+        raise Http404
+    return render(request, 'pollsapp/detail.html', {'poll': poll})
+</pre>
+        </li>
+        <li>You can use django's shortcuts package to reduce the code a bit. Change detail function that you just entered to the following:
+<pre>
+# Add the below import to the top of the views.py file.
+from django.shortcuts import render, get_object_or_404
+
+# Then replace the detail function with the below:
+def detail(request, poll_id):
+    poll = get_object_or_404(Poll, pk=poll_id)
+    return render(request, 'polls/detail.html', {'poll': poll})
+
+</pre>        
+        </li>
+        
+        <li>Create a detail.html file, save it to the pollsapp/templates/ directory</li>
+        <li>Add the following to the detail.html file:
+<pre>
+&lt;h1>{{ poll.question }}&lt;/h1>
+&lt;ul>
+{% for choice in poll.choice_set.all %}
+    &lt;li>{{ choice.choice_text }}&lt;/li>
+{% endfor %}
+&lt;/ul>
+</pre>
+        </li>
+        <li>In the index.html file, replace the hardcoded link <code>&lt;li>&lt;a href="/polls/{{ poll.id }}/">{{ poll.question }}&lt;/a>&lt;/li></code> with <code>&lt;li>&lt;a href="{% url 'detail' poll.id %}">{{ poll.question }}&lt;/a>&lt;/li></code></li>
+        <li>Add namespacing to the pollsite/urls.py file. Change <code>url(r'^polls/', include('pollsapp.urls')),</code> to <code>url(r'^polls/', include('pollsapp.urls', namespace='pollsapp')),</code></li>
+        <li>Edit the index.html file. Change to the following from <code>&lt;li>&lt;a href="{% url 'detail' poll.id %}">{{ poll.question }}&lt;/a>&lt;/li></code> to <code>&lt;li>&lt;a href="{% url 'pollsapp:detail' poll.id %}">{{ poll.question }}&lt;/a>&lt;/li></code></li>
+      </ul>
+        
+        <!-- Forms -->
+        <h3 id="official-forms" class="adjust-anchor">Forms</h3>
+        <ul>  
+          <li>Add a form to the detail.html file. Change the file content to:
+<pre>
+&lt;h1>{{ poll.question }}&lt;/h1>
+
+{% if error_message %}&lt;p>&lt;strong>{{ error_message }}&lt;/strong>&lt;/p>{% endif %}
+
+&lt;form action="{% url 'pollsapp:vote' poll.id %}" method="post">
+{% csrf_token %}
+{% for choice in poll.choice_set.all %}
+    &lt;input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+    &lt;label for="choice{{ forloop.counter }}">{{ choice.choice_text }}&lt;/label>&lt;br />
+{% endfor %}
+&lt;input type="submit" value="Vote" />
+&lt;/form>
+</pre>
+          </li>
+          <li>In the pollsapp/views.py file change the import lines at the top to the following:
+<pre>
+from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponseRedirect, HttpResponse
+from django.core.urlresolvers import reverse
+from pollsapp.models import Choice, Poll
+</pre>
+        </li>
+        <li>Then change the <code>def vote(request, poll_id):</code> function to:
+<pre>
+def vote(request, poll_id):
+    p = get_object_or_404(Poll, pk=poll_id)
+    try:
+        selected_choice = p.choice_set.get(pk=request.POST['choice'])
+    except (KeyError, Choice.DoesNotExist):
+        # Redisplay the poll voting form.
+        return render(request, 'pollsapp/detail.html', {
+            'poll': p,
+            'error_message': "You didn't select a choice.",
+        })
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(reverse('pollsapp:results', args=(p.id,)))
+</pre>
+        </li>
+        <li>Change the def results function to:
+<pre>
+def results(request, poll_id):
+    poll = get_object_or_404(Poll, pk=poll_id)
+    return render(request, 'pollsapp/results.html', {'poll': poll})
+</pre>
+        </li>
+        <li>Create a template file in the pollsapp templates folder called results.html.</li>
+        <li>In the results.html file insert:
+<pre>
+&lt;h1>{{ poll.question }}&lt;/h1>
+
+&lt;ul>
+{% for choice in poll.choice_set.all %}
+    &lt;li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}&lt;/li>
+{% endfor %}
+&lt;/ul>
+
+&lt;a href="{% url 'pollsapp:detail' poll.id %}">Vote again?&lt;/a>
+</pre>
+        </li>
+        <li>Test it in your browser <a href="http://localhost:8000/polls/" target="_blank">http://localhost:8000/polls/</a>.</li>
+
+        
+        <h4>Convert the Python code to the Django Generic Views code</h4>
+
+        <li>In the pollsapp/urls.py file, change the four URL Patterns to:
+<pre>
+    url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^(?P&lt;pk>\d+)/$', views.DetailView.as_view(), name='detail'),
+    url(r'^(?P&lt;pk>\d+)/results/$', views.ResultsView.as_view(), name='results'),
+    url(r'^(?P&lt;poll_id>\d+)/vote/$', views.vote, name='vote'),
+</pre>
+        </li>
+        <li>Open the pollsapp/views.py file and make the following changes:</li>
+        <ul>
+          <li>Change the import rows at the top to:
+<pre>
+from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+from django.views import generic
+
+from pollsapp.models import Choice, Poll
+</pre>
+          </li>
+          <li>Replace the index function with:
+<pre>
+class IndexView(generic.ListView):
+    template_name = 'pollsapp/index.html'
+    context_object_name = 'latest_poll_list'
+
+    def get_queryset(self):
+        """Return the last five published polls."""
+        return Poll.objects.order_by('-pub_date')[:5]
+</pre>
+        </li>
+        <li>Replace the detail function with:
+<pre>
+class DetailView(generic.DetailView):
+    model = Poll
+    template_name = 'pollsapp/detail.html'
+</pre>
+        </li>
+        <li>Replace the results function with:
+<pre>
+class ResultsView(generic.DetailView):
+    model = Poll
+    template_name = 'pollsapp/results.html'
+</pre>
+        </li>
+      </ul>
+      <li>Test it in your browser <a href="http://localhost:8000/polls/" target="_blank">http://localhost:8000/polls/</a>.</li>
+      </ul>
+        
+        <!-- Static Files -->
+        <h3 id="official-static" class="adjust-anchor">Static Files</h3>
+        <ul>
+          <li>Create a directory called static to hold your css, images and javascript files in the pollsapp directory <code>cd /localsites/pollsite/pollsapp</code> enter <code>mkdir static && cd static</code>.</li>
+          <li>Within static create another directory with the parent directory's name <code>mkdir pollsapp</code></li>
+          <li>Create a file called style.css and save it to this folder.</li>
+          <li>Save some CSS style to the style.css file:
+<pre>
+li a { color: green; }
+body { background-color: ghostwhite; }
+</pre>
+          <li>Open the index.html file and at the top of the file insert:
+<pre>
+{% load staticfiles %}
+&lt;link rel="stylesheet" type="text/css" href="{% static 'pollsapp/style.css' %}" />
+</pre>
+          </li>
+          <li>Test it in your browser <a href="http://localhost:8000/polls/" target="_blank">http://localhost:8000/polls/</a>.</li>
+          <li>From <code>cd /localsites/pollsite/pollsapp/static/pollsapp</code>, create a subdirectory called img <code>mkdir img</code></li> 
+          <li>Copy an image to this folder.</li>
+          <li>In the css file change the body line to the below (replace image.png with your image file's name):
+<pre>
+body {
+    background: ghostwhite url("img/<i>image.png</i>") no-repeat left top;
+}
+</pre>
+          </li>
+          <li>Test it in your browser to make sure it works <a href="http://127.0.0.1:8000/polls/">http://127.0.0.1:8000/polls/</a>. If it works, you're done!!!</li>
+        </ul> 
+       
+      </div> <!--/.span9 -->
+		
+			<!-- SIDEBAR -->
+			<div class='span3'>
+				<ul class="nav nav-tabs nav-stacked">
+					<li><a href='#official-setup'><i class="icon-chevron-left"></i> Set Up the Project</a></li>					
+					<li><a href='#official-settings'><i class="icon-chevron-left"></i> Settings.py file</a></li>	
+					<li><a href='#official-models'><i class="icon-chevron-left"></i> Models.py file</a></li>	
+					<li><a href='#official-api'><i class="icon-chevron-left"></i> Use Django Shell API</a></li>	
+					<li><a href='#official-admin'><i class="icon-chevron-left"></i> Admin</a></li>	
+					<li><a href='#official-templates-admin'><i class="icon-chevron-left"></i> Admin Templates</a></li>	
+					<li><a href='#official-views'><i class="icon-chevron-left"></i> Views and Templates</a></li>	
+					<li><a href='#official-forms'><i class="icon-chevron-left"></i> Forms</a></li>	
+					<li><a href='#official-static'><i class="icon-chevron-left"></i> Static Files</a></li>	
+        </ul>
+			</div> <!--/.span3 x-->
+		</div> <!-- /.row x-->
+
+		<hr/>
+		<footer class="span9">
+			<center>Python Django Starter Kit  |  Posted by <a href="http://techandstartup.com">TechandStartup.com</a></center>
+		</footer>
+</div>  <!-- /container x-->
+
+<!-- Javascript is at the end for faster page loading -->
+  <script src="js/jquery-1.10.1.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <!-- Or link to the js files hosted on a content delivery network
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>	-->
+</body>
+</html> 
+            
